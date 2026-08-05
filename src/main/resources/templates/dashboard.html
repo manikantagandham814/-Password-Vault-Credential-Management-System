@@ -3,14 +3,14 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<title>Password Vault Dashboard</title>
+    <title>Password Vault Dashboard</title>
 
-<link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 </head>
 
@@ -30,18 +30,19 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
     <div class="profile">
 
-        <button class="profile-btn">
+        <button class="profile-btn" id="profileBtn">
 
             <i class="fa-solid fa-circle-user"></i>
-<span th:text="${session.fullName}"></span>
+
+            <span th:text="${session.fullName}"></span>
 
             <i class="fa-solid fa-angle-down"></i>
 
         </button>
 
-        <div class="dropdown">
+        <div class="dropdown" id="profileDropdown">
 
-            <a href="#">
+            <a th:href="@{/profile}">
                 <i class="fa-solid fa-user"></i>
                 My Profile
             </a>
@@ -242,17 +243,16 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
                     <td>
 
                         <a th:href="@{'/view-password/' + ${password.id}}">
-
                             <i class="fa-solid fa-eye action view"></i>
-
                         </a>
 
-                        &nbsp;&nbsp;
-
                         <a th:href="@{'/edit-password/' + ${password.id}}">
-
                             <i class="fa-solid fa-pen action edit"></i>
+                        </a>
 
+                        <a th:href="@{'/delete-password/' + ${password.id}}"
+                           onclick="return confirm('Delete this password?')">
+                            <i class="fa-solid fa-trash action delete"></i>
                         </a>
 
                     </td>
@@ -268,6 +268,27 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     </main>
 
 </div>
+
+<script>
+
+const profileBtn = document.getElementById("profileBtn");
+const dropdown = document.getElementById("profileDropdown");
+
+profileBtn.addEventListener("click", function(e){
+
+    e.stopPropagation();
+
+    dropdown.classList.toggle("show");
+
+});
+
+document.addEventListener("click", function(){
+
+    dropdown.classList.remove("show");
+
+});
+
+</script>
 
 </body>
 

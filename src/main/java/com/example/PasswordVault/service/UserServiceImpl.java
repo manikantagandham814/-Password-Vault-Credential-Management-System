@@ -10,6 +10,7 @@ import com.example.PasswordVault.dto.LoginRequest;
 import com.example.PasswordVault.dto.RegisterRequest;
 import com.example.PasswordVault.entity.User;
 import com.example.PasswordVault.repository.UserRepository;
+import com.example.PasswordVault.dto.ProfileRequest;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -95,6 +96,21 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
 
         return userRepository.findByEmail(email).orElse(null);
+
+    }
+    @Override
+    public void updateProfile(String email,
+                              ProfileRequest request) {
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user != null) {
+
+            user.setFullName(request.getFullName());
+
+            userRepository.save(user);
+
+        }
 
     }
 
