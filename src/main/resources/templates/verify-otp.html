@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Verify OTP</title>
+
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Verify OTP</h2>
+
+    <p>Enter the OTP sent to your email.</p>
+
+    <p class="error"
+       th:if="${error}"
+       th:text="${error}">
+    </p>
+
+    <p class="success"
+       th:if="${success}"
+       th:text="${success}">
+    </p>
+
+    <form method="post">
+
+        <input
+            type="text"
+            id="otpInput"
+            name="otp"
+            placeholder="Enter OTP"
+            required>
+
+        <p class="timer-text">
+
+            OTP expires in
+
+            <span id="timer">01:00</span>
+
+        </p>
+
+        <div class="button-group">
+
+            <button
+                id="verifyBtn"
+                type="submit"
+                formaction="/verify-otp">
+
+                Verify OTP
+
+            </button>
+
+            <button
+                id="resendBtn"
+                type="submit"
+                formaction="/resend-otp"
+                style="display:none;">
+
+                Resend OTP
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script th:inline="javascript">
+
+let timeLeft = /*[[${remainingTime}]]*/ 60;
+
+let timer = document.getElementById("timer");
+let verifyBtn = document.getElementById("verifyBtn");
+let resendBtn = document.getElementById("resendBtn");
+let otpInput = document.getElementById("otpInput");
+
+function updateTimer(){
+
+    let minutes = Math.floor(timeLeft / 60);
+
+    let seconds = timeLeft % 60;
+
+    timer.innerHTML =
+        String(minutes).padStart(2,'0')
+        + ":"
+        +
+        String(seconds).padStart(2,'0');
+
+    if(timeLeft<=0){
+
+        clearInterval(interval);
+
+        timer.innerHTML="Expired";
+
+        verifyBtn.disabled=true;
+
+        otpInput.disabled=true;
+
+        resendBtn.style.display="inline-block";
+
+        return;
+    }
+
+    timeLeft--;
+
+}
+
+updateTimer();
+
+let interval=setInterval(updateTimer,1000);
+
+</script>
+
+</body>
+
+</html>
