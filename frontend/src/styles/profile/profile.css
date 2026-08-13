@@ -1,0 +1,460 @@
+/* =========================================================
+   PROFILE PAGE
+   ========================================================= */
+
+.profile-page {
+    min-height: 100vh;
+
+    background: #F8FAFC;
+
+    font-family: "Segoe UI", Arial, sans-serif;
+
+    color: #334155;
+}
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.profile-page .navbar {
+    height: 70px;
+
+    background: #FFFFFF;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 40px;
+
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+    position: relative;
+
+    z-index: 100;
+}
+
+
+.profile-page .logo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: #2563EB;
+}
+
+
+.profile-page .logo i {
+    font-size: 22px;
+}
+
+
+.profile-page .profile-name {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 18px;
+
+    color: #444444;
+
+    font-weight: 600;
+}
+
+
+.profile-page .profile-name i {
+    color: #2563EB;
+
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.profile-page .container {
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: flex-start;
+
+    padding: 60px 20px;
+}
+
+
+/* =========================================================
+   PROFILE CARD
+   ========================================================= */
+
+.profile-page .profile-card {
+    width: 550px;
+
+    max-width: 100%;
+
+    background: #FFFFFF;
+
+    border-radius: 18px;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.10);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   PROFILE HEADER
+   ========================================================= */
+
+.profile-page .profile-header {
+    background: linear-gradient(
+        135deg,
+        #2563EB,
+        #4F46E5
+    );
+
+    color: #FFFFFF;
+
+    padding: 28px 25px;
+
+    text-align: center;
+}
+
+
+.profile-page .profile-header i {
+    display: block;
+
+    font-size: 42px;
+
+    margin-bottom: 10px;
+}
+
+
+.profile-page .profile-header h2 {
+    margin: 0;
+
+    color: #FFFFFF;
+
+    font-size: 28px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   PROFILE BODY
+   ========================================================= */
+
+.profile-page .profile-body {
+    padding: 35px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.profile-page .form-group {
+    margin-bottom: 24px;
+}
+
+
+.profile-page .form-group label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #334155;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   READONLY INFORMATION
+   ========================================================= */
+
+.profile-page .form-group p {
+    margin: 0;
+
+    padding: 14px;
+
+    background: #F8FAFC;
+
+    border: 1px solid #DBE4F0;
+
+    border-radius: 10px;
+
+    color: #475569;
+
+    font-size: 16px;
+
+    line-height: 1.5;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.profile-page .form-group input {
+    width: 100%;
+
+    padding: 14px;
+
+    border: 1px solid #DBE4F0;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #FFFFFF;
+
+    color: #334155;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    transition: 0.3s ease;
+}
+
+
+.profile-page .form-group input:focus {
+    border-color: #2563EB;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* =========================================================
+   READONLY INPUT
+   ========================================================= */
+
+.profile-page .form-group input[readonly] {
+    background: #EEF2F7;
+
+    color: #64748B;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.profile-page .buttons {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 35px;
+}
+
+
+.profile-page .btn-edit,
+.profile-page .btn-save,
+.profile-page .btn-back {
+    display: inline-flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 13px 24px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    transition: all 0.25s ease;
+}
+
+
+/* =========================================================
+   EDIT / SAVE
+   ========================================================= */
+
+.profile-page .btn-edit,
+.profile-page .btn-save {
+    background: #2563EB;
+
+    color: #FFFFFF;
+}
+
+
+.profile-page .btn-edit:hover,
+.profile-page .btn-save:hover {
+    background: #1D4ED8;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 14px rgba(37, 99, 235, 0.20);
+}
+
+
+/* =========================================================
+   BACK
+   ========================================================= */
+
+.profile-page .btn-back {
+    background: #E5E7EB;
+
+    color: #333333;
+}
+
+
+.profile-page .btn-back:hover {
+    background: #D1D5DB;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   DISABLED
+   ========================================================= */
+
+.profile-page button:disabled {
+    background: #9CA3AF;
+
+    color: #FFFFFF;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   ICONS
+   ========================================================= */
+
+.profile-page .buttons i {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .profile-page .navbar {
+        padding: 0 20px;
+    }
+
+
+    .profile-page .logo {
+        font-size: 20px;
+    }
+
+
+    .profile-page .profile-name {
+        font-size: 15px;
+    }
+
+
+    .profile-page .profile-name span {
+        display: none;
+    }
+
+
+    .profile-page .container {
+        padding: 30px 15px;
+    }
+
+
+    .profile-page .profile-body {
+        padding: 25px 20px;
+    }
+
+
+    .profile-page .profile-header {
+        padding: 25px 20px;
+    }
+
+
+    .profile-page .profile-header h2 {
+        font-size: 24px;
+    }
+
+
+    .profile-page .buttons {
+        flex-direction: column;
+    }
+
+
+    .profile-page .btn-edit,
+    .profile-page .btn-save,
+    .profile-page .btn-back {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .profile-page .container {
+        padding: 20px 12px;
+    }
+
+
+    .profile-page .profile-body {
+        padding: 22px 16px;
+    }
+
+
+    .profile-page .profile-header i {
+        font-size: 36px;
+    }
+
+
+    .profile-page .profile-header h2 {
+        font-size: 22px;
+    }
+}

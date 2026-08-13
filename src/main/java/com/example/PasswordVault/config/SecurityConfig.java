@@ -12,18 +12,25 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http)
+            throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
+
+            .cors(cors -> {})
+
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
             )
+
             .formLogin(form -> form.disable())
+
             .httpBasic(httpBasic -> httpBasic.disable());
 
         return http.build();

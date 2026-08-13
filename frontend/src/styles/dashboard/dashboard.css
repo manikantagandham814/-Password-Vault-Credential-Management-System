@@ -1,0 +1,806 @@
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-page {
+    min-height: 100vh;
+    background: #F8FAFC;
+    color: #334155;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.dashboard-page .navbar {
+    height: 70px;
+
+    background: #1E293B;
+    color: white;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 35px;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+
+    position: relative;
+    z-index: 100;
+}
+
+.dashboard-page .logo {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.dashboard-page .logo i {
+    color: #60A5FA;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.dashboard-page .profile {
+    position: relative;
+}
+
+.dashboard-page .profile-btn {
+    width: auto;
+
+    background: transparent;
+    border: none;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 16px;
+
+    padding: 8px 10px;
+
+    border-radius: 8px;
+
+    transition: .3s;
+}
+
+.dashboard-page .profile-btn:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+.dashboard-page .profile-btn i:first-child {
+    font-size: 30px;
+}
+
+.dashboard-page .profile-btn i:last-child {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   PROFILE DROPDOWN
+========================================================= */
+
+.dashboard-page .dropdown {
+    display: none;
+
+    position: absolute;
+
+    right: 0;
+    top: 55px;
+
+    width: 220px;
+
+    background: white;
+
+    border-radius: 10px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+
+    overflow: hidden;
+
+    z-index: 999;
+}
+
+.dashboard-page .dropdown.show {
+    display: block;
+}
+
+.dashboard-page .dropdown a {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px 20px;
+
+    text-decoration: none;
+
+    color: #334155;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: .3s;
+}
+
+.dashboard-page .dropdown a:hover {
+    background: #F1F5F9;
+
+    text-decoration: none;
+}
+
+.dashboard-page .dropdown a i {
+    width: 18px;
+
+    text-align: center;
+
+    color: #4F46E5;
+}
+
+.dashboard-page .dropdown hr {
+    border: none;
+
+    border-top: 1px solid #E5E7EB;
+
+    margin: 3px 0;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.dashboard-page .wrapper {
+    display: flex;
+
+    min-height: calc(100vh - 70px);
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.dashboard-page .sidebar {
+    width: 240px;
+
+    flex-shrink: 0;
+
+    background: white;
+
+    padding: 25px 15px;
+
+    box-shadow: 3px 0 12px rgba(0, 0, 0, .08);
+}
+
+.dashboard-page .sidebar a {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px 18px;
+
+    margin-bottom: 12px;
+
+    text-decoration: none;
+
+    color: #475569;
+
+    border-radius: 12px;
+
+    transition: .3s;
+
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.dashboard-page .sidebar a:hover {
+    background: #EEF2FF;
+
+    color: #4F46E5;
+
+    transform: translateX(6px);
+
+    text-decoration: none;
+}
+
+.dashboard-page .sidebar .active {
+    background: #4F46E5;
+
+    color: white;
+
+    box-shadow: 0 5px 12px rgba(79, 70, 229, .25);
+}
+
+.dashboard-page .sidebar .active:hover {
+    transform: none;
+
+    background: #4F46E5;
+
+    color: white;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.dashboard-page .content {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 35px;
+}
+
+
+/* =========================================================
+   WELCOME
+========================================================= */
+
+.dashboard-page .welcome {
+    margin-bottom: 30px;
+
+    text-align: left;
+}
+
+.dashboard-page .welcome h2 {
+    font-size: 30px;
+
+    margin-bottom: 10px;
+
+    color: #1E293B;
+
+    font-weight: 600;
+
+    text-align: left;
+}
+
+.dashboard-page .welcome h2 span {
+    color: #4F46E5;
+}
+
+.dashboard-page .welcome p {
+    color: #64748B;
+
+    margin: 0;
+
+    font-size: 17px;
+
+    text-align: left;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.dashboard-page .cards {
+    display: flex;
+
+    gap: 25px;
+
+    margin-bottom: 35px;
+}
+
+.dashboard-page .card {
+    flex: 1;
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+
+    transition: .3s;
+
+    position: relative;
+
+    border: 1px solid #F1F5F9;
+}
+
+.dashboard-page .card:hover {
+    transform: translateY(-8px);
+
+    box-shadow: 0 18px 35px rgba(0, 0, 0, .12);
+}
+
+.dashboard-page .card-icon {
+    position: absolute;
+
+    right: 20px;
+    top: 20px;
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+
+    background: #EEF2FF;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 22px;
+
+    color: #4F46E5;
+}
+
+.dashboard-page .card h1 {
+    margin-top: 20px;
+
+    font-size: 36px;
+
+    color: #1E293B;
+
+    font-weight: 600;
+}
+
+.dashboard-page .card p {
+    margin-top: 10px;
+
+    color: #64748B;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.dashboard-page .table-card {
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 30px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+
+    border: 1px solid #F1F5F9;
+
+    overflow: hidden;
+}
+
+.dashboard-page .table-header {
+    margin-bottom: 22px;
+}
+
+.dashboard-page .table-header h3 {
+    color: #1E293B;
+
+    font-size: 26px;
+
+    font-weight: 600;
+
+    margin: 0;
+
+    text-align: left;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.dashboard-page table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.dashboard-page thead {
+    background: #EEF2FF;
+}
+
+.dashboard-page th {
+    padding: 18px 20px;
+
+    color: #4F46E5;
+
+    text-align: left;
+
+    font-size: 17px;
+
+    font-weight: 600;
+}
+
+.dashboard-page td {
+    padding: 20px;
+
+    border-bottom: 1px solid #E5E7EB;
+
+    color: #475569;
+
+    font-size: 17px;
+
+    vertical-align: middle;
+}
+
+.dashboard-page tbody tr {
+    transition: .25s;
+}
+
+.dashboard-page tbody tr:hover {
+    background: #F9FAFB;
+}
+
+.dashboard-page tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   WEBSITE ICON
+========================================================= */
+
+.dashboard-page td:first-child i {
+    color: #2563EB;
+
+    margin-right: 10px;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.dashboard-page td:last-child {
+    white-space: nowrap;
+}
+
+.dashboard-page .actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    gap: 18px;
+
+    width: auto;
+}
+
+
+/* =========================================================
+   ACTION LINKS
+========================================================= */
+
+.dashboard-page .actions a {
+    width: 32px !important;
+    height: 32px !important;
+
+    min-width: 32px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    display: inline-flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    text-decoration: none;
+
+    box-shadow: none !important;
+
+    border-radius: 0 !important;
+
+    cursor: pointer;
+
+    transition: transform .2s ease;
+}
+
+
+/* =========================================================
+  /* =========================================================
+   ACTION ICONS
+========================================================= */
+
+.dashboard-page td:last-child {
+    white-space: nowrap;
+}
+
+.dashboard-page td:last-child a {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: auto;
+    height: auto;
+
+    padding: 0;
+    margin: 0 12px 0 0;
+
+    background: transparent !important;
+
+    border: none;
+    box-shadow: none;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: transform .2s ease;
+}
+
+.dashboard-page td:last-child a:last-child {
+    margin-right: 0;
+}
+
+
+/* =========================================================
+   ACTION ICON
+========================================================= */
+
+.dashboard-page .action {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: auto;
+    height: auto;
+
+    padding: 0;
+
+    background: transparent !important;
+
+    border: none;
+    box-shadow: none;
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+
+/* =========================================================
+   VIEW
+========================================================= */
+
+.dashboard-page .view {
+    color: #2563EB;
+}
+
+.dashboard-page .view:hover {
+    color: #1D4ED8;
+
+    transform: scale(1.15);
+}
+
+
+/* =========================================================
+   EDIT
+========================================================= */
+
+.dashboard-page .edit {
+    color: #F59E0B;
+}
+
+.dashboard-page .edit:hover {
+    color: #D97706;
+
+    transform: scale(1.15);
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+.dashboard-page .delete {
+    color: #EF4444;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    box-shadow: none !important;
+}
+
+.dashboard-page .delete:hover {
+    color: #DC2626;
+
+    background: transparent !important;
+
+    transform: scale(1.15);
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   REMOVE GLOBAL BUTTON BLUE BACKGROUND
+========================================================= */
+
+.dashboard-page td:last-child button {
+    width: auto !important;
+    min-width: 0 !important;
+
+    height: auto !important;
+
+    padding: 0 !important;
+    margin: 0 12px 0 0 !important;
+
+    background: transparent !important;
+
+    color: inherit;
+
+    border: none !important;
+
+    border-radius: 0 !important;
+
+    box-shadow: none !important;
+
+    font-size: 22px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.dashboard-page td:last-child button:last-child {
+    margin-right: 0 !important;
+}
+
+.dashboard-page td:last-child button:hover {
+    background: transparent !important;
+
+    box-shadow: none !important;
+}
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .dashboard-page .cards {
+        flex-direction: column;
+    }
+
+    .dashboard-page .sidebar {
+        width: 200px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-page .wrapper {
+        flex-direction: column;
+    }
+
+    .dashboard-page .sidebar {
+        width: 100%;
+
+        display: flex;
+
+        justify-content: center;
+
+        gap: 10px;
+
+        padding: 15px;
+    }
+
+    .dashboard-page .sidebar a {
+        margin-bottom: 0;
+    }
+
+    .dashboard-page .sidebar a:hover {
+        transform: none;
+    }
+
+    .dashboard-page .content {
+        padding: 20px;
+    }
+
+    .dashboard-page .cards {
+        flex-direction: column;
+    }
+
+    .dashboard-page .table-card {
+        overflow-x: auto;
+    }
+
+    .dashboard-page table {
+        min-width: 750px;
+    }
+
+    .dashboard-page th {
+        font-size: 16px;
+    }
+
+    .dashboard-page td {
+        font-size: 16px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .dashboard-page .navbar {
+        padding: 0 20px;
+    }
+
+    .dashboard-page .logo {
+        font-size: 20px;
+    }
+
+    .dashboard-page .profile-btn span {
+        display: none;
+    }
+
+    .dashboard-page .content {
+        padding: 15px;
+    }
+
+    .dashboard-page .welcome h2 {
+        font-size: 25px;
+    }
+
+    .dashboard-page .welcome p {
+        font-size: 15px;
+    }
+
+    .dashboard-page .table-card {
+        padding: 20px;
+    }
+
+    .dashboard-page .table-header h3 {
+        font-size: 22px;
+    }
+
+    .dashboard-page th {
+        font-size: 15px;
+    }
+
+    .dashboard-page td {
+        font-size: 15px;
+    }
+}
