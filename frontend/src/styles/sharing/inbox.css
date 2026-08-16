@@ -1,0 +1,711 @@
+/* =========================================================
+   INBOX / SENT
+========================================================= */
+
+.inbox-page,
+.sent-page {
+    min-height: 100vh;
+
+    background: #F8FAFC;
+
+    color: #334155;
+
+    font-family: 'Poppins', sans-serif;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.inbox-page .navbar,
+.sent-page .navbar {
+
+    height: 70px;
+
+    background: #1E293B;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 35px;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.inbox-page .logo,
+.sent-page .logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 24px;
+
+    font-weight: 600;
+}
+
+
+.inbox-page .logo i,
+.sent-page .logo i {
+
+    color: #60A5FA;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.inbox-page .profile,
+.sent-page .profile {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 500;
+}
+
+
+.inbox-page .profile i,
+.sent-page .profile i {
+
+    font-size: 28px;
+
+    color: #60A5FA;
+}
+
+
+/* =========================================================
+   WRAPPER
+========================================================= */
+
+.inbox-page .wrapper,
+.sent-page .wrapper {
+
+    display: flex;
+
+    min-height: calc(100vh - 70px);
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.inbox-page .sidebar,
+.sent-page .sidebar {
+
+    width: 240px;
+
+    flex-shrink: 0;
+
+    background: white;
+
+    padding: 25px 15px;
+
+    box-shadow: 3px 0 12px rgba(0, 0, 0, .08);
+}
+
+
+/* =========================================================
+   SIDEBAR LINKS
+========================================================= */
+
+.inbox-page .sidebar a,
+.sent-page .sidebar a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px 18px;
+
+    margin-bottom: 12px;
+
+    color: #475569;
+
+    text-decoration: none;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    transition: .3s;
+}
+
+
+.inbox-page .sidebar a:hover,
+.sent-page .sidebar a:hover {
+
+    background: #EEF2FF;
+
+    color: #4F46E5;
+
+    transform: translateX(6px);
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   ACTIVE SIDEBAR LINK
+========================================================= */
+
+.inbox-page .sidebar .active,
+.sent-page .sidebar .active {
+
+    background: #4F46E5;
+
+    color: white;
+
+    box-shadow: 0 5px 12px rgba(79, 70, 229, .25);
+}
+
+
+.inbox-page .sidebar .active:hover,
+.sent-page .sidebar .active:hover {
+
+    background: #4F46E5;
+
+    color: white;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.inbox-page .content,
+.sent-page .content {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 35px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.inbox-page .page-header,
+.sent-page .page-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+
+.inbox-page .page-header h2,
+.sent-page .page-header h2 {
+
+    margin: 0 0 8px;
+
+    color: #1E293B;
+
+    font-size: 30px;
+
+    font-weight: 600;
+}
+
+
+.inbox-page .page-header p,
+.sent-page .page-header p {
+
+    margin: 0;
+
+    color: #64748B;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.inbox-page .table-card,
+.sent-page .table-card {
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    border: 1px solid #F1F5F9;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.inbox-page table,
+.sent-page table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.inbox-page th,
+.sent-page th {
+
+    padding: 17px;
+
+    background: #EEF2FF;
+
+    color: #4F46E5;
+
+    text-align: left;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   TABLE CONTENT
+========================================================= */
+
+.inbox-page td,
+.sent-page td {
+
+    padding: 18px 17px;
+
+    border-bottom: 1px solid #E5E7EB;
+
+    color: #475569;
+
+    font-size: 15px;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   TABLE HOVER
+========================================================= */
+
+.inbox-page tbody tr,
+.sent-page tbody tr {
+
+    transition: .25s;
+}
+
+
+.inbox-page tbody tr:hover,
+.sent-page tbody tr:hover {
+
+    background: #F8FAFC;
+}
+
+
+.inbox-page tbody tr:last-child td,
+.sent-page tbody tr:last-child td {
+
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   WEBSITE ICON
+========================================================= */
+
+.inbox-page td:first-child i,
+.sent-page td:first-child i {
+
+    color: #2563EB;
+
+    margin-right: 10px;
+}
+
+
+/* =========================================================
+   STRONG TEXT
+========================================================= */
+
+.inbox-page td strong,
+.sent-page td strong {
+
+    display: block;
+
+    color: #334155;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   SMALL TEXT
+========================================================= */
+
+.inbox-page td small,
+.sent-page td small {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: #94A3B8;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   PERMISSION
+========================================================= */
+
+.inbox-page .permission,
+.sent-page .permission {
+
+    display: inline-block;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    background: #EEF2FF;
+
+    color: #4F46E5;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.inbox-page .actions,
+.sent-page .actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+}
+
+
+/* =========================================================
+   ACTION LINKS / BUTTONS
+========================================================= */
+
+.inbox-page .actions a,
+.inbox-page .actions button,
+.sent-page .actions a,
+.sent-page .actions button {
+
+    width: auto;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 19px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition: .25s;
+}
+
+
+/* =========================================================
+   ACTION HOVER
+========================================================= */
+
+.inbox-page .actions a:hover,
+.inbox-page .actions button:hover,
+.sent-page .actions a:hover,
+.sent-page .actions button:hover {
+
+    transform: scale(1.15);
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   VIEW
+========================================================= */
+
+.inbox-page .actions .view,
+.sent-page .actions .view {
+
+    color: #2563EB;
+}
+
+
+/* =========================================================
+   EDIT
+========================================================= */
+
+.inbox-page .actions .edit,
+.sent-page .actions .edit {
+
+    color: #F59E0B;
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+.inbox-page .actions .delete,
+.sent-page .actions .delete {
+
+    color: #EF4444;
+}
+
+
+/* =========================================================
+   MANAGE
+========================================================= */
+
+.inbox-page .actions .manage,
+.sent-page .actions .manage {
+
+    color: #4F46E5;
+}
+
+
+/* =========================================================
+   REMOVE
+========================================================= */
+
+.inbox-page .actions .remove,
+.sent-page .actions .remove {
+
+    color: #EF4444;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.inbox-page .empty,
+.sent-page .empty {
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 60px 30px;
+
+    text-align: center;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .06);
+
+    color: #94A3B8;
+}
+
+
+/* =========================================================
+   EMPTY ICON
+========================================================= */
+
+.inbox-page .empty i,
+.sent-page .empty i {
+
+    font-size: 40px;
+
+    margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   EMPTY HEADING
+========================================================= */
+
+.inbox-page .empty h3,
+.sent-page .empty h3 {
+
+    margin: 10px 0;
+
+    color: #334155;
+
+    font-size: 20px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   EMPTY TEXT
+========================================================= */
+
+.inbox-page .empty p,
+.sent-page .empty p {
+
+    margin: 0;
+
+    color: #94A3B8;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.inbox-page .error,
+.sent-page .error {
+
+    color: #DC2626;
+
+    margin: 0 0 20px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .inbox-page .wrapper,
+    .sent-page .wrapper {
+
+        flex-direction: column;
+    }
+
+
+    .inbox-page .sidebar,
+    .sent-page .sidebar {
+
+        width: 100%;
+
+        display: flex;
+
+        justify-content: center;
+
+        gap: 5px;
+
+        padding: 15px;
+    }
+
+
+    .inbox-page .sidebar a,
+    .sent-page .sidebar a {
+
+        margin-bottom: 0;
+    }
+
+
+    .inbox-page .sidebar a:hover,
+    .sent-page .sidebar a:hover {
+
+        transform: none;
+    }
+
+
+    .inbox-page .content,
+    .sent-page .content {
+
+        padding: 20px;
+    }
+
+
+    .inbox-page table,
+    .sent-page table {
+
+        min-width: 750px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .inbox-page .navbar,
+    .sent-page .navbar {
+
+        padding: 0 20px;
+    }
+
+
+    .inbox-page .logo,
+    .sent-page .logo {
+
+        font-size: 20px;
+    }
+
+
+    .inbox-page .profile span,
+    .sent-page .profile span {
+
+        display: none;
+    }
+
+
+    .inbox-page .content,
+    .sent-page .content {
+
+        padding: 15px;
+    }
+}

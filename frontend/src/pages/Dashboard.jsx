@@ -265,6 +265,17 @@ function Dashboard() {
 
 
     // =====================================================
+    // SHARE PASSWORD
+    // =====================================================
+
+    function handleShare(id) {
+
+        navigate(`/share-password/${id}`);
+
+    }
+
+
+    // =====================================================
     // LOADING
     // =====================================================
 
@@ -461,6 +472,24 @@ function Dashboard() {
                         <i className="fa-solid fa-plus"></i>
 
                         Add Password
+
+                    </Link>
+
+
+                    <Link to="/inbox">
+
+                        <i className="fa-solid fa-inbox"></i>
+
+                        Inbox
+
+                    </Link>
+
+
+                    <Link to="/sent">
+
+                        <i className="fa-solid fa-paper-plane"></i>
+
+                        Sent
 
                     </Link>
 
@@ -696,6 +725,24 @@ function Dashboard() {
                                                         <i className="fa-solid fa-pen action edit"></i>
 
                                                     </Link>
+
+
+                                                    {/* Share */}
+
+                                                    <button
+                                                        type="button"
+                                                        className="share-password-btn"
+                                                        onClick={() =>
+                                                            handleShare(
+                                                                password.id
+                                                            )
+                                                        }
+                                                        title="Share Password"
+                                                    >
+
+                                                        <i className="fa-solid fa-share-nodes action share"></i>
+
+                                                    </button>
 
 
                                                     {/* Delete */}

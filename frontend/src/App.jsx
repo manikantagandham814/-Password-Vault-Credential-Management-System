@@ -30,6 +30,16 @@ import EditPassword from "./pages/EditPassword";
 
 
 // =====================================================
+// SHARING
+// =====================================================
+
+import Inbox from "./pages/Inbox";
+import Sent from "./pages/Sent";
+import SharePassword from "./pages/SharePassword";
+import SharedPassword from "./pages/SharedPassword";
+
+
+// =====================================================
 // PROFILE
 // =====================================================
 
@@ -122,6 +132,42 @@ function App() {
                 <Route
                     path="/edit-password/:id"
                     element={<EditPassword />}
+                />
+
+
+                {/* =================================================
+                    SHARING
+                ================================================= */}
+
+                {/* Passwords shared with the logged-in user */}
+
+                <Route
+                    path="/inbox"
+                    element={<Inbox />}
+                />
+
+
+                {/* Passwords shared by the logged-in user */}
+
+                <Route
+                    path="/sent"
+                    element={<Sent />}
+                />
+
+
+                {/* Share a password */}
+
+                <Route
+                    path="/share-password/:id"
+                    element={<SharePassword />}
+                />
+
+
+                {/* View a shared password */}
+
+                <Route
+                    path="/shared-password/:shareId"
+                    element={<SharedPassword />}
                 />
 
 
