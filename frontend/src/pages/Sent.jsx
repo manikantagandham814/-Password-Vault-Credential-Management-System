@@ -628,6 +628,21 @@ function Sent() {
 
                     </Link>
 
+                     <Link to="/login-history">
+
+        <i className="fa-solid fa-clock-rotate-left"></i>
+
+        Login History
+
+    </Link>
+    <Link to="/security">
+
+        <i className="fa-solid fa-shield-halved"></i>
+
+        Security
+
+    </Link>
+
                 </aside>
 
 

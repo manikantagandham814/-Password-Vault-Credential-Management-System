@@ -1,0 +1,803 @@
+/* =====================================================
+   SECURITY PAGE
+   Uses the existing Dashboard layout.
+   Only Security-specific styles are defined here.
+   ===================================================== */
+
+/* =====================================================
+   SECURITY HEADER
+   ===================================================== */
+
+.dashboard-page .security-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 22px;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   TITLE AREA
+   ===================================================== */
+
+.dashboard-page .security-header > div:first-child {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    width: auto;
+}
+
+
+.dashboard-page .security-header h2 {
+    display: block;
+
+    width: auto;
+
+    margin: 0 0 6px;
+
+    padding: 0;
+
+    color: #172033;
+
+    font-size: 28px;
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.dashboard-page .security-header p {
+    width: auto;
+
+    max-width: none;
+
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   REFRESH BUTTON
+   ===================================================== */
+
+.dashboard-page .security-header .security-refresh {
+    flex: 0 0 auto;
+
+    width: auto !important;
+    min-width: 95px;
+    max-width: max-content;
+
+    height: 40px;
+
+    margin: 0;
+
+    padding: 0 16px;
+
+    box-sizing: border-box;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    border: 1px solid #d9dee7;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #374151;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.dashboard-page .security-header .security-refresh:hover {
+    background: #f5f7fa;
+
+    border-color: #c5ccd6;
+
+    transform: translateY(-1px);
+}
+
+
+.dashboard-page .security-header .security-refresh i {
+    width: auto;
+
+    margin: 0;
+
+    font-size: 12px;
+}
+
+/* =====================================================
+   SECURITY STATUS
+   ===================================================== */
+
+.dashboard-page .security-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    min-height: 75px;
+
+    padding: 14px 18px;
+
+    margin-bottom: 22px;
+
+    box-sizing: border-box;
+
+    border: 1px solid;
+
+    border-radius: 9px;
+}
+
+
+/* =====================================================
+   DANGER
+   ===================================================== */
+
+.dashboard-page .security-danger {
+    background: #fff7ed;
+
+    border-color: #fed7aa;
+}
+
+
+/* =====================================================
+   SAFE
+   ===================================================== */
+
+.dashboard-page .security-safe {
+    background: #f0fdf4;
+
+    border-color: #bbf7d0;
+}
+
+
+/* =====================================================
+   STATUS ICON
+   ===================================================== */
+
+.dashboard-page .security-status-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+}
+
+
+.dashboard-page .security-danger .security-status-icon {
+    background: #ffedd5;
+
+    color: #ea580c;
+}
+
+
+.dashboard-page .security-safe .security-status-icon {
+    background: #dcfce7;
+
+    color: #16a34a;
+}
+
+
+.dashboard-page .security-status-icon i {
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   STATUS TEXT
+   ===================================================== */
+
+.dashboard-page .security-status-text {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    min-width: 0;
+}
+
+
+.dashboard-page .security-status-text strong {
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.dashboard-page .security-status-text span {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+
+/* =====================================================
+   ACTION REQUIRED
+   ===================================================== */
+
+.dashboard-page .security-action-required {
+    flex-shrink: 0;
+
+    padding: 6px 10px;
+
+    border-radius: 5px;
+
+    background: #dc2626;
+
+    color: #ffffff;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 0.3px;
+}
+
+
+/* =====================================================
+   ERROR
+   ===================================================== */
+
+.dashboard-page .security-error {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 12px 14px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 7px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   SECURITY CARD
+   ===================================================== */
+
+.dashboard-page .security-card {
+    margin-bottom: 22px;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   SECURITY ALERT CARD
+   ===================================================== */
+
+.dashboard-page .security-alert-card-section {
+    border-top: 3px solid #f97316;
+}
+
+
+/* =====================================================
+   SECTION HEADER
+   ===================================================== */
+
+.dashboard-page .security-section-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+/* =====================================================
+   SECTION TITLE
+   ===================================================== */
+
+.dashboard-page .security-section-header h3 {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 0 0 4px;
+
+    color: #1f2937;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+.dashboard-page .security-section-header h3 i {
+    color: #2563eb;
+
+    font-size: 14px;
+}
+
+
+.dashboard-page
+.security-alert-card-section
+.security-section-header
+h3
+i {
+    color: #ea580c;
+}
+
+
+/* =====================================================
+   SECTION DESCRIPTION
+   ===================================================== */
+
+.dashboard-page .security-section-header p {
+    margin: 0;
+
+    color: #9ca3af;
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   COUNT
+   ===================================================== */
+
+.dashboard-page .security-count {
+    min-width: 28px;
+    height: 28px;
+
+    padding: 0 8px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+.dashboard-page .danger-count {
+    background: #fee2e2;
+
+    color: #dc2626;
+}
+
+
+/* =====================================================
+   ALERT LIST
+   ===================================================== */
+
+.dashboard-page .security-alert-list {
+    padding: 12px;
+}
+
+
+/* =====================================================
+   ALERT ITEM
+   ===================================================== */
+
+.dashboard-page .security-alert-item {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 14px;
+
+    padding: 15px;
+
+    margin-bottom: 9px;
+
+    border: 1px solid #fed7aa;
+
+    border-left: 4px solid #f97316;
+
+    border-radius: 7px;
+
+    background: #fffaf5;
+
+    transition: background 0.2s ease;
+}
+
+
+.dashboard-page .security-alert-item:last-child {
+    margin-bottom: 0;
+}
+
+
+.dashboard-page .security-alert-item:hover {
+    background: #fff7ed;
+}
+
+
+/* =====================================================
+   ALERT ICON
+   ===================================================== */
+
+.dashboard-page .security-alert-icon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #ffedd5;
+
+    color: #ea580c;
+}
+
+
+.dashboard-page .security-alert-icon i {
+    font-size: 16px;
+}
+
+
+/* =====================================================
+   ALERT CONTENT
+   ===================================================== */
+
+.dashboard-page .security-alert-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.dashboard-page .security-alert-title {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 5px;
+}
+
+
+.dashboard-page .security-alert-title h4 {
+    margin: 0;
+
+    color: #374151;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.dashboard-page .security-alert-content p {
+    margin: 0 0 9px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   HIGH BADGE
+   ===================================================== */
+
+.dashboard-page .high-badge {
+    flex-shrink: 0;
+
+    padding: 4px 7px;
+
+    border-radius: 4px;
+
+    background: #dc2626;
+
+    color: #ffffff;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.4px;
+}
+
+
+/* =====================================================
+   ALERT META
+   ===================================================== */
+
+.dashboard-page .security-alert-meta {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px 14px;
+}
+
+
+.dashboard-page .security-alert-meta span {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    color: #9ca3af;
+
+    font-size: 10px;
+}
+
+
+.dashboard-page .security-alert-meta i {
+    font-size: 9px;
+}
+
+
+/* =====================================================
+   UNREAD
+   ===================================================== */
+
+.dashboard-page .unread-status {
+    color: #dc2626 !important;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.dashboard-page .security-empty {
+    min-height: 145px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px 18px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+}
+
+
+.dashboard-page .security-empty > i {
+    margin-bottom: 9px;
+
+    color: #9ca3af;
+
+    font-size: 22px;
+}
+
+
+.dashboard-page .security-empty h4 {
+    margin: 0 0 5px;
+
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 650;
+}
+
+
+.dashboard-page .security-empty p {
+    margin: 0;
+
+    color: #9ca3af;
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   SECURITY TABLE
+   ===================================================== */
+
+.dashboard-page .security-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+.dashboard-page .security-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+
+.dashboard-page .security-table th {
+    padding: 11px 17px;
+
+    background: #fafafa;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    text-align: left;
+
+    white-space: nowrap;
+
+    color: #6b7280;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+.dashboard-page .security-table td {
+    padding: 13px 17px;
+
+    border-bottom: 1px solid #f0f1f3;
+
+    color: #6b7280;
+
+    font-size: 11px;
+
+    line-height: 1.45;
+
+    vertical-align: middle;
+}
+
+
+.dashboard-page .security-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.dashboard-page .security-table tbody tr:hover {
+    background: #fafafa;
+}
+
+
+.dashboard-page .security-table td strong {
+    color: #374151;
+
+    font-size: 11px;
+    font-weight: 650;
+}
+
+
+/* =====================================================
+   FLAGGED
+   ===================================================== */
+
+.dashboard-page .flagged-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 8px;
+
+    border-radius: 12px;
+
+    background: #fff7ed;
+
+    color: #c2410c;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+.dashboard-page .flagged-badge i {
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    .dashboard-page .security-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .dashboard-page .security-refresh {
+        align-self: flex-start;
+    }
+
+
+    .dashboard-page .security-status {
+        align-items: flex-start;
+    }
+
+
+    .dashboard-page .security-action-required {
+        display: none;
+    }
+
+
+    .dashboard-page .security-alert-title {
+        align-items: flex-start;
+    }
+
+
+    .dashboard-page .security-section-header {
+        padding: 13px 14px;
+    }
+
+
+    .dashboard-page .security-table th,
+    .dashboard-page .security-table td {
+        padding: 10px 12px;
+    }
+
+}

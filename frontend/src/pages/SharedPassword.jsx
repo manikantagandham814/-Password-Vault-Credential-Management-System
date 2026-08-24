@@ -22,6 +22,10 @@ function SharedPassword() {
         useState("");
 
 
+    // =====================================================
+    // LOAD SHARED PASSWORD
+    // =====================================================
+
     useEffect(() => {
 
         async function load() {
@@ -32,22 +36,21 @@ function SharedPassword() {
                     await fetch(
                         `http://localhost:8082/api/shares/${shareId}`,
                         {
+                            method: "GET",
                             credentials: "include"
                         }
                     );
 
 
-                if (
-                    response.status === 401
-                ) {
+                if (response.status === 401) {
+
                     navigate("/login");
+
                     return;
                 }
 
 
-                if (
-                    response.status === 403
-                ) {
+                if (response.status === 403) {
 
                     setError(
                         "You do not have access to this password."
@@ -59,8 +62,12 @@ function SharedPassword() {
 
                 if (!response.ok) {
 
+                    const message =
+                        await response.text();
+
                     setError(
-                        await response.text()
+                        message ||
+                        "Unable to load shared password"
                     );
 
                     return;
@@ -70,20 +77,29 @@ function SharedPassword() {
                 const result =
                     await response.json();
 
+
                 setData(result);
+
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "Shared password error:",
+                    error
+                );
+
 
                 setError(
                     "Unable to load shared password"
                 );
 
+
             } finally {
 
                 setLoading(false);
+
             }
+
         }
 
 
@@ -92,21 +108,39 @@ function SharedPassword() {
     }, [shareId, navigate]);
 
 
+    // =====================================================
+    // LOADING
+    // =====================================================
+
     if (loading) {
 
         return (
+
             <div className="shared-password-page">
+
                 <div className="card">
-                    <h2>Loading...</h2>
+
+                    <h2>
+                        Loading...
+                    </h2>
+
                 </div>
+
             </div>
+
         );
+
     }
 
+
+    // =====================================================
+    // ERROR
+    // =====================================================
 
     if (error) {
 
         return (
+
             <div className="shared-password-page">
 
                 <div className="card">
@@ -115,25 +149,47 @@ function SharedPassword() {
                         Access Denied
                     </h2>
 
+
                     <p className="error">
                         {error}
                     </p>
 
-                    <Link to="/inbox">
-                        Back to Inbox
-                    </Link>
+
+                    <div className="buttons">
+
+                        <Link to="/inbox">
+
+                            <i className="fa-solid fa-arrow-left"></i>
+
+                            {" "}Back to Inbox
+
+                        </Link>
+
+                    </div>
 
                 </div>
 
             </div>
+
         );
+
     }
 
+
+    // =====================================================
+    // NO DATA
+    // =====================================================
 
     if (!data) {
+
         return null;
+
     }
 
+
+    // =====================================================
+    // MAIN UI
+    // =====================================================
 
     return (
 
@@ -141,11 +197,23 @@ function SharedPassword() {
 
             <div className="card">
 
+
+                {/* =================================================
+                    HEADER
+                ================================================= */}
+
                 <h2>
+
                     <i className="fa-solid fa-share-nodes"></i>
+
                     Shared Password
+
                 </h2>
 
+
+                {/* =================================================
+                    WEBSITE
+                ================================================= */}
 
                 <div className="row">
 
@@ -160,6 +228,10 @@ function SharedPassword() {
                 </div>
 
 
+                {/* =================================================
+                    WEBSITE URL
+                ================================================= */}
+
                 <div className="row">
 
                     <label>
@@ -167,11 +239,30 @@ function SharedPassword() {
                     </label>
 
                     <p>
-                        {data.websiteUrl || "-"}
+
+                        {data.websiteUrl ? (
+
+                            <a
+                                href={data.websiteUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {data.websiteUrl}
+                            </a>
+
+                        ) : (
+
+                            "-"
+                        )}
+
                     </p>
 
                 </div>
 
+
+                {/* =================================================
+                    USERNAME
+                ================================================= */}
 
                 <div className="row">
 
@@ -186,11 +277,16 @@ function SharedPassword() {
                 </div>
 
 
+                {/* =================================================
+                    PASSWORD
+                ================================================= */}
+
                 <div className="row">
 
                     <label>
                         Password
                     </label>
+
 
                     <div className="password-box">
 
@@ -200,18 +296,28 @@ function SharedPassword() {
                                     ? "text"
                                     : "password"
                             }
-                            value={data.password}
+                            value={
+                                data.password || ""
+                            }
                             readOnly
                         />
+
 
                         <button
                             type="button"
                             onClick={() =>
                                 setShowPassword(
-                                    value => !value
+                                    value =>
+                                        !value
                                 )
                             }
+                            title={
+                                showPassword
+                                    ? "Hide Password"
+                                    : "Show Password"
+                            }
                         >
+
                             <i
                                 className={
                                     showPassword
@@ -219,12 +325,17 @@ function SharedPassword() {
                                         : "fa-solid fa-eye"
                                 }
                             ></i>
+
                         </button>
 
                     </div>
 
                 </div>
 
+
+                {/* =================================================
+                    CATEGORY
+                ================================================= */}
 
                 <div className="row">
 
@@ -239,6 +350,10 @@ function SharedPassword() {
                 </div>
 
 
+                {/* =================================================
+                    NOTES
+                ================================================= */}
+
                 <div className="row">
 
                     <label>
@@ -252,23 +367,18 @@ function SharedPassword() {
                 </div>
 
 
-                <div className="permission-box">
-
-                    <strong>
-                        Your Permission
-                    </strong>
-
-                    <span>
-                        {data.permission}
-                    </span>
-
-                </div>
-
+                {/* =================================================
+                    BACK BUTTON
+                ================================================= */}
 
                 <div className="buttons">
 
                     <Link to="/inbox">
-                        Back to Inbox
+
+                        <i className="fa-solid fa-arrow-left"></i>
+
+                        {" "}Back to Inbox
+
                     </Link>
 
                 </div>
@@ -276,7 +386,9 @@ function SharedPassword() {
             </div>
 
         </div>
+
     );
+
 }
 
 export default SharedPassword;

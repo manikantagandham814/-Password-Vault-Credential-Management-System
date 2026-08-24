@@ -40,6 +40,20 @@ import SharedPassword from "./pages/SharedPassword";
 
 
 // =====================================================
+// LOGIN HISTORY
+// =====================================================
+
+import LoginHistory from "./pages/LoginHistory";
+
+
+// =====================================================
+// SECURITY
+// =====================================================
+
+import Security from "./pages/Security";
+
+
+// =====================================================
 // PROFILE
 // =====================================================
 
@@ -139,35 +153,44 @@ function App() {
                     SHARING
                 ================================================= */}
 
-                {/* Passwords shared with the logged-in user */}
-
                 <Route
                     path="/inbox"
                     element={<Inbox />}
                 />
-
-
-                {/* Passwords shared by the logged-in user */}
 
                 <Route
                     path="/sent"
                     element={<Sent />}
                 />
 
-
-                {/* Share a password */}
-
                 <Route
                     path="/share-password/:id"
                     element={<SharePassword />}
                 />
 
-
-                {/* View a shared password */}
-
                 <Route
                     path="/shared-password/:shareId"
                     element={<SharedPassword />}
+                />
+
+
+                {/* =================================================
+                    LOGIN HISTORY
+                ================================================= */}
+
+                <Route
+                    path="/login-history"
+                    element={<LoginHistory />}
+                />
+
+
+                {/* =================================================
+                    SECURITY
+                ================================================= */}
+
+                <Route
+                    path="/security"
+                    element={<Security />}
                 />
 
 

@@ -1,0 +1,583 @@
+/* =====================================================
+   LOGIN HISTORY PAGE
+   All styles are scoped to .login-history-page
+   ===================================================== */
+
+.login-history-page {
+    min-height: 100vh;
+    background: #F8FAFC;
+    color: #334155;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+/* =====================================================
+   NAVBAR
+   ===================================================== */
+
+.login-history-page .navbar {
+    height: 70px;
+
+    background: #1E293B;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 35px;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+
+    box-sizing: border-box;
+}
+
+
+.login-history-page .logo {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 24px;
+    font-weight: 600;
+
+    color: white;
+}
+
+
+.login-history-page .logo i {
+    color: #60A5FA;
+}
+
+
+/* =====================================================
+   PROFILE
+   ===================================================== */
+
+.login-history-page .profile {
+    position: relative;
+}
+
+
+.login-history-page .profile-btn {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    border: none;
+    background: transparent;
+
+    color: white;
+
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    padding: 8px 10px;
+
+    border-radius: 8px;
+
+    transition: .2s;
+}
+
+
+.login-history-page .profile-btn:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+
+.login-history-page .profile-btn > i:first-child {
+    font-size: 29px;
+}
+
+
+.login-history-page .profile-btn > i:last-child {
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   PROFILE DROPDOWN
+   ===================================================== */
+
+.login-history-page .dropdown {
+    position: absolute;
+
+    top: calc(100% + 10px);
+    right: 0;
+
+    width: 210px;
+
+    background: white;
+
+    border-radius: 10px;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
+
+    border: 1px solid #E5E7EB;
+
+    padding: 8px;
+
+    z-index: 1000;
+}
+
+
+.login-history-page .dropdown a {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 12px;
+
+    color: #334155;
+
+    text-decoration: none;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+
+    transition: .2s;
+}
+
+
+.login-history-page .dropdown a:hover {
+    background: #EEF2FF;
+    color: #4F46E5;
+}
+
+
+.login-history-page .dropdown a i {
+    width: 18px;
+
+    text-align: center;
+}
+
+
+.login-history-page .dropdown hr {
+    border: none;
+
+    border-top: 1px solid #E5E7EB;
+
+    margin: 6px 0;
+}
+
+
+/* =====================================================
+   MAIN WRAPPER
+   ===================================================== */
+
+.login-history-page .wrapper {
+    display: flex;
+
+    min-height: calc(100vh - 70px);
+}
+
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+
+.login-history-page .sidebar {
+    width: 240px;
+
+    flex-shrink: 0;
+
+    background: white;
+
+    padding: 25px 15px;
+
+    box-shadow: 3px 0 12px rgba(0, 0, 0, .08);
+
+    box-sizing: border-box;
+}
+
+
+.login-history-page .sidebar a {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px 18px;
+
+    margin-bottom: 12px;
+
+    color: #475569;
+
+    text-decoration: none;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    transition: .3s;
+
+    box-sizing: border-box;
+}
+
+
+.login-history-page .sidebar a i {
+    width: 20px;
+
+    text-align: center;
+
+    flex-shrink: 0;
+}
+
+
+.login-history-page .sidebar a:hover {
+    background: #EEF2FF;
+
+    color: #4F46E5;
+
+    transform: translateX(6px);
+}
+
+
+.login-history-page .sidebar a.active {
+    background: #4F46E5;
+
+    color: white;
+
+    box-shadow:
+        0 5px 12px rgba(79, 70, 229, .25);
+}
+
+
+/* =====================================================
+   CONTENT
+   ===================================================== */
+
+.login-history-page .content {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 35px;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+   ===================================================== */
+
+.login-history-page .welcome {
+    margin-bottom: 30px;
+}
+
+
+.login-history-page .welcome h2 {
+    margin: 0 0 8px;
+
+    color: #1E293B;
+
+    font-size: 30px;
+
+    font-weight: 600;
+
+    line-height: 1.2;
+}
+
+
+.login-history-page .welcome p {
+    margin: 0;
+
+    color: #64748B;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   TABLE CARD
+   ===================================================== */
+
+.login-history-page .table-card {
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    border: 1px solid #F1F5F9;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, .08);
+
+    overflow-x: auto;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   TABLE HEADER
+   ===================================================== */
+
+.login-history-page .table-header {
+    display: flex;
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+
+.login-history-page .table-header h3 {
+    margin: 0;
+
+    color: #1E293B;
+
+    font-size: 22px;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   TABLE
+   ===================================================== */
+
+.login-history-page table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 650px;
+}
+
+
+.login-history-page th {
+    padding: 17px;
+
+    background: #EEF2FF;
+
+    color: #4F46E5;
+
+    text-align: left;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+.login-history-page td {
+    padding: 18px 17px;
+
+    border-bottom: 1px solid #E5E7EB;
+
+    color: #475569;
+
+    font-size: 15px;
+
+    vertical-align: middle;
+}
+
+
+.login-history-page tbody tr {
+    transition: .2s;
+}
+
+
+.login-history-page tbody tr:hover {
+    background: #F8FAFC;
+}
+
+
+.login-history-page td:first-child i {
+    color: #2563EB;
+
+    margin-right: 8px;
+}
+
+
+.login-history-page td:last-child i {
+    color: #64748B;
+
+    margin-right: 7px;
+}
+
+
+/* =====================================================
+   LOGIN STATUS
+   ===================================================== */
+
+.login-history-page .login-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.login-history-page .login-status.success {
+    background: #DCFCE7;
+
+    color: #16A34A;
+}
+
+
+.login-history-page .login-status.failed {
+    background: #FEE2E2;
+
+    color: #DC2626;
+}
+
+
+.login-history-page .login-status i {
+    margin: 0;
+
+    color: inherit !important;
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.login-history-page .empty {
+    padding: 60px 30px;
+
+    text-align: center;
+
+    color: #94A3B8;
+}
+
+
+.login-history-page .empty > i {
+    display: block;
+
+    font-size: 40px;
+
+    margin-bottom: 15px;
+}
+
+
+.login-history-page .empty h3 {
+    margin: 10px 0;
+
+    color: #334155;
+
+    font-size: 20px;
+
+    font-weight: 600;
+}
+
+
+.login-history-page .empty p {
+    margin: 0;
+
+    color: #94A3B8;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   ERROR
+   ===================================================== */
+
+.login-history-page .error {
+    margin: 0 0 20px;
+
+    color: #DC2626;
+
+    font-size: 14px;
+
+    font-weight: 500;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    .login-history-page .navbar {
+        padding: 0 20px;
+    }
+
+
+    .login-history-page .logo {
+        font-size: 20px;
+    }
+
+
+    .login-history-page .wrapper {
+        flex-direction: column;
+    }
+
+
+    .login-history-page .sidebar {
+        width: 100%;
+
+        display: flex;
+
+        justify-content: center;
+
+        gap: 5px;
+
+        padding: 15px;
+
+        overflow-x: auto;
+    }
+
+
+    .login-history-page .sidebar a {
+        margin-bottom: 0;
+
+        white-space: nowrap;
+
+        padding: 12px 14px;
+    }
+
+
+    .login-history-page .sidebar a:hover {
+        transform: none;
+    }
+
+
+    .login-history-page .content {
+        padding: 20px;
+    }
+
+
+    .login-history-page .welcome h2 {
+        font-size: 26px;
+    }
+
+
+    .login-history-page .table-card {
+        padding: 18px;
+    }
+
+
+    .login-history-page .table-header h3 {
+        font-size: 19px;
+    }
+}

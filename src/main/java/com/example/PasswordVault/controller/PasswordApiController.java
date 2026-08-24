@@ -12,6 +12,7 @@ import com.example.PasswordVault.entity.Password;
 import com.example.PasswordVault.entity.User;
 import com.example.PasswordVault.repository.UserRepository;
 import com.example.PasswordVault.service.PasswordService;
+import com.example.PasswordVault.service.PasswordShareService;
 import com.example.PasswordVault.util.AESUtil;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,9 @@ public class PasswordApiController {
 
     @Autowired
     private PasswordService passwordService;
+
+    @Autowired
+    private PasswordShareService passwordShareService;
 
     @Autowired
     private UserRepository userRepository;
@@ -164,27 +168,12 @@ public class PasswordApiController {
             @PathVariable Long id,
             HttpSession session) {
 
-        String email =
-                (String) session.getAttribute("email");
-
-        if (email == null) {
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Please login first");
-        }
-
-        User user =
-                userRepository
-                        .findByEmail(email)
-                        .orElse(null);
+        User user = getLoggedInUser(session);
 
         if (user == null) {
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("User not found");
+            return unauthorized();
         }
+
 
         Password password =
                 passwordService.getPasswordById(id);
@@ -197,11 +186,13 @@ public class PasswordApiController {
         }
 
 
-        // Make sure this password belongs
-        // to the logged-in user
+        // =================================================
+        // OWNER OR SHARED USER
+        // =================================================
 
-        if (!password.getUser().getId()
-                .equals(user.getId())) {
+        if (!passwordShareService.canView(
+                password,
+                user)) {
 
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
@@ -242,27 +233,12 @@ public class PasswordApiController {
             @RequestBody PasswordRequest request,
             HttpSession session) {
 
-        String email =
-                (String) session.getAttribute("email");
-
-        if (email == null) {
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Please login first");
-        }
-
-        User user =
-                userRepository
-                        .findByEmail(email)
-                        .orElse(null);
+        User user = getLoggedInUser(session);
 
         if (user == null) {
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("User not found");
+            return unauthorized();
         }
+
 
         Password password =
                 passwordService.getPasswordById(id);
@@ -275,15 +251,19 @@ public class PasswordApiController {
         }
 
 
-        // Make sure this password belongs
-        // to the logged-in user
+        // =================================================
+        // OWNER OR EDIT/FULL MANAGEMENT
+        // =================================================
 
-        if (!password.getUser().getId()
-                .equals(user.getId())) {
+        if (!passwordShareService.canEdit(
+                password,
+                user)) {
 
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
-                    .body("Access denied");
+                    .body(
+                        "You do not have permission to edit this password"
+                    );
         }
 
 
@@ -309,27 +289,12 @@ public class PasswordApiController {
             @PathVariable Long id,
             HttpSession session) {
 
-        String email =
-                (String) session.getAttribute("email");
-
-        if (email == null) {
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Please login first");
-        }
-
-        User user =
-                userRepository
-                        .findByEmail(email)
-                        .orElse(null);
+        User user = getLoggedInUser(session);
 
         if (user == null) {
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("User not found");
+            return unauthorized();
         }
+
 
         Password password =
                 passwordService.getPasswordById(id);
@@ -342,15 +307,19 @@ public class PasswordApiController {
         }
 
 
-        // Make sure this password belongs
-        // to the logged-in user
+        // =================================================
+        // OWNER OR FULL MANAGEMENT
+        // =================================================
 
-        if (!password.getUser().getId()
-                .equals(user.getId())) {
+        if (!passwordShareService.canDelete(
+                password,
+                user)) {
 
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
-                    .body("Access denied");
+                    .body(
+                        "You do not have permission to delete this password"
+                    );
         }
 
 
@@ -360,6 +329,40 @@ public class PasswordApiController {
         return ResponseEntity.ok(
                 "Password Deleted Successfully"
         );
+    }
+
+
+    // =====================================================
+    // SESSION USER
+    // =====================================================
+
+    private User getLoggedInUser(
+            HttpSession session) {
+
+        String email =
+                (String) session.getAttribute("email");
+
+
+        if (email == null) {
+            return null;
+        }
+
+
+        return userRepository
+                .findByEmail(email)
+                .orElse(null);
+    }
+
+
+    // =====================================================
+    // UNAUTHORIZED
+    // =====================================================
+
+    private ResponseEntity<?> unauthorized() {
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Please login first");
     }
 
 

@@ -295,6 +295,7 @@ function Passwords() {
         if (!confirmDelete) {
 
             return;
+
         }
 
 
@@ -315,6 +316,7 @@ function Passwords() {
                 navigate("/login");
 
                 return;
+
             }
 
 
@@ -325,6 +327,7 @@ function Passwords() {
                 );
 
                 return;
+
             }
 
 
@@ -345,6 +348,7 @@ function Passwords() {
 
 
                 return;
+
             }
 
 
@@ -413,24 +417,11 @@ function Passwords() {
 
         } finally {
 
-            navigate("/login");
+            navigate(
+                "/login"
+            );
 
         }
-
-    }
-
-
-    // =====================================================
-    // PROFILE BUTTON
-    // =====================================================
-
-    function toggleProfile(e) {
-
-        e.stopPropagation();
-
-        setProfileOpen(
-            value => !value
-        );
 
     }
 
@@ -447,22 +438,14 @@ function Passwords() {
 
                 <header className="navbar">
 
+
                     {/* LOGO */}
 
                     <div className="logo">
 
-                        <i
-                            className="fa-solid fa-lock"
-                            style={{
-                                fontSize: "18px"
-                            }}
-                        ></i>
+                        <i className="fa-solid fa-lock"></i>
 
-                        <span
-                            style={{
-                                fontSize: "20px"
-                            }}
-                        >
+                        <span>
                             PasswordVault
                         </span>
 
@@ -476,34 +459,84 @@ function Passwords() {
                         <button
                             type="button"
                             className="profile-btn"
-                            onClick={
-                                toggleProfile
-                            }
+                            onClick={(e) => {
+
+                                e.stopPropagation();
+
+                                setProfileOpen(
+                                    value =>
+                                        !value
+                                );
+
+                            }}
                         >
 
-                            <i
-                                className="fa-solid fa-circle-user"
-                                style={{
-                                    fontSize: "17px"
-                                }}
-                            ></i>
+                            <i className="fa-solid fa-circle-user"></i>
 
-                            <span
-                                style={{
-                                    fontSize: "14px"
-                                }}
-                            >
+                            <span>
                                 {fullName}
                             </span>
 
-                            <i
-                                className="fa-solid fa-angle-down"
-                                style={{
-                                    fontSize: "11px"
-                                }}
-                            ></i>
+                            <i className="fa-solid fa-angle-down"></i>
 
                         </button>
+
+
+                        {profileOpen && (
+
+                            <div
+                                className="dropdown show"
+                                onClick={(e) =>
+                                    e.stopPropagation()
+                                }
+                            >
+
+                                <Link to="/profile">
+
+                                    <i className="fa-solid fa-user"></i>
+
+                                    My Profile
+
+                                </Link>
+
+
+                                <Link to="/change-password">
+
+                                    <i className="fa-solid fa-key"></i>
+
+                                    Change Password
+
+                                </Link>
+
+
+                                <Link to="/settings">
+
+                                    <i className="fa-solid fa-gear"></i>
+
+                                    Settings
+
+                                </Link>
+
+
+                                <hr />
+
+
+                                <a
+                                    href="/login"
+                                    onClick={
+                                        handleLogout
+                                    }
+                                >
+
+                                    <i className="fa-solid fa-right-from-bracket"></i>
+
+                                    Logout
+
+                                </a>
+
+                            </div>
+
+                        )}
 
                     </div>
 
@@ -516,20 +549,9 @@ function Passwords() {
 
                         <Link to="/dashboard">
 
-                            <i
-                                className="fa-solid fa-chart-line"
-                                style={{
-                                    fontSize: "15px"
-                                }}
-                            ></i>
+                            <i className="fa-solid fa-chart-line"></i>
 
-                            <span
-                                style={{
-                                    fontSize: "14px"
-                                }}
-                            >
-                                Overview
-                            </span>
+                            Overview
 
                         </Link>
 
@@ -539,80 +561,36 @@ function Passwords() {
                             className="active"
                         >
 
-                            <i
-                                className="fa-solid fa-key"
-                                style={{
-                                    fontSize: "15px"
-                                }}
-                            ></i>
+                            <i className="fa-solid fa-key"></i>
 
-                            <span
-                                style={{
-                                    fontSize: "14px"
-                                }}
-                            >
-                                My Passwords
-                            </span>
+                            My Passwords
 
                         </Link>
 
 
                         <Link to="/add-password">
 
-                            <i
-                                className="fa-solid fa-plus"
-                                style={{
-                                    fontSize: "15px"
-                                }}
-                            ></i>
+                            <i className="fa-solid fa-plus"></i>
 
-                            <span
-                                style={{
-                                    fontSize: "14px"
-                                }}
-                            >
-                                Add Password
-                            </span>
+                            Add Password
 
                         </Link>
 
 
                         <Link to="/inbox">
 
-                            <i
-                                className="fa-solid fa-inbox"
-                                style={{
-                                    fontSize: "15px"
-                                }}
-                            ></i>
+                            <i className="fa-solid fa-inbox"></i>
 
-                            <span
-                                style={{
-                                    fontSize: "14px"
-                                }}
-                            >
-                                Inbox
-                            </span>
+                            Inbox
 
                         </Link>
 
 
                         <Link to="/sent">
 
-                            <i
-                                className="fa-solid fa-paper-plane"
-                                style={{
-                                    fontSize: "15px"
-                                }}
-                            ></i>
+                            <i className="fa-solid fa-paper-plane"></i>
 
-                            <span
-                                style={{
-                                    fontSize: "14px"
-                                }}
-                            >
-                                Sent
-                            </span>
+                            Sent
 
                         </Link>
 
@@ -660,18 +638,9 @@ function Passwords() {
 
                 <div className="logo">
 
-                    <i
-                        className="fa-solid fa-lock"
-                        style={{
-                            fontSize: "18px"
-                        }}
-                    ></i>
+                    <i className="fa-solid fa-lock"></i>
 
-                    <span
-                        style={{
-                            fontSize: "20px"
-                        }}
-                    >
+                    <span>
                         PasswordVault
                     </span>
 
@@ -687,32 +656,25 @@ function Passwords() {
                     <button
                         type="button"
                         className="profile-btn"
-                        onClick={
-                            toggleProfile
-                        }
+                        onClick={(e) => {
+
+                            e.stopPropagation();
+
+                            setProfileOpen(
+                                value =>
+                                    !value
+                            );
+
+                        }}
                     >
 
-                        <i
-                            className="fa-solid fa-circle-user"
-                            style={{
-                                fontSize: "17px"
-                            }}
-                        ></i>
+                        <i className="fa-solid fa-circle-user"></i>
 
-                        <span
-                            style={{
-                                fontSize: "14px"
-                            }}
-                        >
+                        <span>
                             {fullName}
                         </span>
 
-                        <i
-                            className="fa-solid fa-angle-down"
-                            style={{
-                                fontSize: "11px"
-                            }}
-                        ></i>
+                        <i className="fa-solid fa-angle-down"></i>
 
                     </button>
 
@@ -732,20 +694,27 @@ function Passwords() {
 
                             <Link to="/profile">
 
-                                <i
-                                    className="fa-solid fa-user"
-                                    style={{
-                                        fontSize: "14px"
-                                    }}
-                                ></i>
+                                <i className="fa-solid fa-user"></i>
 
-                                <span
-                                    style={{
-                                        fontSize: "14px"
-                                    }}
-                                >
-                                    My Profile
-                                </span>
+                                My Profile
+
+                            </Link>
+
+
+                            <Link to="/change-password">
+
+                                <i className="fa-solid fa-key"></i>
+
+                                Change Password
+
+                            </Link>
+
+
+                            <Link to="/settings">
+
+                                <i className="fa-solid fa-gear"></i>
+
+                                Settings
 
                             </Link>
 
@@ -760,20 +729,9 @@ function Passwords() {
                                 }
                             >
 
-                                <i
-                                    className="fa-solid fa-right-from-bracket"
-                                    style={{
-                                        fontSize: "14px"
-                                    }}
-                                ></i>
+                                <i className="fa-solid fa-right-from-bracket"></i>
 
-                                <span
-                                    style={{
-                                        fontSize: "14px"
-                                    }}
-                                >
-                                    Logout
-                                </span>
+                                Logout
 
                             </a>
 
@@ -800,24 +758,13 @@ function Passwords() {
                 <aside className="sidebar">
 
 
-                    {/* OVERVIEW */}
+                    {/* DASHBOARD */}
 
                     <Link to="/dashboard">
 
-                        <i
-                            className="fa-solid fa-chart-line"
-                            style={{
-                                fontSize: "15px"
-                            }}
-                        ></i>
+                        <i className="fa-solid fa-chart-line"></i>
 
-                        <span
-                            style={{
-                                fontSize: "14px"
-                            }}
-                        >
-                            Overview
-                        </span>
+                        Overview
 
                     </Link>
 
@@ -829,20 +776,9 @@ function Passwords() {
                         className="active"
                     >
 
-                        <i
-                            className="fa-solid fa-key"
-                            style={{
-                                fontSize: "15px"
-                            }}
-                        ></i>
+                        <i className="fa-solid fa-key"></i>
 
-                        <span
-                            style={{
-                                fontSize: "14px"
-                            }}
-                        >
-                            My Passwords
-                        </span>
+                        My Passwords
 
                     </Link>
 
@@ -851,20 +787,9 @@ function Passwords() {
 
                     <Link to="/add-password">
 
-                        <i
-                            className="fa-solid fa-plus"
-                            style={{
-                                fontSize: "15px"
-                            }}
-                        ></i>
+                        <i className="fa-solid fa-plus"></i>
 
-                        <span
-                            style={{
-                                fontSize: "14px"
-                            }}
-                        >
-                            Add Password
-                        </span>
+                        Add Password
 
                     </Link>
 
@@ -873,20 +798,9 @@ function Passwords() {
 
                     <Link to="/inbox">
 
-                        <i
-                            className="fa-solid fa-inbox"
-                            style={{
-                                fontSize: "15px"
-                            }}
-                        ></i>
+                        <i className="fa-solid fa-inbox"></i>
 
-                        <span
-                            style={{
-                                fontSize: "14px"
-                            }}
-                        >
-                            Inbox
-                        </span>
+                        Inbox
 
                     </Link>
 
@@ -895,22 +809,26 @@ function Passwords() {
 
                     <Link to="/sent">
 
-                        <i
-                            className="fa-solid fa-paper-plane"
-                            style={{
-                                fontSize: "15px"
-                            }}
-                        ></i>
+                        <i className="fa-solid fa-paper-plane"></i>
 
-                        <span
-                            style={{
-                                fontSize: "14px"
-                            }}
-                        >
-                            Sent
-                        </span>
+                        Sent
 
                     </Link>
+
+                     <Link to="/login-history">
+
+        <i className="fa-solid fa-clock-rotate-left"></i>
+
+        Login History
+
+    </Link>
+    <Link to="/security">
+
+        <i className="fa-solid fa-shield-halved"></i>
+
+        Security
+
+    </Link>
 
                 </aside>
 
@@ -936,7 +854,9 @@ function Passwords() {
                         <div className="top-actions">
 
 
-                            {/* SEARCH */}
+                            {/* =================================================
+                                SEARCH
+                            ================================================= */}
 
                             <form
                                 onSubmit={
@@ -963,31 +883,23 @@ function Passwords() {
                                     title="Search"
                                 >
 
-                                    <i
-                                        className="fa-solid fa-magnifying-glass"
-                                        style={{
-                                            fontSize: "13px"
-                                        }}
-                                    ></i>
+                                    <i className="fa-solid fa-magnifying-glass"></i>
 
                                 </button>
 
                             </form>
 
 
-                            {/* ADD NEW */}
+                            {/* =================================================
+                                ADD PASSWORD
+                            ================================================= */}
 
                             <Link
                                 to="/add-password"
                                 className="add-btn"
                             >
 
-                                <i
-                                    className="fa-solid fa-plus"
-                                    style={{
-                                        fontSize: "13px"
-                                    }}
-                                ></i>
+                                <i className="fa-solid fa-plus"></i>
 
                                 {" "}Add New
 
@@ -1067,12 +979,7 @@ function Passwords() {
 
                                                 <td>
 
-                                                    <i
-                                                        className="fa-solid fa-globe"
-                                                        style={{
-                                                            fontSize: "14px"
-                                                        }}
-                                                    ></i>
+                                                    <i className="fa-solid fa-globe"></i>
 
                                                     <span>
 
@@ -1127,12 +1034,7 @@ function Passwords() {
                                                             aria-label="View Password"
                                                         >
 
-                                                            <i
-                                                                className="fa-solid fa-eye view"
-                                                                style={{
-                                                                    fontSize: "15px"
-                                                                }}
-                                                            ></i>
+                                                            <i className="fa-solid fa-eye view"></i>
 
                                                         </Link>
 
@@ -1145,12 +1047,7 @@ function Passwords() {
                                                             aria-label="Edit Password"
                                                         >
 
-                                                            <i
-                                                                className="fa-solid fa-pen edit"
-                                                                style={{
-                                                                    fontSize: "15px"
-                                                                }}
-                                                            ></i>
+                                                            <i className="fa-solid fa-pen edit"></i>
 
                                                         </Link>
 
@@ -1168,12 +1065,7 @@ function Passwords() {
                                                             aria-label="Delete Password"
                                                         >
 
-                                                            <i
-                                                                className="fa-solid fa-trash delete"
-                                                                style={{
-                                                                    fontSize: "15px"
-                                                                }}
-                                                            ></i>
+                                                            <i className="fa-solid fa-trash delete"></i>
 
                                                         </button>
 
@@ -1186,12 +1078,7 @@ function Passwords() {
                                                             aria-label="Share Password"
                                                         >
 
-                                                            <i
-                                                                className="fa-solid fa-share-nodes share"
-                                                                style={{
-                                                                    fontSize: "15px"
-                                                                }}
-                                                            ></i>
+                                                            <i className="fa-solid fa-share-nodes share"></i>
 
                                                         </Link>
 

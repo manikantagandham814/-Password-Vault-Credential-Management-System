@@ -46,13 +46,11 @@ public class PasswordShareServiceImpl
             SharePasswordRequest request,
             User currentUser) {
 
-
         if (request.getPasswordId() == null) {
 
             throw new IllegalArgumentException(
                     "Password ID is required");
         }
-
 
         if (request.getRecipientEmail() == null ||
                 request.getRecipientEmail()
@@ -62,7 +60,6 @@ public class PasswordShareServiceImpl
             throw new IllegalArgumentException(
                     "Recipient email is required");
         }
-
 
         if (request.getPermission() == null ||
                 request.getPermission()
@@ -87,8 +84,7 @@ public class PasswordShareServiceImpl
         }
 
 
-        // Current user must be owner OR have
-        // FULL_MANAGEMENT permission.
+        // Owner OR FULL_MANAGEMENT user can share.
 
         if (!canManageSharing(
                 password,
@@ -150,11 +146,8 @@ public class PasswordShareServiceImpl
 
 
         share.setPassword(password);
-
         share.setSharedBy(currentUser);
-
         share.setRecipient(recipient);
-
         share.setPermission(permission);
 
         share.setCreatedAt(
@@ -218,7 +211,6 @@ public class PasswordShareServiceImpl
     getSharedPassword(
             Long shareId,
             User currentUser) {
-
 
         PasswordShare share =
                 getShare(shareId);
@@ -286,7 +278,6 @@ public class PasswordShareServiceImpl
             Long passwordId,
             User currentUser) {
 
-
         Password password =
                 passwordRepository
                         .findById(passwordId)
@@ -330,7 +321,6 @@ public class PasswordShareServiceImpl
             UpdateSharePermissionRequest request,
             User currentUser) {
 
-
         PasswordShare share =
                 getShare(shareId);
 
@@ -345,6 +335,16 @@ public class PasswordShareServiceImpl
 
             throw new SecurityException(
                     "You do not have permission to change permission");
+        }
+
+
+        if (request.getPermission() == null ||
+                request.getPermission()
+                        .trim()
+                        .isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Permission is required");
         }
 
 
@@ -374,7 +374,6 @@ public class PasswordShareServiceImpl
     public void removeShare(
             Long shareId,
             User currentUser) {
-
 
         PasswordShare share =
                 getShare(shareId);
@@ -408,7 +407,6 @@ public class PasswordShareServiceImpl
             Long shareId,
             User currentUser) {
 
-
         PasswordShare share =
                 getShare(shareId);
 
@@ -439,13 +437,141 @@ public class PasswordShareServiceImpl
         }
 
 
-        /*
-         * Deleting Password causes its share rows to
-         * be deleted because PasswordShare.password
-         * uses ON DELETE CASCADE.
-         */
-
         passwordRepository.delete(password);
+    }
+
+
+    // =====================================================
+    // CHECK VIEW ACCESS
+    // =====================================================
+
+    public boolean canView(
+            Password password,
+            User currentUser) {
+
+        if (password.getUser()
+                .getId()
+                .equals(currentUser.getId())) {
+
+            return true;
+        }
+
+
+        return shareRepository
+                .findByPasswordAndRecipient(
+                        password,
+                        currentUser
+                )
+                .isPresent();
+    }
+
+
+    // =====================================================
+    // CHECK EDIT ACCESS
+    // =====================================================
+
+    public boolean canEdit(
+            Password password,
+            User currentUser) {
+
+        // Owner can always edit.
+
+        if (password.getUser()
+                .getId()
+                .equals(currentUser.getId())) {
+
+            return true;
+        }
+
+
+        PasswordShare share =
+                shareRepository
+                        .findByPasswordAndRecipient(
+                                password,
+                                currentUser
+                        )
+                        .orElse(null);
+
+
+        if (share == null) {
+
+            return false;
+        }
+
+
+        return share.getPermission()
+                == SharePermission.EDIT
+                ||
+                share.getPermission()
+                == SharePermission.FULL_MANAGEMENT;
+    }
+
+
+    // =====================================================
+    // CHECK DELETE ACCESS
+    // =====================================================
+
+    public boolean canDelete(
+            Password password,
+            User currentUser) {
+
+        // Owner can always delete.
+
+        if (password.getUser()
+                .getId()
+                .equals(currentUser.getId())) {
+
+            return true;
+        }
+
+
+        PasswordShare share =
+                shareRepository
+                        .findByPasswordAndRecipient(
+                                password,
+                                currentUser
+                        )
+                        .orElse(null);
+
+
+        return share != null
+                &&
+                share.getPermission()
+                        == SharePermission.FULL_MANAGEMENT;
+    }
+
+
+    // =====================================================
+    // CHECK SHARE MANAGEMENT ACCESS
+    // =====================================================
+
+    public boolean canManageSharing(
+            Password password,
+            User currentUser) {
+
+        // Owner always has full control.
+
+        if (password.getUser()
+                .getId()
+                .equals(currentUser.getId())) {
+
+            return true;
+        }
+
+
+        PasswordShare ownShare =
+                shareRepository
+                        .findByPasswordAndRecipient(
+                                password,
+                                currentUser
+                        )
+                        .orElse(null);
+
+
+        return ownShare != null
+                &&
+                ownShare.getPermission()
+                        == SharePermission.FULL_MANAGEMENT;
     }
 
 
@@ -455,7 +581,6 @@ public class PasswordShareServiceImpl
 
     private PasswordShare getShare(
             Long shareId) {
-
 
         PasswordShare share =
                 shareRepository
@@ -481,7 +606,6 @@ public class PasswordShareServiceImpl
     private SharePermission parsePermission(
             String value) {
 
-
         try {
 
             return SharePermission.valueOf(
@@ -499,52 +623,11 @@ public class PasswordShareServiceImpl
 
 
     // =====================================================
-    // SHARING PERMISSION
-    // =====================================================
-
-    private boolean canManageSharing(
-            Password password,
-            User currentUser) {
-
-
-        // Owner always has management access.
-
-        if (password.getUser()
-                .getId()
-                .equals(currentUser.getId())) {
-
-            return true;
-        }
-
-
-        /*
-         * Find whether current user has FULL_MANAGEMENT
-         * access to this password.
-         */
-
-        PasswordShare ownShare =
-                shareRepository
-                        .findByPasswordAndRecipient(
-                                password,
-                                currentUser
-                        )
-                        .orElse(null);
-
-
-        return ownShare != null
-                &&
-                ownShare.getPermission()
-                        == SharePermission.FULL_MANAGEMENT;
-    }
-
-
-    // =====================================================
     // SUMMARY DTO
     // =====================================================
 
     private SharedPasswordSummaryResponse
     toSummary(PasswordShare share) {
-
 
         Password password =
                 share.getPassword();

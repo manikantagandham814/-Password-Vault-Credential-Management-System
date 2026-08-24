@@ -291,6 +291,95 @@ function Inbox() {
 
 
     // =====================================================
+    // DELETE SHARED PASSWORD
+    // FULL MANAGEMENT ONLY
+    // =====================================================
+
+    async function handleDelete(
+        shareId
+    ) {
+
+        const confirmed =
+            window.confirm(
+                "Are you sure you want to delete this password?"
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `http://localhost:8082/api/shares/${shareId}/password`,
+                    {
+                        method: "DELETE",
+                        credentials: "include"
+                    }
+                );
+
+
+            // =================================================
+            // SESSION EXPIRED
+            // =================================================
+
+            if (
+                response.status === 401
+            ) {
+
+                navigate("/login");
+
+                return;
+            }
+
+
+            const message =
+                await response.text();
+
+
+            if (!response.ok) {
+
+                alert(
+                    message ||
+                    "Unable to delete password"
+                );
+
+                return;
+            }
+
+
+            alert(
+                "Password deleted successfully"
+            );
+
+
+            // Refresh inbox
+
+            await loadInbox();
+
+
+        } catch (err) {
+
+            console.error(
+                "Delete shared password error:",
+                err
+            );
+
+
+            alert(
+                "Unable to delete password"
+            );
+
+        }
+    }
+
+
+    // =====================================================
     // LOADING
     // =====================================================
 
@@ -537,6 +626,20 @@ function Inbox() {
                         Sent
 
                     </Link>
+                     <Link to="/login-history">
+
+        <i className="fa-solid fa-clock-rotate-left"></i>
+
+        Login History
+
+    </Link>
+    <Link to="/security">
+
+        <i className="fa-solid fa-shield-halved"></i>
+
+        Security
+
+    </Link>
 
                 </aside>
 
@@ -687,110 +790,202 @@ function Inbox() {
                                     <tbody>
 
                                         {items.map(
-                                            (item) => (
+                                            (item) => {
 
-                                                <tr
-                                                    key={
-                                                        item.shareId ||
-                                                        item.id
-                                                    }
-                                                >
+                                                const shareId =
+                                                    item.shareId ||
+                                                    item.id;
 
+                                                const passwordId =
+                                                    item.passwordId;
 
-                                                    {/* WEBSITE */}
-
-                                                    <td>
-
-                                                        <i className="fa-solid fa-globe"></i>
-
-                                                        <span>
-
-                                                            {" "}
-
-                                                            {
-                                                                item.websiteName
-                                                            }
-
-                                                        </span>
-
-                                                    </td>
+                                                const permission =
+                                                    (
+                                                        item.permission ||
+                                                        ""
+                                                    )
+                                                    .toUpperCase()
+                                                    .trim();
 
 
-                                                    {/* SHARED BY */}
-
-                                                    <td>
-
-                                                        <strong>
-
-                                                            {
-                                                                item.sharedByName ||
-                                                                item.ownerName ||
-                                                                "-"
-                                                            }
-
-                                                        </strong>
+                                                const canEdit =
+                                                    permission === "EDIT" ||
+                                                    permission === "FULL_MANAGEMENT";
 
 
-                                                        <small>
-
-                                                            {
-                                                                item.sharedByEmail ||
-                                                                item.ownerEmail ||
-                                                                ""
-                                                            }
-
-                                                        </small>
-
-                                                    </td>
+                                                const canManage =
+                                                    permission === "FULL_MANAGEMENT";
 
 
-                                                    {/* PERMISSION */}
+                                                return (
 
-                                                    <td>
-
-                                                        <span
-                                                            className="permission"
-                                                        >
-
-                                                            {
-                                                                formatPermission(
-                                                                    item.permission
-                                                                )
-                                                            }
-
-                                                        </span>
-
-                                                    </td>
+                                                    <tr
+                                                        key={
+                                                            shareId
+                                                        }
+                                                    >
 
 
-                                                    {/* ACTIONS */}
+                                                        {/* WEBSITE */}
 
-                                                    <td>
+                                                        <td>
+
+                                                            <i className="fa-solid fa-globe"></i>
+
+                                                            <span>
+
+                                                                {" "}
+
+                                                                {
+                                                                    item.websiteName
+                                                                }
+
+                                                            </span>
+
+                                                        </td>
 
 
-                                                        {/* VIEW */}
+                                                        {/* SHARED BY */}
 
-                                                        <Link
-                                                            to={
-                                                                `/shared-password/${
-                                                                    item.shareId ||
-                                                                    item.id
-                                                                }`
-                                                            }
-                                                            title="View Shared Password"
-                                                        >
+                                                        <td>
 
-                                                            <i
-                                                                className="fa-solid fa-eye action view"
-                                                            ></i>
+                                                            <strong>
 
-                                                        </Link>
+                                                                {
+                                                                    item.sharedByName ||
+                                                                    item.ownerName ||
+                                                                    "-"
+                                                                }
 
-                                                    </td>
+                                                            </strong>
 
-                                                </tr>
 
-                                            )
+                                                            <small>
+
+                                                                {
+                                                                    item.sharedByEmail ||
+                                                                    item.ownerEmail ||
+                                                                    ""
+                                                                }
+
+                                                            </small>
+
+                                                        </td>
+
+
+                                                        {/* PERMISSION */}
+
+                                                        <td>
+
+                                                            <span
+                                                                className="permission"
+                                                            >
+
+                                                                {
+                                                                    formatPermission(
+                                                                        permission
+                                                                    )
+                                                                }
+
+                                                            </span>
+
+                                                        </td>
+
+
+                                                        {/* =================================================
+                                                            ACTIONS
+                                                        ================================================= */}
+
+                                                        <td>
+
+                                                            <div
+                                                                className="actions"
+                                                            >
+
+
+                                                                {/* VIEW */}
+
+                                                                <Link
+                                                                    to={
+                                                                        `/shared-password/${shareId}`
+                                                                    }
+                                                                    className="view"
+                                                                    title="View Password"
+                                                                >
+
+                                                                    <i className="fa-solid fa-eye"></i>
+
+                                                                </Link>
+
+
+                                                                {/* EDIT */}
+
+                                                                {canEdit && (
+
+                                                                    <Link
+                                                                        to={
+                                                                            `/edit-password/${passwordId}`
+                                                                        }
+                                                                        className="edit"
+                                                                        title="Edit Password"
+                                                                    >
+
+                                                                        <i className="fa-solid fa-pen"></i>
+
+                                                                    </Link>
+
+                                                                )}
+
+
+                                                                {/* DELETE */}
+
+                                                                {canManage && (
+
+                                                                    <button
+                                                                        type="button"
+                                                                        className="delete"
+                                                                        title="Delete Password"
+                                                                        onClick={() =>
+                                                                            handleDelete(
+                                                                                shareId
+                                                                            )
+                                                                        }
+                                                                    >
+
+                                                                        <i className="fa-solid fa-trash"></i>
+
+                                                                    </button>
+
+                                                                )}
+
+
+                                                                {/* MANAGE SHARING */}
+
+                                                                {canManage && (
+
+                                                                    <Link
+                                                                        to={
+                                                                            `/share-password/${passwordId}`
+                                                                        }
+                                                                        className="manage"
+                                                                        title="Manage Sharing"
+                                                                    >
+
+                                                                        <i className="fa-solid fa-share-nodes"></i>
+
+                                                                    </Link>
+
+                                                                )}
+
+                                                            </div>
+
+                                                        </td>
+
+                                                    </tr>
+
+                                                );
+
+                                            }
                                         )}
 
                                     </tbody>
