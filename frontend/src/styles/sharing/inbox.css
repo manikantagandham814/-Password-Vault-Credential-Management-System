@@ -1,6 +1,6 @@
 /* =========================================================
    INBOX / SENT
-========================================================= */
+   ========================================================= */
 
 .inbox-page,
 .sent-page {
@@ -16,7 +16,7 @@
 
 /* =========================================================
    NAVBAR
-========================================================= */
+   ========================================================= */
 
 .inbox-page .navbar,
 .sent-page .navbar {
@@ -41,7 +41,7 @@
 
 /* =========================================================
    LOGO
-========================================================= */
+   ========================================================= */
 
 .inbox-page .logo,
 .sent-page .logo {
@@ -67,7 +67,7 @@
 
 /* =========================================================
    PROFILE
-========================================================= */
+   ========================================================= */
 
 .inbox-page .profile,
 .sent-page .profile {
@@ -97,7 +97,7 @@
 
 /* =========================================================
    WRAPPER
-========================================================= */
+   ========================================================= */
 
 .inbox-page .wrapper,
 .sent-page .wrapper {
@@ -110,7 +110,7 @@
 
 /* =========================================================
    SIDEBAR
-========================================================= */
+   ========================================================= */
 
 .inbox-page .sidebar,
 .sent-page .sidebar {
@@ -129,7 +129,7 @@
 
 /* =========================================================
    SIDEBAR LINKS
-========================================================= */
+   ========================================================= */
 
 .inbox-page .sidebar a,
 .sent-page .sidebar a {
@@ -173,7 +173,7 @@
 
 /* =========================================================
    ACTIVE SIDEBAR LINK
-========================================================= */
+   ========================================================= */
 
 .inbox-page .sidebar .active,
 .sent-page .sidebar .active {
@@ -199,7 +199,7 @@
 
 /* =========================================================
    CONTENT
-========================================================= */
+   ========================================================= */
 
 .inbox-page .content,
 .sent-page .content {
@@ -214,7 +214,7 @@
 
 /* =========================================================
    PAGE HEADER
-========================================================= */
+   ========================================================= */
 
 .inbox-page .page-header,
 .sent-page .page-header {
@@ -255,7 +255,7 @@
 
 /* =========================================================
    TABLE CARD
-========================================================= */
+   ========================================================= */
 
 .inbox-page .table-card,
 .sent-page .table-card {
@@ -276,7 +276,7 @@
 
 /* =========================================================
    TABLE
-========================================================= */
+   ========================================================= */
 
 .inbox-page table,
 .sent-page table {
@@ -289,7 +289,7 @@
 
 /* =========================================================
    TABLE HEADER
-========================================================= */
+   ========================================================= */
 
 .inbox-page th,
 .sent-page th {
@@ -310,7 +310,7 @@
 
 /* =========================================================
    TABLE CONTENT
-========================================================= */
+   ========================================================= */
 
 .inbox-page td,
 .sent-page td {
@@ -329,7 +329,7 @@
 
 /* =========================================================
    TABLE HOVER
-========================================================= */
+   ========================================================= */
 
 .inbox-page tbody tr,
 .sent-page tbody tr {
@@ -354,7 +354,7 @@
 
 /* =========================================================
    WEBSITE ICON
-========================================================= */
+   ========================================================= */
 
 .inbox-page td:first-child i,
 .sent-page td:first-child i {
@@ -367,7 +367,7 @@
 
 /* =========================================================
    STRONG TEXT
-========================================================= */
+   ========================================================= */
 
 .inbox-page td strong,
 .sent-page td strong {
@@ -382,7 +382,7 @@
 
 /* =========================================================
    SMALL TEXT
-========================================================= */
+   ========================================================= */
 
 .inbox-page td small,
 .sent-page td small {
@@ -399,7 +399,7 @@
 
 /* =========================================================
    PERMISSION
-========================================================= */
+   ========================================================= */
 
 .inbox-page .permission,
 .sent-page .permission {
@@ -424,7 +424,7 @@
 
 /* =========================================================
    ACTIONS
-========================================================= */
+   ========================================================= */
 
 .inbox-page .actions,
 .sent-page .actions {
@@ -439,7 +439,7 @@
 
 /* =========================================================
    ACTION LINKS / BUTTONS
-========================================================= */
+   ========================================================= */
 
 .inbox-page .actions a,
 .inbox-page .actions button,
@@ -468,7 +468,7 @@
 
 /* =========================================================
    ACTION HOVER
-========================================================= */
+   ========================================================= */
 
 .inbox-page .actions a:hover,
 .inbox-page .actions button:hover,
@@ -483,7 +483,7 @@
 
 /* =========================================================
    VIEW
-========================================================= */
+   ========================================================= */
 
 .inbox-page .actions .view,
 .sent-page .actions .view {
@@ -494,7 +494,7 @@
 
 /* =========================================================
    EDIT
-========================================================= */
+   ========================================================= */
 
 .inbox-page .actions .edit,
 .sent-page .actions .edit {
@@ -505,7 +505,7 @@
 
 /* =========================================================
    DELETE
-========================================================= */
+   ========================================================= */
 
 .inbox-page .actions .delete,
 .sent-page .actions .delete {
@@ -516,7 +516,7 @@
 
 /* =========================================================
    MANAGE
-========================================================= */
+   ========================================================= */
 
 .inbox-page .actions .manage,
 .sent-page .actions .manage {
@@ -527,7 +527,7 @@
 
 /* =========================================================
    REMOVE
-========================================================= */
+   ========================================================= */
 
 .inbox-page .actions .remove,
 .sent-page .actions .remove {
@@ -538,7 +538,7 @@
 
 /* =========================================================
    EMPTY STATE
-========================================================= */
+   ========================================================= */
 
 .inbox-page .empty,
 .sent-page .empty {
@@ -559,7 +559,7 @@
 
 /* =========================================================
    EMPTY ICON
-========================================================= */
+   ========================================================= */
 
 .inbox-page .empty i,
 .sent-page .empty i {
@@ -572,7 +572,7 @@
 
 /* =========================================================
    EMPTY HEADING
-========================================================= */
+   ========================================================= */
 
 .inbox-page .empty h3,
 .sent-page .empty h3 {
@@ -589,7 +589,7 @@
 
 /* =========================================================
    EMPTY TEXT
-========================================================= */
+   ========================================================= */
 
 .inbox-page .empty p,
 .sent-page .empty p {
@@ -604,7 +604,7 @@
 
 /* =========================================================
    ERROR
-========================================================= */
+   ========================================================= */
 
 .inbox-page .error,
 .sent-page .error {
@@ -621,91 +621,349 @@
 
 /* =========================================================
    RESPONSIVE
-========================================================= */
+   ========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 
     .inbox-page .wrapper,
     .sent-page .wrapper {
-
         flex-direction: column;
     }
 
-
     .inbox-page .sidebar,
     .sent-page .sidebar {
-
         width: 100%;
+        height: auto;
 
         display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
 
-        justify-content: center;
+        gap: 8px;
 
-        gap: 5px;
+        padding: 10px 12px;
 
-        padding: 15px;
+        box-sizing: border-box;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+
+        box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
     }
-
 
     .inbox-page .sidebar a,
     .sent-page .sidebar a {
+        flex: 0 0 auto;
+
+        width: auto;
 
         margin-bottom: 0;
-    }
 
+        padding: 12px 14px;
+
+        white-space: nowrap;
+
+        font-size: 14px;
+
+        gap: 8px;
+    }
 
     .inbox-page .sidebar a:hover,
     .sent-page .sidebar a:hover {
-
         transform: none;
     }
 
-
     .inbox-page .content,
     .sent-page .content {
+        width: 100%;
+        min-width: 0;
 
-        padding: 20px;
+        padding: 25px 20px;
+
+        box-sizing: border-box;
     }
 
+    .inbox-page .page-header,
+    .sent-page .page-header {
+        gap: 15px;
+    }
+
+    .inbox-page .table-card,
+    .sent-page .table-card {
+        width: 100%;
+        max-width: 100%;
+
+        box-sizing: border-box;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+    }
 
     .inbox-page table,
     .sent-page table {
-
         min-width: 750px;
     }
 }
 
 
 /* =========================================================
-   SMALL MOBILE
-========================================================= */
+   TABLET
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .inbox-page .navbar,
+    .sent-page .navbar {
+        padding: 0 20px;
+    }
+
+    .inbox-page .page-header,
+    .sent-page .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+
+        margin-bottom: 22px;
+    }
+
+    .inbox-page .page-header h2,
+    .sent-page .page-header h2 {
+        font-size: 27px;
+    }
+
+    .inbox-page .page-header p,
+    .sent-page .page-header p {
+        font-size: 14px;
+    }
+
+    .inbox-page .table-card,
+    .sent-page .table-card {
+        padding: 20px;
+    }
+
+    .inbox-page .empty,
+    .sent-page .empty {
+        padding: 45px 20px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
 @media (max-width: 480px) {
 
     .inbox-page .navbar,
     .sent-page .navbar {
+        height: 60px;
 
-        padding: 0 20px;
+        padding: 0 15px;
     }
-
 
     .inbox-page .logo,
     .sent-page .logo {
-
         font-size: 20px;
+
+        gap: 8px;
     }
 
+    .inbox-page .profile,
+    .sent-page .profile {
+        gap: 6px;
+    }
 
     .inbox-page .profile span,
     .sent-page .profile span {
-
         display: none;
     }
 
+    .inbox-page .profile i,
+    .sent-page .profile i {
+        font-size: 25px;
+    }
+
+    .inbox-page .sidebar,
+    .sent-page .sidebar {
+        padding: 8px 10px;
+
+        gap: 6px;
+    }
+
+    .inbox-page .sidebar a,
+    .sent-page .sidebar a {
+        padding: 10px 12px;
+
+        font-size: 13px;
+
+        border-radius: 8px;
+    }
 
     .inbox-page .content,
     .sent-page .content {
-
         padding: 15px;
+
+        box-sizing: border-box;
+    }
+
+    .inbox-page .page-header,
+    .sent-page .page-header {
+        margin-bottom: 18px;
+    }
+
+    .inbox-page .page-header h2,
+    .sent-page .page-header h2 {
+        font-size: 24px;
+    }
+
+    .inbox-page .page-header p,
+    .sent-page .page-header p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .inbox-page .table-card,
+    .sent-page .table-card {
+        padding: 15px;
+
+        border-radius: 12px;
+    }
+
+    .inbox-page table,
+    .sent-page table {
+        min-width: 700px;
+    }
+
+    .inbox-page th,
+    .sent-page th {
+        padding: 13px 12px;
+
+        font-size: 13px;
+    }
+
+    .inbox-page td,
+    .sent-page td {
+        padding: 14px 12px;
+
+        font-size: 13px;
+    }
+
+    .inbox-page td small,
+    .sent-page td small {
+        font-size: 11px;
+    }
+
+    .inbox-page .permission,
+    .sent-page .permission {
+        padding: 6px 10px;
+
+        font-size: 11px;
+    }
+
+    .inbox-page .actions,
+    .sent-page .actions {
+        gap: 13px;
+    }
+
+    .inbox-page .actions a,
+    .inbox-page .actions button,
+    .sent-page .actions a,
+    .sent-page .actions button {
+        font-size: 17px;
+    }
+
+    .inbox-page .empty,
+    .sent-page .empty {
+        padding: 40px 15px;
+
+        border-radius: 12px;
+    }
+
+    .inbox-page .empty i,
+    .sent-page .empty i {
+        font-size: 34px;
+    }
+
+    .inbox-page .empty h3,
+    .sent-page .empty h3 {
+        font-size: 18px;
+    }
+
+    .inbox-page .empty p,
+    .sent-page .empty p {
+        font-size: 13px;
+    }
+
+    .inbox-page .error,
+    .sent-page .error {
+        font-size: 13px;
+
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .inbox-page .logo,
+    .sent-page .logo {
+        font-size: 18px;
+    }
+
+    .inbox-page .content,
+    .sent-page .content {
+        padding: 12px;
+    }
+
+    .inbox-page .sidebar,
+    .sent-page .sidebar {
+        justify-content: flex-start;
+
+        overflow-x: auto;
+    }
+
+    .inbox-page .sidebar a,
+    .sent-page .sidebar a {
+        flex: 0 0 auto;
+
+        white-space: nowrap;
+    }
+
+    .inbox-page .page-header h2,
+    .sent-page .page-header h2 {
+        font-size: 22px;
+    }
+
+    .inbox-page .table-card,
+    .sent-page .table-card {
+        padding: 12px;
+    }
+
+    .inbox-page table,
+    .sent-page table {
+        min-width: 680px;
+    }
+
+    .inbox-page th,
+    .sent-page th {
+        padding: 11px 10px;
+
+        font-size: 12px;
+    }
+
+    .inbox-page td,
+    .sent-page td {
+        padding: 12px 10px;
+
+        font-size: 12px;
     }
 }

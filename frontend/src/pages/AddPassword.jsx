@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Layout from "../components/Layout";
 import "../styles/passwords/add-password.css";
+
 
 function AddPassword() {
 
     const navigate = useNavigate();
+
+    const [fullName, setFullName] = useState("");
 
     const [websiteName, setWebsiteName] = useState("");
     const [websiteUrl, setWebsiteUrl] = useState("");
@@ -15,43 +19,169 @@ function AddPassword() {
     const [notes, setNotes] = useState("");
 
     const [showPassword, setShowPassword] = useState(false);
-
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-
     const [loading, setLoading] = useState(false);
 
 
     // =====================================================
-    // Generate Password
+    // LOAD USER PROFILE NAME
+    // =====================================================
+
+    useEffect(() => {
+
+        async function loadUser() {
+
+            try {
+
+                const response = await fetch(
+                    "http://localhost:8082/api/dashboard",
+                    {
+                        method: "GET",
+                        credentials: "include"
+                    }
+                );
+
+
+                // Unauthorized session
+                if (response.status === 401) {
+
+                    navigate("/login");
+
+                    return;
+                }
+
+
+                // Other server/API error
+                if (!response.ok) {
+
+                    setError(
+                        "Unable to load your account information. Please try again."
+                    );
+
+                    return;
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.authenticated) {
+
+                    navigate("/login");
+
+                    return;
+                }
+
+
+                setFullName(
+                    data.fullName || ""
+                );
+
+
+            } catch (err) {
+
+                console.error(
+                    "Profile loading error:",
+                    err
+                );
+
+                setError(
+                    "Unable to connect to server. Please try again."
+                );
+            }
+        }
+
+
+        loadUser();
+
+    }, [navigate]);
+
+
+    // =====================================================
+    // GENERATE PASSWORD
     // =====================================================
 
     function generatePassword() {
 
-        const characters =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "0123456789@#$%&*!";
+        const uppercase =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        let generatedPassword = "";
+        const lowercase =
+            "abcdefghijklmnopqrstuvwxyz";
 
-        for (let i = 0; i < 14; i++) {
+        const numbers =
+            "0123456789";
 
-            const index = Math.floor(
-                Math.random() * characters.length
-            );
+        const symbols =
+            "@#$%&*!";
 
-            generatedPassword += characters[index];
+        const allCharacters =
+            uppercase +
+            lowercase +
+            numbers +
+            symbols;
+
+        let generated = "";
+
+
+        generated += uppercase[
+            Math.floor(
+                Math.random() * uppercase.length
+            )
+        ];
+
+
+        generated += lowercase[
+            Math.floor(
+                Math.random() * lowercase.length
+            )
+        ];
+
+
+        generated += numbers[
+            Math.floor(
+                Math.random() * numbers.length
+            )
+        ];
+
+
+        generated += symbols[
+            Math.floor(
+                Math.random() * symbols.length
+            )
+        ];
+
+
+        for (
+            let i = generated.length;
+            i < 14;
+            i++
+        ) {
+
+            generated += allCharacters[
+                Math.floor(
+                    Math.random() *
+                    allCharacters.length
+                )
+            ];
         }
 
-        setPassword(generatedPassword);
 
+        generated = generated
+            .split("")
+            .sort(() => Math.random() - 0.5)
+            .join("");
+
+
+        setPassword(generated);
         setShowPassword(true);
     }
 
 
     // =====================================================
-    // Save Password
+    // SAVE PASSWORD
     // =====================================================
 
     async function handleSubmit(e) {
@@ -60,7 +190,10 @@ function AddPassword() {
 
         setError("");
         setSuccess("");
+
+
         setLoading(true);
+
 
         try {
 
@@ -87,6 +220,7 @@ function AddPassword() {
             );
 
 
+            // Unauthorized session
             if (response.status === 401) {
 
                 navigate("/login");
@@ -97,12 +231,47 @@ function AddPassword() {
 
             if (!response.ok) {
 
-                const message =
-                    await response.text();
+                let message =
+                    "Unable to save password. Please check your details and try again.";
 
-                setError(
-                    message || "Unable to save password"
-                );
+                try {
+
+                    const responseText =
+                        await response.text();
+
+                    if (responseText) {
+
+                        message =
+                            responseText;
+                    }
+
+                } catch (readError) {
+
+                    console.error(
+                        "Error reading save response:",
+                        readError
+                    );
+                }
+
+
+                /*
+                 * Keep technical server errors away
+                 * from the user interface.
+                 */
+                if (
+                    message.includes("Exception") ||
+                    message.includes("at org.") ||
+                    message.includes("at java.") ||
+                    message.includes("StackTrace") ||
+                    message.includes("Error:")
+                ) {
+
+                    message =
+                        "Unable to save password. Please try again.";
+                }
+
+
+                setError(message);
 
                 return;
             }
@@ -120,15 +289,15 @@ function AddPassword() {
             }, 800);
 
 
-        } catch (error) {
+        } catch (err) {
 
             console.error(
-                "Add password error:",
-                error
+                "Error saving password:",
+                err
             );
 
             setError(
-                "Unable to connect to server"
+                "Unable to connect to server. Please try again."
             );
 
         } finally {
@@ -138,41 +307,48 @@ function AddPassword() {
     }
 
 
+    // =====================================================
+    // UI
+    // =====================================================
+
     return (
 
-        <div className="add-password-page">
+        <Layout
+            fullName={fullName}
+            pageClassName="add-password-page"
+        >
 
             <div className="container">
 
                 <div className="card">
 
                     <h2>
-
                         <i className="fa-solid fa-key"></i>
-
                         Add New Password
-
                     </h2>
 
 
                     {error && (
+
                         <p className="error">
                             {error}
                         </p>
+
                     )}
 
 
                     {success && (
+
                         <p className="success">
                             {success}
                         </p>
+
                     )}
 
 
                     <form onSubmit={handleSubmit}>
 
-
-                        {/* Website Name */}
+                        {/* WEBSITE NAME */}
 
                         <div className="input-group">
 
@@ -182,8 +358,6 @@ function AddPassword() {
 
                             <input
                                 type="text"
-                                name="websiteName"
-                                placeholder="Google"
                                 value={websiteName}
                                 onChange={(e) =>
                                     setWebsiteName(
@@ -196,7 +370,7 @@ function AddPassword() {
                         </div>
 
 
-                        {/* Website URL */}
+                        {/* WEBSITE URL */}
 
                         <div className="input-group">
 
@@ -206,8 +380,6 @@ function AddPassword() {
 
                             <input
                                 type="url"
-                                name="websiteUrl"
-                                placeholder="https://google.com"
                                 value={websiteUrl}
                                 onChange={(e) =>
                                     setWebsiteUrl(
@@ -220,7 +392,7 @@ function AddPassword() {
                         </div>
 
 
-                        {/* Username */}
+                        {/* USERNAME */}
 
                         <div className="input-group">
 
@@ -230,8 +402,6 @@ function AddPassword() {
 
                             <input
                                 type="text"
-                                name="username"
-                                placeholder="abc@gmail.com"
                                 value={username}
                                 onChange={(e) =>
                                     setUsername(
@@ -244,14 +414,13 @@ function AddPassword() {
                         </div>
 
 
-                        {/* Password */}
+                        {/* PASSWORD */}
 
                         <div className="input-group">
 
                             <label>
                                 Password
                             </label>
-
 
                             <div className="password-box">
 
@@ -261,8 +430,6 @@ function AddPassword() {
                                             ? "text"
                                             : "password"
                                     }
-                                    name="password"
-                                    placeholder="Enter password"
                                     value={password}
                                     onChange={(e) =>
                                         setPassword(
@@ -278,8 +445,7 @@ function AddPassword() {
                                     className="show-password-btn"
                                     onClick={() =>
                                         setShowPassword(
-                                            (previous) =>
-                                                !previous
+                                            !showPassword
                                         )
                                     }
                                 >
@@ -292,8 +458,6 @@ function AddPassword() {
                                         }
                                     ></i>
 
-                                   
-
                                 </button>
 
 
@@ -304,7 +468,7 @@ function AddPassword() {
                                         generatePassword
                                     }
                                 >
-                                    Generate Password
+                                    Generate
                                 </button>
 
                             </div>
@@ -312,7 +476,7 @@ function AddPassword() {
                         </div>
 
 
-                        {/* Category */}
+                        {/* CATEGORY */}
 
                         <div className="input-group">
 
@@ -321,7 +485,6 @@ function AddPassword() {
                             </label>
 
                             <select
-                                name="category"
                                 value={category}
                                 onChange={(e) =>
                                     setCategory(
@@ -355,7 +518,7 @@ function AddPassword() {
                         </div>
 
 
-                        {/* Notes */}
+                        {/* NOTES */}
 
                         <div className="input-group">
 
@@ -364,20 +527,18 @@ function AddPassword() {
                             </label>
 
                             <textarea
-                                name="notes"
-                                placeholder="Add notes (optional)"
                                 value={notes}
                                 onChange={(e) =>
                                     setNotes(
                                         e.target.value
                                     )
                                 }
-                            />
+                            ></textarea>
 
                         </div>
 
 
-                        {/* Save */}
+                        {/* SAVE */}
 
                         <button
                             type="submit"
@@ -385,12 +546,9 @@ function AddPassword() {
                             disabled={loading}
                         >
 
-                            <i className="fa-solid fa-floppy-disk"></i>
-
                             {loading
                                 ? "Saving..."
-                                : "Save Password"
-                            }
+                                : "Save Password"}
 
                         </button>
 
@@ -400,8 +558,9 @@ function AddPassword() {
 
             </div>
 
-        </div>
+        </Layout>
     );
 }
+
 
 export default AddPassword;

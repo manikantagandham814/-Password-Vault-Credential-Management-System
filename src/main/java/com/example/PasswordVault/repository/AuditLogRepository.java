@@ -21,4 +21,6 @@ public interface AuditLogRepository
     findByUserOrderByTimestampDesc(
             User user
     );
+    
+    long countByUser(User user);
 }

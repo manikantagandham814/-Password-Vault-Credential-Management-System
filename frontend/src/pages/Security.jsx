@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import Layout from "../components/Layout";
 import "../styles/dashboard/dashboard.css";
 import "../styles/security/security.css";
 
@@ -14,25 +15,19 @@ function Security() {
     // PROFILE
     // =====================================================
 
-    const [profileOpen, setProfileOpen] =
-        useState(false);
-
     const [fullName, setFullName] =
         useState("");
 
 
     // =====================================================
-    // SECURITY DATA
+    // SECURITY STATUS
     // =====================================================
 
-    const [alerts, setAlerts] =
-        useState([]);
+    const [alertsCount, setAlertsCount] =
+        useState(0);
 
-    const [suspicious, setSuspicious] =
-        useState([]);
-
-    const [auditLogs, setAuditLogs] =
-        useState([]);
+    const [suspiciousCount, setSuspiciousCount] =
+        useState(0);
 
 
     const [loading, setLoading] =
@@ -43,38 +38,7 @@ function Security() {
 
 
     // =====================================================
-    // CLOSE PROFILE DROPDOWN
-    // =====================================================
-
-    useEffect(() => {
-
-        function handleDocumentClick() {
-
-            setProfileOpen(false);
-
-        }
-
-
-        document.addEventListener(
-            "click",
-            handleDocumentClick
-        );
-
-
-        return () => {
-
-            document.removeEventListener(
-                "click",
-                handleDocumentClick
-            );
-
-        };
-
-    }, []);
-
-
-    // =====================================================
-    // LOAD SECURITY DATA
+    // LOAD SECURITY STATUS
     // =====================================================
 
     useEffect(() => {
@@ -153,8 +117,7 @@ function Security() {
 
             const [
                 alertsResponse,
-                suspiciousResponse,
-                auditResponse
+                suspiciousResponse
             ] = await Promise.all([
 
                 fetch(
@@ -169,13 +132,6 @@ function Security() {
                     {
                         credentials: "include"
                     }
-                ),
-
-                fetch(
-                    "http://localhost:8082/api/security/audit-logs",
-                    {
-                        credentials: "include"
-                    }
                 )
 
             ]);
@@ -183,8 +139,7 @@ function Security() {
 
             if (
                 alertsResponse.status === 401 ||
-                suspiciousResponse.status === 401 ||
-                auditResponse.status === 401
+                suspiciousResponse.status === 401
             ) {
 
                 navigate("/login");
@@ -196,8 +151,7 @@ function Security() {
 
             if (
                 !alertsResponse.ok ||
-                !suspiciousResponse.ok ||
-                !auditResponse.ok
+                !suspiciousResponse.ok
             ) {
 
                 throw new Error(
@@ -213,28 +167,18 @@ function Security() {
             const suspiciousData =
                 await suspiciousResponse.json();
 
-            const auditData =
-                await auditResponse.json();
 
-
-            setAlerts(
+            setAlertsCount(
                 Array.isArray(alertsData)
-                    ? alertsData
-                    : []
+                    ? alertsData.length
+                    : 0
             );
 
 
-            setSuspicious(
+            setSuspiciousCount(
                 Array.isArray(suspiciousData)
-                    ? suspiciousData
-                    : []
-            );
-
-
-            setAuditLogs(
-                Array.isArray(auditData)
-                    ? auditData
-                    : []
+                    ? suspiciousData.length
+                    : 0
             );
 
 
@@ -246,10 +190,21 @@ function Security() {
             );
 
 
-            setError(
-                "Unable to load security information"
-            );
+            if (
+                error instanceof TypeError
+            ) {
 
+                setError(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+
+            } else {
+
+                setError(
+                    "Unable to load security information. Please try again."
+                );
+
+            }
 
         } finally {
 
@@ -261,110 +216,12 @@ function Security() {
 
 
     // =====================================================
-    // LOGOUT
-    // =====================================================
-
-    async function handleLogout(e) {
-
-        e.preventDefault();
-
-
-        try {
-
-            await fetch(
-                "http://localhost:8082/api/logout",
-                {
-                    method: "POST",
-                    credentials: "include"
-                }
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Logout error:",
-                error
-            );
-
-        } finally {
-
-            navigate("/login");
-
-        }
-
-    }
-
-
-    // =====================================================
-    // FORMAT DATE
-    // =====================================================
-
-    function formatDate(value) {
-
-        if (!value) {
-
-            return "-";
-
-        }
-
-
-        const date =
-            new Date(value);
-
-
-        if (
-            Number.isNaN(
-                date.getTime()
-            )
-        ) {
-
-            return value;
-
-        }
-
-
-        return date.toLocaleString(
-            "en-IN",
-            {
-                dateStyle: "medium",
-                timeStyle: "short"
-            }
-        );
-
-    }
-
-
-    // =====================================================
-    // FORMAT TEXT
-    // =====================================================
-
-    function formatText(value) {
-
-        if (!value) {
-
-            return "-";
-
-        }
-
-
-        return value
-            .replaceAll("_", " ")
-            .replace(
-                /\b\w/g,
-                character =>
-                    character.toUpperCase()
-            );
-
-    }
-
-
-    // =====================================================
     // SECURITY STATUS
     // =====================================================
 
     const securityIssue =
-        alerts.length > 0 ||
-        suspicious.length > 0;
+        alertsCount > 0 ||
+        suspiciousCount > 0;
 
 
     // =====================================================
@@ -375,44 +232,24 @@ function Security() {
 
         return (
 
-            <div className="dashboard-page">
+            <Layout
+                fullName={fullName}
+                pageClassName="security-page"
+            >
 
-                {/* =================================================
-                    NAVBAR
-                ================================================= */}
+                <section className="table-card">
 
-                <header className="navbar">
+                    <div className="table-header">
 
-                    <div className="logo">
-
-                        <i className="fa-solid fa-lock"></i>
-
-                        <span>
-                            PasswordVault
-                        </span>
+                        <h3>
+                            Loading Security...
+                        </h3>
 
                     </div>
 
-                </header>
+                </section>
 
-
-                <main className="content">
-
-                    <section className="table-card">
-
-                        <div className="table-header">
-
-                            <h3>
-                                Loading Security...
-                            </h3>
-
-                        </div>
-
-                    </section>
-
-                </main>
-
-            </div>
+            </Layout>
 
         );
 
@@ -425,334 +262,145 @@ function Security() {
 
     return (
 
-        <div className="dashboard-page">
+        <Layout
+            fullName={fullName}
+            pageClassName="security-page"
+        >
+
+            {/* =================================================
+                SECURITY HEADER
+            ================================================= */}
+
+            <section className="security-header">
+
+                <div>
+
+                    <h2>
+                        Security Center
+                    </h2>
+
+                    <p>
+                        Monitor your account security,
+                        suspicious activity and security events.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    className="security-refresh"
+                    onClick={loadSecurityData}
+                >
+
+                    <i className="fa-solid fa-rotate"></i>
+
+                    Refresh
+
+                </button>
+
+            </section>
 
 
             {/* =================================================
-                NAVBAR
+                SECURITY STATUS
             ================================================= */}
 
-            <header className="navbar">
+            <section
+                className={
+                    securityIssue
+                        ? "security-status security-danger"
+                        : "security-status security-safe"
+                }
+            >
+
+                <div className="security-status-icon">
+
+                    <i
+                        className={
+                            securityIssue
+                                ? "fa-solid fa-triangle-exclamation"
+                                : "fa-solid fa-shield-check"
+                        }
+                    ></i>
+
+                </div>
 
 
-                {/* LOGO */}
+                <div className="security-status-text">
 
-                <div className="logo">
+                    <strong>
 
-                    <i className="fa-solid fa-lock"></i>
+                        {securityIssue
+                            ? "Suspicious activity detected"
+                            : "Your account is secure"
+                        }
+
+                    </strong>
+
 
                     <span>
-                        PasswordVault
+
+                        {securityIssue
+
+                            ? `${alertsCount} security alert${alertsCount === 1 ? "" : "s"} and ${suspiciousCount} suspicious activit${suspiciousCount === 1 ? "y" : "ies"} detected.`
+
+                            : "No suspicious activity has been detected on your account."
+
+                        }
+
                     </span>
 
                 </div>
 
 
-                {/* PROFILE */}
+                {securityIssue && (
 
-                <div className="profile">
+                    <span className="security-action-required">
 
-                    <button
-                        type="button"
-                        className="profile-btn"
-                        onClick={(e) => {
+                        ACTION REQUIRED
 
-                            e.stopPropagation();
+                    </span>
 
-                            setProfileOpen(
-                                value =>
-                                    !value
-                            );
+                )}
 
-                        }}
-                    >
-
-                        <i className="fa-solid fa-circle-user"></i>
-
-
-                        <span>
-                            {fullName || "User"}
-                        </span>
-
-
-                        <i className="fa-solid fa-angle-down"></i>
-
-                    </button>
-
-
-                    {profileOpen && (
-
-                        <div
-                            className="dropdown show"
-                            onClick={(e) =>
-                                e.stopPropagation()
-                            }
-                        >
-
-                            <Link to="/profile">
-
-                                <i className="fa-solid fa-user"></i>
-
-                                My Profile
-
-                            </Link>
-
-
-                            <Link to="/change-password">
-
-                                <i className="fa-solid fa-key"></i>
-
-                                Change Password
-
-                            </Link>
-
-
-                            <Link to="/settings">
-
-                                <i className="fa-solid fa-gear"></i>
-
-                                Settings
-
-                            </Link>
-
-
-                            <hr />
-
-
-                            <a
-                                href="/login"
-                                onClick={handleLogout}
-                            >
-
-                                <i className="fa-solid fa-right-from-bracket"></i>
-
-                                Logout
-
-                            </a>
-
-                        </div>
-
-                    )}
-
-                </div>
-
-            </header>
+            </section>
 
 
             {/* =================================================
-                MAIN LAYOUT
+                ERROR
             ================================================= */}
 
-            <div className="wrapper">
+            {error && (
+
+                <div className="security-error">
+
+                    <i className="fa-solid fa-circle-exclamation"></i>
+
+                    {error}
+
+                </div>
+
+            )}
+
+
+            {/* =================================================
+                SECURITY OPTIONS
+            ================================================= */}
+
+            <section className="security-menu">
 
 
                 {/* =================================================
-                    SIDEBAR
+                    SECURITY ALERTS
                 ================================================= */}
 
-                <aside className="sidebar">
-
-
-                    <Link to="/dashboard">
-
-                        <i className="fa-solid fa-chart-line"></i>
-
-                        Overview
-
-                    </Link>
-
-
-                    <Link to="/passwords">
-
-                        <i className="fa-solid fa-key"></i>
-
-                        My Passwords
-
-                    </Link>
-
-
-                    <Link to="/add-password">
-
-                        <i className="fa-solid fa-plus"></i>
-
-                        Add Password
-
-                    </Link>
-
-
-                    <Link to="/inbox">
-
-                        <i className="fa-solid fa-inbox"></i>
-
-                        Inbox
-
-                    </Link>
-
-
-                    <Link to="/sent">
-
-                        <i className="fa-solid fa-paper-plane"></i>
-
-                        Sent
-
-                    </Link>
-
-
-                    <Link to="/login-history">
-
-                        <i className="fa-solid fa-clock-rotate-left"></i>
-
-                        Login History
-
-                    </Link>
-
-
-                    {/* SECURITY ACTIVE */}
-
-                    <Link
-                        to="/security"
-                        className="active"
-                    >
-
-                        <i className="fa-solid fa-shield-halved"></i>
-
-                        Security
-
-                    </Link>
-
-
-                </aside>
-
-
-                {/* =================================================
-                    CONTENT
-                ================================================= */}
-
-                <main className="content">
-
-
-                    {/* =================================================
-                        SECURITY HEADER
-                    ================================================= */}
-
-                    <section className="security-header">
-
-                        <div>
-
-                            <h2>
-                                Security Center
-                            </h2>
-
-                            <p>
-                                Monitor your account security,
-                                suspicious activity and security events.
-                            </p>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            className="security-refresh"
-                            onClick={loadSecurityData}
-                        >
-
-                            <i className="fa-solid fa-rotate"></i>
-
-                            Refresh
-
-                        </button>
-
-                    </section>
-
-
-                    {/* =================================================
-                        SECURITY STATUS
-                    ================================================= */}
-
-                    <section
-                        className={
-                            securityIssue
-                                ? "security-status security-danger"
-                                : "security-status security-safe"
-                        }
-                    >
-
-                        <div className="security-status-icon">
-
-                            <i
-                                className={
-                                    securityIssue
-                                        ? "fa-solid fa-triangle-exclamation"
-                                        : "fa-solid fa-shield-check"
-                                }
-                            ></i>
-
-                        </div>
-
-
-                        <div className="security-status-text">
-
-                            <strong>
-
-                                {securityIssue
-                                    ? "Suspicious activity detected"
-                                    : "Your account is secure"
-                                }
-
-                            </strong>
-
-
-                            <span>
-
-                                {securityIssue
-
-                                    ? `${alerts.length} security alert${alerts.length === 1 ? "" : "s"} and ${suspicious.length} suspicious activit${suspicious.length === 1 ? "y" : "ies"} detected.`
-
-                                    : "No suspicious activity has been detected on your account."
-                                }
-
-                            </span>
-
-                        </div>
-
-
-                        {securityIssue && (
-
-                            <span className="security-action-required">
-
-                                ACTION REQUIRED
-
-                            </span>
-
-                        )}
-
-                    </section>
-
-
-                    {/* =================================================
-                        ERROR
-                    ================================================= */}
-
-                    {error && (
-
-                        <div className="security-error">
-
-                            <i className="fa-solid fa-circle-exclamation"></i>
-
-                            {error}
-
-                        </div>
-
-                    )}
-
-
-                    {/* =================================================
-                        SECURITY ALERTS
-                    ================================================= */}
-
-                    <section className="table-card security-card security-alert-card-section">
-
+                <Link
+                    to="/security/alerts"
+                    className="security-menu-link"
+                >
+
+                    <div className="table-card security-card">
 
                         <div className="table-header security-section-header">
 
@@ -775,120 +423,33 @@ function Security() {
 
                             <span
                                 className={
-                                    alerts.length > 0
+                                    alertsCount > 0
                                         ? "security-count danger-count"
                                         : "security-count"
                                 }
                             >
 
-                                {alerts.length}
+                                {alertsCount}
 
                             </span>
 
                         </div>
 
+                    </div>
 
-                        {alerts.length === 0 ? (
-
-                            <div className="security-empty">
-
-                                <i className="fa-solid fa-shield-check"></i>
-
-                                <h4>
-                                    No Security Alerts
-                                </h4>
-
-                                <p>
-                                    Your account has no active security alerts.
-                                </p>
-
-                            </div>
-
-                        ) : (
-
-                            <div className="security-alert-list">
-
-                                {alerts.map(
-                                    alert => (
-
-                                        <div
-                                            className="security-alert-item"
-                                            key={alert.id}
-                                        >
-
-                                            <div className="security-alert-icon">
-
-                                                <i className="fa-solid fa-triangle-exclamation"></i>
-
-                                            </div>
+                </Link>
 
 
-                                            <div className="security-alert-content">
+                {/* =================================================
+                    SUSPICIOUS ACTIVITY
+                ================================================= */}
 
-                                                <div className="security-alert-title">
+                <Link
+                    to="/security/suspicious"
+                    className="security-menu-link"
+                >
 
-                                                    <h4>
-                                                        {formatText(
-                                                            alert.alertType
-                                                        )}
-                                                    </h4>
-
-
-                                                    <span className="high-badge">
-
-                                                        {alert.severity || "HIGH"}
-
-                                                    </span>
-
-                                                </div>
-
-
-                                                <p>
-                                                    {alert.message}
-                                                </p>
-
-
-                                                <div className="security-alert-meta">
-
-                                                    <span>
-
-                                                        <i className="fa-regular fa-clock"></i>
-
-                                                        {formatDate(
-                                                            alert.createdAt
-                                                        )}
-
-                                                    </span>
-
-
-                                                    <span className="unread-status">
-
-                                                        {alert.status}
-
-                                                    </span>
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                    )
-                                )}
-
-                            </div>
-
-                        )}
-
-                    </section>
-
-
-                    {/* =================================================
-                        SUSPICIOUS ACTIVITY
-                    ================================================= */}
-
-                    <section className="table-card security-card">
-
+                    <div className="table-card security-card">
 
                         <div className="table-header security-section-header">
 
@@ -911,134 +472,33 @@ function Security() {
 
                             <span
                                 className={
-                                    suspicious.length > 0
+                                    suspiciousCount > 0
                                         ? "security-count danger-count"
                                         : "security-count"
                                 }
                             >
 
-                                {suspicious.length}
+                                {suspiciousCount}
 
                             </span>
 
                         </div>
 
+                    </div>
 
-                        {suspicious.length === 0 ? (
-
-                            <div className="security-empty">
-
-                                <i className="fa-solid fa-circle-check"></i>
-
-                                <h4>
-                                    No Suspicious Activity
-                                </h4>
-
-                                <p>
-                                    No unusual activity has been detected.
-                                </p>
-
-                            </div>
-
-                        ) : (
-
-                            <div className="security-table-wrapper">
-
-                                <table className="security-table">
-
-                                    <thead>
-
-                                        <tr>
-
-                                            <th>
-                                                Activity
-                                            </th>
-
-                                            <th>
-                                                Description
-                                            </th>
-
-                                            <th>
-                                                Detected
-                                            </th>
-
-                                            <th>
-                                                Status
-                                            </th>
-
-                                        </tr>
-
-                                    </thead>
+                </Link>
 
 
-                                    <tbody>
+                {/* =================================================
+                    AUDIT LOGS
+                ================================================= */}
 
-                                        {suspicious.map(
-                                            activity => (
+                <Link
+                    to="/security/audit-logs"
+                    className="security-menu-link"
+                >
 
-                                                <tr
-                                                    key={activity.id}
-                                                >
-
-                                                    <td>
-
-                                                        <strong>
-                                                            {formatText(
-                                                                activity.activityType
-                                                            )}
-                                                        </strong>
-
-                                                    </td>
-
-
-                                                    <td>
-                                                        {
-                                                            activity.description
-                                                        }
-                                                    </td>
-
-
-                                                    <td>
-                                                        {formatDate(
-                                                            activity.detectedAt
-                                                        )}
-                                                    </td>
-
-
-                                                    <td>
-
-                                                        <span className="flagged-badge">
-
-                                                            <i className="fa-solid fa-flag"></i>
-
-                                                            {activity.status}
-
-                                                        </span>
-
-                                                    </td>
-
-                                                </tr>
-
-                                            )
-                                        )}
-
-                                    </tbody>
-
-                                </table>
-
-                            </div>
-
-                        )}
-
-                    </section>
-
-
-                    {/* =================================================
-                        AUDIT LOGS
-                    ================================================= */}
-
-                    <section className="table-card security-card">
-
+                    <div className="table-card security-card">
 
                         <div className="table-header security-section-header">
 
@@ -1061,110 +521,65 @@ function Security() {
 
                             <span className="security-count">
 
-                                {auditLogs.length}
+                                View
 
                             </span>
 
                         </div>
 
+                    </div>
 
-                        {auditLogs.length === 0 ? (
+                </Link>
 
-                            <div className="security-empty">
 
-                                <i className="fa-solid fa-file-circle-check"></i>
+                {/* =================================================
+                    SECURITY ANALYTICS
+                ================================================= */}
 
-                                <h4>
-                                    No Audit Logs
-                                </h4>
+                <Link
+                    to="/security/analytics"
+                    className="security-menu-link"
+                >
+
+                    <div className="table-card security-card">
+
+                        <div className="table-header security-section-header">
+
+                            <div>
+
+                                <h3>
+
+                                    <i className="fa-solid fa-chart-pie"></i>
+
+                                    Security Analytics
+
+                                </h3>
 
                                 <p>
-                                    No security events have been recorded.
+                                    View security statistics and analysis
                                 </p>
 
                             </div>
 
-                        ) : (
 
-                            <div className="security-table-wrapper">
+                            <span className="security-count">
 
-                                <table className="security-table">
+                                View
 
-                                    <thead>
+                            </span>
 
-                                        <tr>
+                        </div>
 
-                                            <th>
-                                                Action
-                                            </th>
+                    </div>
 
-                                            <th>
-                                                Description
-                                            </th>
-
-                                            <th>
-                                                Time
-                                            </th>
-
-                                        </tr>
-
-                                    </thead>
+                </Link>
 
 
-                                    <tbody>
-
-                                        {auditLogs.map(
-                                            log => (
-
-                                                <tr
-                                                    key={log.id}
-                                                >
-
-                                                    <td>
-
-                                                        <strong>
-                                                            {formatText(
-                                                                log.action
-                                                            )}
-                                                        </strong>
-
-                                                    </td>
+            </section>
 
 
-                                                    <td>
-                                                        {
-                                                            log.description
-                                                        }
-                                                    </td>
+        </Layout>
 
-
-                                                    <td>
-                                                        {formatDate(
-                                                            log.timestamp
-                                                        )}
-                                                    </td>
-
-                                                </tr>
-
-                                            )
-                                        )}
-
-                                    </tbody>
-
-                                </table>
-
-                            </div>
-
-                        )}
-
-                    </section>
-
-
-                </main>
-
-            </div>
-
-        </div>
     );
 }
 

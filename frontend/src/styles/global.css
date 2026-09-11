@@ -264,6 +264,9 @@ button:hover {
     margin-bottom: 15px;
 
     font-weight: bold;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .error {
@@ -274,6 +277,9 @@ button:hover {
     margin-bottom: 15px;
 
     font-weight: bold;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 
@@ -281,13 +287,182 @@ button:hover {
    RESPONSIVE
 ========================================================= */
 
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .container {
+        width: 100%;
+
+        max-width: 420px;
+
+        padding: 30px;
+
+        box-sizing: border-box;
+    }
+
+    h2 {
+        font-size: 26px;
+    }
+
+    p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    input {
+        width: 100%;
+
+        padding: 12px;
+
+        font-size: 15px;
+
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+
+        padding: 12px;
+
+        font-size: 15px;
+
+        box-sizing: border-box;
+    }
+
+    .button-group {
+        gap: 12px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 480px) {
 
     .container {
-        width: 90%;
+        width: calc(100% - 30px);
+
+        max-width: 420px;
+
+        padding: 25px 20px;
+
+        border-radius: 10px;
+    }
+
+    h2 {
+        font-size: 24px;
+
+        margin-bottom: 18px;
+    }
+
+    p {
+        font-size: 14px;
+
+        line-height: 1.5;
+    }
+
+    input {
+        width: 100%;
+
+        padding: 12px;
+
+        margin-bottom: 15px;
+
+        font-size: 15px;
+    }
+
+    button {
+        width: 100%;
+
+        padding: 12px;
+
+        font-size: 15px;
     }
 
     .button-group {
         flex-direction: column;
+
+        gap: 10px;
+
+        margin-top: 18px;
+    }
+
+    .button-group button {
+        width: 100%;
+    }
+
+    .timer-text {
+        font-size: 14px;
+    }
+
+    #timer {
+        font-size: 17px;
+    }
+
+    .success,
+    .error {
+        font-size: 14px;
+
+        line-height: 1.4;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .container {
+        width: calc(100% - 20px);
+
+        padding: 20px 15px;
+
+        border-radius: 9px;
+    }
+
+    h2 {
+        font-size: 22px;
+
+        margin-bottom: 16px;
+    }
+
+    p {
+        font-size: 13px;
+    }
+
+    input {
+        padding: 11px;
+
+        font-size: 14px;
+    }
+
+    button {
+        padding: 11px;
+
+        font-size: 14px;
+    }
+
+    .button-group {
+        gap: 8px;
+    }
+
+    .timer-text {
+        font-size: 13px;
+    }
+
+    #timer {
+        font-size: 16px;
+    }
+
+    .success,
+    .error {
+        font-size: 13px;
     }
 }

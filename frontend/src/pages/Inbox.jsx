@@ -1,122 +1,48 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import Layout from "../components/Layout";
 import "../styles/dashboard/dashboard.css";
 
-
 function Inbox() {
-
     const navigate = useNavigate();
 
-    const [profileOpen, setProfileOpen] =
-        useState(false);
-
-    const [fullName, setFullName] =
-        useState("");
-
-    const [items, setItems] =
-        useState([]);
-
-    const [loading, setLoading] =
-        useState(true);
-
-    const [error, setError] =
-        useState("");
-
-
-    // =====================================================
-    // CLOSE PROFILE DROPDOWN
-    // =====================================================
-
-    useEffect(() => {
-
-        function handleDocumentClick() {
-
-            setProfileOpen(false);
-
-        }
-
-        document.addEventListener(
-            "click",
-            handleDocumentClick
-        );
-
-        return () => {
-
-            document.removeEventListener(
-                "click",
-                handleDocumentClick
-            );
-
-        };
-
-    }, []);
-
+    const [fullName, setFullName] = useState("");
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     // =====================================================
     // LOAD INBOX
     // =====================================================
 
     useEffect(() => {
-
         loadInbox();
-
     }, []);
 
-
     async function loadInbox() {
-
         try {
-
             setLoading(true);
             setError("");
 
-
-            const response =
-                await fetch(
-                    "http://localhost:8082/api/shares/inbox",
-                    {
-                        method: "GET",
-                        credentials: "include"
-                    }
-                );
-
-
-            // =================================================
-            // NOT LOGGED IN
-            // =================================================
+            const response = await fetch(
+                "http://localhost:8082/api/shares/inbox",
+                {
+                    method: "GET",
+                    credentials: "include"
+                }
+            );
 
             if (response.status === 401) {
-
                 navigate("/login");
-
                 return;
             }
 
-
-            // =================================================
-            // SERVER ERROR
-            // =================================================
-
             if (!response.ok) {
-
-                const message =
-                    await response.text();
-
-                throw new Error(
-                    message ||
-                    "Unable to load inbox"
-                );
+                throw new Error("Unable to load inbox");
             }
 
-
-            // =================================================
-            // RESPONSE
-            // =================================================
-
-            const data =
-                await response.json();
-
+            const data = await response.json();
 
             setItems(
                 Array.isArray(data)
@@ -124,886 +50,439 @@ function Inbox() {
                     : []
             );
 
-
         } catch (err) {
+            console.error("Inbox error:", err);
 
-            console.error(
-                "Inbox error:",
-                err
-            );
-
-            setError(
-                err.message ||
-                "Unable to load shared passwords"
-            );
+            if (err instanceof TypeError) {
+                setError(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+            } else {
+                setError(
+                    "Unable to load shared passwords. Please try again."
+                );
+            }
 
         } finally {
-
             setLoading(false);
-
         }
     }
-
 
     // =====================================================
     // LOAD USER PROFILE NAME
     // =====================================================
 
     useEffect(() => {
-
         async function loadUser() {
-
             try {
-
-                const response =
-                    await fetch(
-                        "http://localhost:8082/api/dashboard",
-                        {
-                            method: "GET",
-                            credentials: "include"
-                        }
-                    );
-
-
-                if (
-                    response.status === 401
-                ) {
-
-                    navigate("/login");
-
-                    return;
-                }
-
-
-                if (!response.ok) {
-
-                    return;
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                if (
-                    !data.authenticated
-                ) {
-
-                    navigate("/login");
-
-                    return;
-                }
-
-
-                setFullName(
-                    data.fullName || "User"
+                const response = await fetch(
+                    "http://localhost:8082/api/dashboard",
+                    {
+                        method: "GET",
+                        credentials: "include"
+                    }
                 );
 
+                if (response.status === 401) {
+                    navigate("/login");
+                    return;
+                }
+
+                if (!response.ok) {
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!data.authenticated) {
+                    navigate("/login");
+                    return;
+                }
+
+                setFullName(
+                    data.fullName || ""
+                );
 
             } catch (err) {
-
                 console.error(
                     "Profile loading error:",
                     err
                 );
-
             }
-
         }
-
 
         loadUser();
-
     }, [navigate]);
-
-
-    // =====================================================
-    // LOGOUT
-    // =====================================================
-
-    async function handleLogout(e) {
-
-        e.preventDefault();
-
-        try {
-
-            await fetch(
-                "http://localhost:8082/api/logout",
-                {
-                    method: "POST",
-                    credentials: "include"
-                }
-            );
-
-        } catch (err) {
-
-            console.error(
-                "Logout error:",
-                err
-            );
-
-        } finally {
-
-            navigate("/login");
-
-        }
-    }
-
 
     // =====================================================
     // FORMAT PERMISSION
     // =====================================================
 
-    function formatPermission(
-        permission
-    ) {
-
+    function formatPermission(permission) {
         if (!permission) {
-
             return "-";
-
         }
-
 
         switch (permission) {
-
             case "VIEW_ONLY":
-
                 return "View Only";
 
-
             case "EDIT":
-
                 return "Edit Access";
 
-
             case "FULL_MANAGEMENT":
-
                 return "Full Management";
 
-
             default:
-
                 return permission;
-
         }
     }
-
 
     // =====================================================
     // DELETE SHARED PASSWORD
     // FULL MANAGEMENT ONLY
     // =====================================================
 
-    async function handleDelete(
-        shareId
-    ) {
-
-        const confirmed =
-            window.confirm(
-                "Are you sure you want to delete this password?"
-            );
-
+    async function handleDelete(shareId) {
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this password?"
+        );
 
         if (!confirmed) {
-
             return;
-
         }
 
-
         try {
-
-            const response =
-                await fetch(
-                    `http://localhost:8082/api/shares/${shareId}/password`,
-                    {
-                        method: "DELETE",
-                        credentials: "include"
-                    }
-                );
-
-
-            // =================================================
-            // SESSION EXPIRED
-            // =================================================
-
-            if (
-                response.status === 401
-            ) {
-
-                navigate("/login");
-
-                return;
-            }
-
-
-            const message =
-                await response.text();
-
-
-            if (!response.ok) {
-
-                alert(
-                    message ||
-                    "Unable to delete password"
-                );
-
-                return;
-            }
-
-
-            alert(
-                "Password deleted successfully"
+            const response = await fetch(
+                `http://localhost:8082/api/shares/${shareId}/password`,
+                {
+                    method: "DELETE",
+                    credentials: "include"
+                }
             );
 
+            if (response.status === 401) {
+                navigate("/login");
+                return;
+            }
 
-            // Refresh inbox
+            if (!response.ok) {
+                const message = await response.text();
+
+                const technicalError =
+                    /Exception|at org\.|at java\.|StackTrace|Error:/i.test(
+                        message
+                    );
+
+                if (
+                    technicalError ||
+                    !message.trim()
+                ) {
+                    alert(
+                        "Unable to delete password. Please try again."
+                    );
+                } else {
+                    alert(message);
+                }
+
+                return;
+            }
+
+            alert("Password deleted successfully");
 
             await loadInbox();
 
-
         } catch (err) {
-
             console.error(
                 "Delete shared password error:",
                 err
             );
 
-
             alert(
-                "Unable to delete password"
+                "Unable to connect to server. Please check your connection and try again."
             );
-
         }
     }
-
 
     // =====================================================
     // LOADING
     // =====================================================
 
     if (loading) {
-
         return (
+            <Layout fullName={fullName}>
+                <section className="table-card">
 
-            <div className="dashboard-page">
-
-
-                {/* =================================================
-                    NAVBAR
-                ================================================= */}
-
-                <header className="navbar">
-
-                    <div className="logo">
-
-                        <i className="fa-solid fa-lock"></i>
-
-                        <span>
-                            PasswordVault
-                        </span>
-
+                    <div className="table-header">
+                        <h3>
+                            Loading Inbox...
+                        </h3>
                     </div>
 
-                </header>
-
-
-                {/* =================================================
-                    CONTENT
-                ================================================= */}
-
-                <main className="content">
-
-                    <section className="table-card">
-
-                        <div className="table-header">
-
-                            <h3>
-                                Loading Inbox...
-                            </h3>
-
-                        </div>
-
-                    </section>
-
-                </main>
-
-            </div>
-
+                </section>
+            </Layout>
         );
-
     }
-
 
     // =====================================================
     // MAIN UI
     // =====================================================
 
     return (
+        <Layout fullName={fullName}>
 
-        <div className="dashboard-page">
+            <section className="welcome">
 
+                <h2>
+                    Inbox
+                </h2>
+
+                <p>
+                    Passwords shared with you
+                </p>
+
+            </section>
 
             {/* =================================================
-                NAVBAR
+                ERROR
             ================================================= */}
 
-            <header className="navbar">
+            {error && (
+                <p className="error">
+                    {error}
+                </p>
+            )}
 
+            {/* =================================================
+                EMPTY
+            ================================================= */}
 
-                {/* LOGO */}
+            {!error &&
+                items.length === 0 && (
+                    <section className="table-card">
 
-                <div className="logo">
-
-                    <i className="fa-solid fa-lock"></i>
-
-                    <span>
-                        PasswordVault
-                    </span>
-
-                </div>
-
-
-                {/* PROFILE */}
-
-                <div className="profile">
-
-                    <button
-                        type="button"
-                        className="profile-btn"
-                        onClick={(e) => {
-
-                            e.stopPropagation();
-
-                            setProfileOpen(
-                                (value) =>
-                                    !value
-                            );
-
-                        }}
-                    >
-
-                        <i className="fa-solid fa-circle-user"></i>
-
-                        <span>
-                            {fullName || "User"}
-                        </span>
-
-                        <i className="fa-solid fa-angle-down"></i>
-
-                    </button>
-
-
-                    {profileOpen && (
-
-                        <div
-                            className="dropdown show"
-                            onClick={(e) =>
-                                e.stopPropagation()
-                            }
-                        >
-
-                            <Link to="/profile">
-
-                                <i className="fa-solid fa-user"></i>
-
-                                My Profile
-
-                            </Link>
-
-
-                            <Link to="/change-password">
-
-                                <i className="fa-solid fa-key"></i>
-
-                                Change Password
-
-                            </Link>
-
-
-                            <Link to="/settings">
-
-                                <i className="fa-solid fa-gear"></i>
-
-                                Settings
-
-                            </Link>
-
-
-                            <hr />
-
-
-                            <a
-                                href="/login"
-                                onClick={
-                                    handleLogout
-                                }
-                            >
-
-                                <i className="fa-solid fa-right-from-bracket"></i>
-
-                                Logout
-
-                            </a>
-
+                        <div className="table-header">
+                            <h3>
+                                No Shared Passwords
+                            </h3>
                         </div>
 
-                    )}
+                        <div
+                            style={{
+                                textAlign: "center",
+                                padding: "40px"
+                            }}
+                        >
+                            <i
+                                className="fa-solid fa-inbox"
+                                style={{
+                                    fontSize: "35px",
+                                    marginBottom: "15px"
+                                }}
+                            ></i>
 
-                </div>
-
-            </header>
-
-
-            {/* =================================================
-                MAIN LAYOUT
-            ================================================= */}
-
-            <div className="wrapper">
-
-
-                {/* =================================================
-                    SIDEBAR
-                ================================================= */}
-
-                <aside className="sidebar">
-
-
-                    {/* DASHBOARD */}
-
-                    <Link to="/dashboard">
-
-                        <i className="fa-solid fa-chart-line"></i>
-
-                        Overview
-
-                    </Link>
-
-
-                    {/* MY PASSWORDS */}
-
-                    <Link to="/passwords">
-
-                        <i className="fa-solid fa-key"></i>
-
-                        My Passwords
-
-                    </Link>
-
-
-                    {/* ADD PASSWORD */}
-
-                    <Link to="/add-password">
-
-                        <i className="fa-solid fa-plus"></i>
-
-                        Add Password
-
-                    </Link>
-
-
-                    {/* INBOX */}
-
-                    <Link
-                        to="/inbox"
-                        className="active"
-                    >
-
-                        <i className="fa-solid fa-inbox"></i>
-
-                        Inbox
-
-                    </Link>
-
-
-                    {/* SENT */}
-
-                    <Link to="/sent">
-
-                        <i className="fa-solid fa-paper-plane"></i>
-
-                        Sent
-
-                    </Link>
-                     <Link to="/login-history">
-
-        <i className="fa-solid fa-clock-rotate-left"></i>
-
-        Login History
-
-    </Link>
-    <Link to="/security">
-
-        <i className="fa-solid fa-shield-halved"></i>
-
-        Security
-
-    </Link>
-
-                </aside>
-
-
-                {/* =================================================
-                    CONTENT
-                ================================================= */}
-
-                <main className="content">
-
-
-                    {/* =================================================
-                        PAGE HEADER
-                    ================================================= */}
-
-                    <section className="welcome">
-
-                        <h2>
-                            Inbox
-                        </h2>
-
-                        <p>
-                            Passwords shared with you
-                        </p>
+                            <p>
+                                Passwords shared
+                                with you will
+                                appear here.
+                            </p>
+                        </div>
 
                     </section>
+                )}
 
+            {/* =================================================
+                INBOX TABLE
+            ================================================= */}
 
-                    {/* =================================================
-                        ERROR
-                    ================================================= */}
+            {!error &&
+                items.length > 0 && (
+                    <section className="table-card">
 
-                    {error && (
+                        <div className="table-header">
+                            <h3>
+                                Passwords Shared With You
+                            </h3>
+                        </div>
 
-                        <p className="error">
+                        <table>
 
-                            {error}
+                            <thead>
+                                <tr>
 
-                        </p>
+                                    <th>
+                                        Website
+                                    </th>
 
-                    )}
+                                    <th>
+                                        Shared By
+                                    </th>
 
+                                    <th>
+                                        Permission
+                                    </th>
 
-                    {/* =================================================
-                        EMPTY
-                    ================================================= */}
+                                    <th>
+                                        Actions
+                                    </th>
 
-                    {!error &&
-                        items.length === 0 && (
+                                </tr>
+                            </thead>
 
-                            <section className="table-card">
+                            <tbody>
 
-                                <div className="table-header">
+                                {items.map((item) => {
 
-                                    <h3>
-                                        No Shared Passwords
-                                    </h3>
+                                    const shareId =
+                                        item.shareId ||
+                                        item.id;
 
-                                </div>
+                                    const passwordId =
+                                        item.passwordId;
 
+                                    const permission =
+                                        (
+                                            item.permission ||
+                                            ""
+                                        )
+                                            .toUpperCase()
+                                            .trim();
 
-                                <div
-                                    style={{
-                                        textAlign:
-                                            "center",
-                                        padding:
-                                            "40px"
-                                    }}
-                                >
+                                    const canEdit =
+                                        permission === "EDIT" ||
+                                        permission === "FULL_MANAGEMENT";
 
-                                    <i
-                                        className="fa-solid fa-inbox"
-                                        style={{
-                                            fontSize:
-                                                "35px",
-                                            marginBottom:
-                                                "15px"
-                                        }}
-                                    ></i>
+                                    const canManage =
+                                        permission === "FULL_MANAGEMENT";
 
+                                    return (
+                                        <tr key={shareId}>
 
-                                    <p>
+                                            {/* WEBSITE */}
 
-                                        Passwords shared
-                                        with you will
-                                        appear here.
+                                            <td>
 
-                                    </p>
+                                                <i className="fa-solid fa-globe"></i>
 
-                                </div>
+                                                <span>
+                                                    {" "}
+                                                    {item.websiteName}
+                                                </span>
 
-                            </section>
+                                            </td>
 
-                        )
-                    }
+                                            {/* SHARED BY */}
 
+                                            <td>
 
-                    {/* =================================================
-                        INBOX TABLE
-                    ================================================= */}
+                                                <strong>
+                                                    {
+                                                        item.sharedByName ||
+                                                        item.ownerName ||
+                                                        "-"
+                                                    }
+                                                </strong>
 
-                    {!error &&
-                        items.length > 0 && (
+                                                <small>
+                                                    {
+                                                        item.sharedByEmail ||
+                                                        item.ownerEmail ||
+                                                        ""
+                                                    }
+                                                </small>
 
-                            <section className="table-card">
+                                            </td>
 
+                                            {/* PERMISSION */}
 
-                                {/* TABLE HEADER */}
+                                            <td>
 
-                                <div className="table-header">
+                                                <span className="permission">
 
-                                    <h3>
-                                        Passwords Shared With You
-                                    </h3>
+                                                    {
+                                                        formatPermission(
+                                                            permission
+                                                        )
+                                                    }
 
-                                </div>
+                                                </span>
 
+                                            </td>
 
-                                {/* TABLE */}
+                                            {/* ACTIONS */}
 
-                                <table>
+                                            <td>
 
-                                    <thead>
+                                                <div className="actions">
 
-                                        <tr>
+                                                    {/* VIEW */}
 
-                                            <th>
-                                                Website
-                                            </th>
+                                                    <Link
+                                                        to={`/shared-password/${shareId}`}
+                                                        className="view"
+                                                        title="View Password"
+                                                    >
+                                                        <i className="fa-solid fa-eye"></i>
+                                                    </Link>
 
-                                            <th>
-                                                Shared By
-                                            </th>
+                                                    {/* EDIT */}
 
-                                            <th>
-                                                Permission
-                                            </th>
+                                                    {canEdit && (
+                                                        <Link
+                                                            to={`/edit-password/${passwordId}`}
+                                                            className="edit"
+                                                            title="Edit Password"
+                                                        >
+                                                            <i className="fa-solid fa-pen"></i>
+                                                        </Link>
+                                                    )}
 
-                                            <th>
-                                                Actions
-                                            </th>
+                                                    {/* DELETE */}
+
+                                                    {canManage && (
+                                                        <button
+                                                            type="button"
+                                                            className="delete"
+                                                            title="Delete Password"
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    shareId
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="fa-solid fa-trash"></i>
+                                                        </button>
+                                                    )}
+
+                                                    {/* MANAGE SHARING */}
+
+                                                    {canManage && (
+                                                        <Link
+                                                            to={`/share-password/${passwordId}`}
+                                                            className="manage"
+                                                            title="Manage Sharing"
+                                                        >
+                                                            <i className="fa-solid fa-share-nodes"></i>
+                                                        </Link>
+                                                    )}
+
+                                                </div>
+
+                                            </td>
 
                                         </tr>
+                                    );
+                                })}
 
-                                    </thead>
+                            </tbody>
 
+                        </table>
 
-                                    <tbody>
+                    </section>
+                )}
 
-                                        {items.map(
-                                            (item) => {
-
-                                                const shareId =
-                                                    item.shareId ||
-                                                    item.id;
-
-                                                const passwordId =
-                                                    item.passwordId;
-
-                                                const permission =
-                                                    (
-                                                        item.permission ||
-                                                        ""
-                                                    )
-                                                    .toUpperCase()
-                                                    .trim();
-
-
-                                                const canEdit =
-                                                    permission === "EDIT" ||
-                                                    permission === "FULL_MANAGEMENT";
-
-
-                                                const canManage =
-                                                    permission === "FULL_MANAGEMENT";
-
-
-                                                return (
-
-                                                    <tr
-                                                        key={
-                                                            shareId
-                                                        }
-                                                    >
-
-
-                                                        {/* WEBSITE */}
-
-                                                        <td>
-
-                                                            <i className="fa-solid fa-globe"></i>
-
-                                                            <span>
-
-                                                                {" "}
-
-                                                                {
-                                                                    item.websiteName
-                                                                }
-
-                                                            </span>
-
-                                                        </td>
-
-
-                                                        {/* SHARED BY */}
-
-                                                        <td>
-
-                                                            <strong>
-
-                                                                {
-                                                                    item.sharedByName ||
-                                                                    item.ownerName ||
-                                                                    "-"
-                                                                }
-
-                                                            </strong>
-
-
-                                                            <small>
-
-                                                                {
-                                                                    item.sharedByEmail ||
-                                                                    item.ownerEmail ||
-                                                                    ""
-                                                                }
-
-                                                            </small>
-
-                                                        </td>
-
-
-                                                        {/* PERMISSION */}
-
-                                                        <td>
-
-                                                            <span
-                                                                className="permission"
-                                                            >
-
-                                                                {
-                                                                    formatPermission(
-                                                                        permission
-                                                                    )
-                                                                }
-
-                                                            </span>
-
-                                                        </td>
-
-
-                                                        {/* =================================================
-                                                            ACTIONS
-                                                        ================================================= */}
-
-                                                        <td>
-
-                                                            <div
-                                                                className="actions"
-                                                            >
-
-
-                                                                {/* VIEW */}
-
-                                                                <Link
-                                                                    to={
-                                                                        `/shared-password/${shareId}`
-                                                                    }
-                                                                    className="view"
-                                                                    title="View Password"
-                                                                >
-
-                                                                    <i className="fa-solid fa-eye"></i>
-
-                                                                </Link>
-
-
-                                                                {/* EDIT */}
-
-                                                                {canEdit && (
-
-                                                                    <Link
-                                                                        to={
-                                                                            `/edit-password/${passwordId}`
-                                                                        }
-                                                                        className="edit"
-                                                                        title="Edit Password"
-                                                                    >
-
-                                                                        <i className="fa-solid fa-pen"></i>
-
-                                                                    </Link>
-
-                                                                )}
-
-
-                                                                {/* DELETE */}
-
-                                                                {canManage && (
-
-                                                                    <button
-                                                                        type="button"
-                                                                        className="delete"
-                                                                        title="Delete Password"
-                                                                        onClick={() =>
-                                                                            handleDelete(
-                                                                                shareId
-                                                                            )
-                                                                        }
-                                                                    >
-
-                                                                        <i className="fa-solid fa-trash"></i>
-
-                                                                    </button>
-
-                                                                )}
-
-
-                                                                {/* MANAGE SHARING */}
-
-                                                                {canManage && (
-
-                                                                    <Link
-                                                                        to={
-                                                                            `/share-password/${passwordId}`
-                                                                        }
-                                                                        className="manage"
-                                                                        title="Manage Sharing"
-                                                                    >
-
-                                                                        <i className="fa-solid fa-share-nodes"></i>
-
-                                                                    </Link>
-
-                                                                )}
-
-                                                            </div>
-
-                                                        </td>
-
-                                                    </tr>
-
-                                                );
-
-                                            }
-                                        )}
-
-                                    </tbody>
-
-                                </table>
-
-                            </section>
-
-                        )
-                    }
-
-                </main>
-
-            </div>
-
-        </div>
+        </Layout>
     );
 }
-
 
 export default Inbox;

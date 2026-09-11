@@ -16,7 +16,7 @@ import ResetPassword from "./pages/ResetPassword";
 // DASHBOARD
 // =====================================================
 
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/dashboard";
 
 
 // =====================================================
@@ -51,6 +51,10 @@ import LoginHistory from "./pages/LoginHistory";
 // =====================================================
 
 import Security from "./pages/Security";
+import SecurityAlerts from "./pages/SecurityAlerts";
+import SuspiciousActivity from "./pages/SuspiciousActivity";
+import AuditLogs from "./pages/AuditLogs";
+import SecurityAnalytics from "./pages/SecurityAnalytics";
 
 
 // =====================================================
@@ -58,6 +62,7 @@ import Security from "./pages/Security";
 // =====================================================
 
 import EditProfile from "./pages/EditProfile";
+import ChangePassword from "./pages/ChangePassword";
 
 
 function App() {
@@ -193,6 +198,26 @@ function App() {
                     element={<Security />}
                 />
 
+                <Route
+                    path="/security/alerts"
+                    element={<SecurityAlerts />}
+                />
+
+                <Route
+                    path="/security/suspicious"
+                    element={<SuspiciousActivity />}
+                />
+
+                <Route
+                    path="/security/audit-logs"
+                    element={<AuditLogs />}
+                />
+
+                <Route
+                    path="/security/analytics"
+                    element={<SecurityAnalytics />}
+                />
+
 
                 {/* =================================================
                     PROFILE
@@ -201,6 +226,11 @@ function App() {
                 <Route
                     path="/profile"
                     element={<EditProfile />}
+                />
+
+                <Route
+                    path="/change-password"
+                    element={<ChangePassword />}
                 />
 
 

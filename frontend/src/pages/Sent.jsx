@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import Layout from "../components/Layout";
 import "../styles/dashboard/dashboard.css";
 
 
 function Sent() {
 
     const navigate = useNavigate();
-
-    const [profileOpen, setProfileOpen] =
-        useState(false);
 
     const [fullName, setFullName] =
         useState("");
@@ -22,35 +20,6 @@ function Sent() {
 
     const [error, setError] =
         useState("");
-
-
-    // =====================================================
-    // CLOSE PROFILE DROPDOWN
-    // =====================================================
-
-    useEffect(() => {
-
-        function handleDocumentClick() {
-
-            setProfileOpen(false);
-
-        }
-
-        document.addEventListener(
-            "click",
-            handleDocumentClick
-        );
-
-        return () => {
-
-            document.removeEventListener(
-                "click",
-                handleDocumentClick
-            );
-
-        };
-
-    }, []);
 
 
     // =====================================================
@@ -100,11 +69,7 @@ function Sent() {
 
             if (!response.ok) {
 
-                const message =
-                    await response.text();
-
                 throw new Error(
-                    message ||
                     "Unable to load sent passwords"
                 );
             }
@@ -120,10 +85,6 @@ function Sent() {
 
             // =================================================
             // GET USER NAME
-            //
-            // Your sharing API does not necessarily return
-            // fullName separately, so keep the existing
-            // session/dashboard-style profile if available.
             // =================================================
 
             if (
@@ -153,16 +114,29 @@ function Sent() {
                 err
             );
 
-            setError(
-                err.message ||
-                "Unable to load sent passwords"
-            );
+
+            if (
+                err instanceof TypeError
+            ) {
+
+                setError(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+
+            } else {
+
+                setError(
+                    "Unable to load sent passwords. Please try again."
+                );
+
+            }
 
         } finally {
 
             setLoading(false);
 
         }
+
     }
 
 
@@ -217,7 +191,7 @@ function Sent() {
 
 
                 setFullName(
-                    data.fullName || "User"
+                    data.fullName || ""
                 );
 
 
@@ -239,39 +213,6 @@ function Sent() {
 
 
     // =====================================================
-    // LOGOUT
-    // =====================================================
-
-    async function handleLogout(e) {
-
-        e.preventDefault();
-
-        try {
-
-            await fetch(
-                "http://localhost:8082/api/logout",
-                {
-                    method: "POST",
-                    credentials: "include"
-                }
-            );
-
-        } catch (err) {
-
-            console.error(
-                "Logout error:",
-                err
-            );
-
-        } finally {
-
-            navigate("/login");
-
-        }
-    }
-
-
-    // =====================================================
     // REMOVE ACCESS
     // =====================================================
 
@@ -288,7 +229,6 @@ function Sent() {
         if (!confirmDelete) {
 
             return;
-
         }
 
 
@@ -304,23 +244,47 @@ function Sent() {
                 );
 
 
-            const message =
-                await response.text();
+            if (response.status === 401) {
+
+                navigate("/login");
+
+                return;
+            }
 
 
             if (!response.ok) {
 
-                alert(
-                    message ||
-                    "Unable to remove access"
-                );
+                const message =
+                    await response.text();
+
+                const technicalError =
+                    /Exception|at org\.|at java\.|StackTrace|Error:/i.test(
+                        message
+                    );
+
+
+                if (
+                    technicalError ||
+                    !message.trim()
+                ) {
+
+                    alert(
+                        "Unable to remove access. Please try again."
+                    );
+
+                } else {
+
+                    alert(message);
+
+                }
 
                 return;
-
             }
 
 
+            // =================================================
             // Refresh Sent list
+            // =================================================
 
             await loadSent();
 
@@ -332,11 +296,25 @@ function Sent() {
                 err
             );
 
-            alert(
-                "Unable to remove access"
-            );
+
+            if (
+                err instanceof TypeError
+            ) {
+
+                alert(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+
+            } else {
+
+                alert(
+                    "Unable to remove access. Please try again."
+                );
+
+            }
 
         }
+
     }
 
 
@@ -351,7 +329,6 @@ function Sent() {
         if (!permission) {
 
             return "-";
-
         }
 
 
@@ -388,49 +365,23 @@ function Sent() {
 
         return (
 
-            <div className="dashboard-page">
+            <Layout
+                fullName={fullName}
+            >
 
+                <section className="table-card">
 
-                {/* =================================================
-                    NAVBAR
-                ================================================= */}
+                    <div className="table-header">
 
-                <header className="navbar">
-
-                    <div className="logo">
-
-                        <i className="fa-solid fa-lock"></i>
-
-                        <span>
-                            PasswordVault
-                        </span>
+                        <h3>
+                            Loading Sent Passwords...
+                        </h3>
 
                     </div>
 
-                </header>
+                </section>
 
-
-                {/* =================================================
-                    CONTENT
-                ================================================= */}
-
-                <main className="content">
-
-                    <section className="table-card">
-
-                        <div className="table-header">
-
-                            <h3>
-                                Loading Sent Passwords...
-                            </h3>
-
-                        </div>
-
-                    </section>
-
-                </main>
-
-            </div>
+            </Layout>
 
         );
 
@@ -443,489 +394,284 @@ function Sent() {
 
     return (
 
-        <div className="dashboard-page">
+        <Layout
+            fullName={fullName}
+        >
+
+            {/* =================================================
+                PAGE HEADER
+            ================================================= */}
+
+            <section className="welcome">
+
+                <h2>
+                    Sent
+                </h2>
+
+                <p>
+                    Passwords shared by you
+                </p>
+
+            </section>
 
 
             {/* =================================================
-                NAVBAR
+                ERROR
             ================================================= */}
 
-            <header className="navbar">
+            {error && (
+
+                <p className="error">
+
+                    {error}
+
+                </p>
+
+            )}
 
 
-                {/* LOGO */}
+            {/* =================================================
+                EMPTY
+            ================================================= */}
 
-                <div className="logo">
+            {!error &&
+                items.length === 0 && (
 
-                    <i className="fa-solid fa-lock"></i>
+                    <section className="table-card">
 
-                    <span>
-                        PasswordVault
-                    </span>
+                        <div className="table-header">
 
-                </div>
-
-
-                {/* PROFILE */}
-
-                <div className="profile">
-
-                    <button
-                        type="button"
-                        className="profile-btn"
-                        onClick={(e) => {
-
-                            e.stopPropagation();
-
-                            setProfileOpen(
-                                (value) =>
-                                    !value
-                            );
-
-                        }}
-                    >
-
-                        <i className="fa-solid fa-circle-user"></i>
-
-                        <span>
-                            {fullName || "User"}
-                        </span>
-
-                        <i className="fa-solid fa-angle-down"></i>
-
-                    </button>
-
-
-                    {profileOpen && (
-
-                        <div
-                            className="dropdown show"
-                            onClick={(e) =>
-                                e.stopPropagation()
-                            }
-                        >
-
-                            <Link to="/profile">
-
-                                <i className="fa-solid fa-user"></i>
-
-                                My Profile
-
-                            </Link>
-
-
-                            <Link to="/change-password">
-
-                                <i className="fa-solid fa-key"></i>
-
-                                Change Password
-
-                            </Link>
-
-
-                            <Link to="/settings">
-
-                                <i className="fa-solid fa-gear"></i>
-
-                                Settings
-
-                            </Link>
-
-
-                            <hr />
-
-
-                            <a
-                                href="/login"
-                                onClick={
-                                    handleLogout
-                                }
-                            >
-
-                                <i className="fa-solid fa-right-from-bracket"></i>
-
-                                Logout
-
-                            </a>
+                            <h3>
+                                Nothing shared yet
+                            </h3>
 
                         </div>
 
-                    )}
 
-                </div>
+                        <div
+                            style={{
+                                textAlign:
+                                    "center",
 
-            </header>
+                                padding:
+                                    "40px"
+                            }}
+                        >
 
+                            <i
+                                className="fa-solid fa-paper-plane"
 
-            {/* =================================================
-                MAIN LAYOUT
-            ================================================= */}
+                                style={{
+                                    fontSize:
+                                        "35px",
 
-            <div className="wrapper">
-
-
-                {/* =================================================
-                    SIDEBAR
-                ================================================= */}
-
-                <aside className="sidebar">
-
-
-                    {/* DASHBOARD */}
-
-                    <Link to="/dashboard">
-
-                        <i className="fa-solid fa-chart-line"></i>
-
-                        Overview
-
-                    </Link>
+                                    marginBottom:
+                                        "15px"
+                                }}
+                            ></i>
 
 
-                    {/* MY PASSWORDS */}
+                            <p>
 
-                    <Link to="/passwords">
+                                Passwords you share
+                                will appear here.
 
-                        <i className="fa-solid fa-key"></i>
+                            </p>
 
-                        My Passwords
-
-                    </Link>
-
-
-                    {/* ADD PASSWORD */}
-
-                    <Link to="/add-password">
-
-                        <i className="fa-solid fa-plus"></i>
-
-                        Add Password
-
-                    </Link>
-
-
-                    {/* INBOX */}
-
-                    <Link to="/inbox">
-
-                        <i className="fa-solid fa-inbox"></i>
-
-                        Inbox
-
-                    </Link>
-
-
-                    {/* SENT */}
-
-                    <Link
-                        to="/sent"
-                        className="active"
-                    >
-
-                        <i className="fa-solid fa-paper-plane"></i>
-
-                        Sent
-
-                    </Link>
-
-                     <Link to="/login-history">
-
-        <i className="fa-solid fa-clock-rotate-left"></i>
-
-        Login History
-
-    </Link>
-    <Link to="/security">
-
-        <i className="fa-solid fa-shield-halved"></i>
-
-        Security
-
-    </Link>
-
-                </aside>
-
-
-                {/* =================================================
-                    CONTENT
-                ================================================= */}
-
-                <main className="content">
-
-
-                    {/* =================================================
-                        PAGE HEADER
-                    ================================================= */}
-
-                    <section className="welcome">
-
-                        <h2>
-                            Sent
-                        </h2>
-
-                        <p>
-                            Passwords shared by you
-                        </p>
+                        </div>
 
                     </section>
 
-
-                    {/* =================================================
-                        ERROR
-                    ================================================= */}
-
-                    {error && (
-
-                        <p className="error">
-
-                            {error}
-
-                        </p>
-
-                    )}
+                )}
 
 
-                    {/* =================================================
-                        EMPTY
-                    ================================================= */}
+            {/* =================================================
+                SENT TABLE
+            ================================================= */}
 
-                    {!error &&
-                        items.length === 0 && (
+            {!error &&
+                items.length > 0 && (
 
-                            <section className="table-card">
-
-                                <div className="table-header">
-
-                                    <h3>
-                                        Nothing shared yet
-                                    </h3>
-
-                                </div>
+                    <section className="table-card">
 
 
-                                <div
-                                    style={{
-                                        textAlign:
-                                            "center",
-                                        padding:
-                                            "40px"
-                                    }}
-                                >
+                        {/* TABLE HEADER */}
 
-                                    <i
-                                        className="fa-solid fa-paper-plane"
-                                        style={{
-                                            fontSize:
-                                                "35px",
-                                            marginBottom:
-                                                "15px"
-                                        }}
-                                    ></i>
+                        <div className="table-header">
+
+                            <h3>
+                                Passwords Shared By You
+                            </h3>
+
+                        </div>
 
 
-                                    <p>
+                        {/* TABLE */}
 
-                                        Passwords you share
-                                        will appear here.
+                        <table>
 
-                                    </p>
+                            <thead>
 
-                                </div>
+                                <tr>
 
-                            </section>
+                                    <th>
+                                        Website
+                                    </th>
 
-                        )
-                    }
+                                    <th>
+                                        Shared With
+                                    </th>
 
+                                    <th>
+                                        Permission
+                                    </th>
 
-                    {/* =================================================
-                        SENT TABLE
-                    ================================================= */}
+                                    <th>
+                                        Actions
+                                    </th>
 
-                    {!error &&
-                        items.length > 0 && (
+                                </tr>
 
-                            <section className="table-card">
-
-
-                                {/* TABLE HEADER */}
-
-                                <div className="table-header">
-
-                                    <h3>
-                                        Passwords Shared By You
-                                    </h3>
-
-                                </div>
+                            </thead>
 
 
-                                {/* TABLE */}
+                            <tbody>
 
-                                <table>
+                                {items.map(
+                                    (item) => (
 
-                                    <thead>
+                                        <tr
+                                            key={
+                                                item.shareId
+                                            }
+                                        >
 
-                                        <tr>
 
-                                            <th>
-                                                Website
-                                            </th>
+                                            {/* WEBSITE */}
 
-                                            <th>
-                                                Shared With
-                                            </th>
+                                            <td>
 
-                                            <th>
-                                                Permission
-                                            </th>
+                                                <i className="fa-solid fa-globe"></i>
 
-                                            <th>
-                                                Actions
-                                            </th>
+                                                <span>
+
+                                                    {" "}
+
+                                                    {
+                                                        item.websiteName
+                                                    }
+
+                                                </span>
+
+                                            </td>
+
+
+                                            {/* SHARED WITH */}
+
+                                            <td>
+
+                                                <strong>
+
+                                                    {
+                                                        item.recipientName
+                                                    }
+
+                                                </strong>
+
+
+                                                <small>
+
+                                                    {
+                                                        item.recipientEmail
+                                                    }
+
+                                                </small>
+
+                                            </td>
+
+
+                                            {/* PERMISSION */}
+
+                                            <td>
+
+                                                <span
+                                                    className="permission"
+                                                >
+
+                                                    {
+                                                        formatPermission(
+                                                            item.permission
+                                                        )
+                                                    }
+
+                                                </span>
+
+                                            </td>
+
+
+                                            {/* ACTIONS */}
+
+                                            <td>
+
+
+                                                {/* MANAGE */}
+
+                                                <Link
+                                                    to={
+                                                        `/share-password/${item.passwordId}`
+                                                    }
+
+                                                    title="Manage Sharing"
+                                                >
+
+                                                    <i
+                                                        className="fa-solid fa-gear action"
+                                                    ></i>
+
+                                                </Link>
+
+
+                                                {" "}
+
+
+                                                {/* REMOVE */}
+
+                                                <button
+                                                    type="button"
+                                                    className="delete-password-btn"
+
+                                                    onClick={() =>
+                                                        removeAccess(
+                                                            item.shareId
+                                                        )
+                                                    }
+
+                                                    title="Remove Access"
+                                                >
+
+                                                    <i
+                                                        className="fa-solid fa-user-minus action delete"
+                                                    ></i>
+
+                                                </button>
+
+                                            </td>
 
                                         </tr>
 
-                                    </thead>
+                                    )
+                                )}
 
+                            </tbody>
 
-                                    <tbody>
+                        </table>
 
-                                        {items.map(
-                                            (item) => (
+                    </section>
 
-                                                <tr
-                                                    key={
-                                                        item.shareId
-                                                    }
-                                                >
+                )}
 
+        </Layout>
 
-                                                    {/* WEBSITE */}
-
-                                                    <td>
-
-                                                        <i className="fa-solid fa-globe"></i>
-
-                                                        <span>
-
-                                                            {" "}
-
-                                                            {
-                                                                item.websiteName
-                                                            }
-
-                                                        </span>
-
-                                                    </td>
-
-
-                                                    {/* SHARED WITH */}
-
-                                                    <td>
-
-                                                        <strong>
-
-                                                            {
-                                                                item.recipientName
-                                                            }
-
-                                                        </strong>
-
-
-                                                        <small>
-
-                                                            {
-                                                                item.recipientEmail
-                                                            }
-
-                                                        </small>
-
-                                                    </td>
-
-
-                                                    {/* PERMISSION */}
-
-                                                    <td>
-
-                                                        <span
-                                                            className="permission"
-                                                        >
-
-                                                            {
-                                                                formatPermission(
-                                                                    item.permission
-                                                                )
-                                                            }
-
-                                                        </span>
-
-                                                    </td>
-
-
-                                                    {/* ACTIONS */}
-
-                                                    <td>
-
-
-                                                        {/* MANAGE */}
-
-                                                        <Link
-                                                            to={
-                                                                `/share-password/${item.passwordId}`
-                                                            }
-                                                            title="Manage Sharing"
-                                                        >
-
-                                                            <i
-                                                                className="fa-solid fa-gear action"
-                                                            ></i>
-
-                                                        </Link>
-
-
-                                                        {" "}
-
-
-                                                        {/* REMOVE */}
-
-                                                        <button
-                                                            type="button"
-                                                            className="delete-password-btn"
-                                                            onClick={() =>
-                                                                removeAccess(
-                                                                    item.shareId
-                                                                )
-                                                            }
-                                                            title="Remove Access"
-                                                        >
-
-                                                            <i
-                                                                className="fa-solid fa-user-minus action delete"
-                                                            ></i>
-
-                                                        </button>
-
-                                                    </td>
-
-                                                </tr>
-
-                                            )
-                                        )}
-
-                                    </tbody>
-
-                                </table>
-
-                            </section>
-
-                        )
-                    }
-
-                </main>
-
-            </div>
-
-        </div>
     );
 }
 

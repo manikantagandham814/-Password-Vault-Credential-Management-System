@@ -46,6 +46,7 @@ function EditPassword() {
                 );
 
 
+                // Unauthorized session
                 if (response.status === 401) {
 
                     navigate("/login");
@@ -54,42 +55,61 @@ function EditPassword() {
                 }
 
 
+                // Access denied
                 if (response.status === 403) {
 
-                    alert("Access denied");
-
-                    navigate("/passwords");
+                    setError(
+                        "Access denied. You do not have permission to edit this password."
+                    );
 
                     return;
                 }
 
 
+                // Password not found
                 if (response.status === 404) {
 
-                    navigate("/passwords");
+                    setError(
+                        "Password not found."
+                    );
 
                     return;
                 }
 
 
+                // Other API error
                 if (!response.ok) {
 
-                    throw new Error(
-                        "Unable to load password"
+                    setError(
+                        "Unable to load password. Please try again."
                     );
+
+                    return;
                 }
 
 
-                const data = await response.json();
+                const data =
+                    await response.json();
 
 
                 setFormData({
-                    websiteName: data.websiteName || "",
-                    websiteUrl: data.websiteUrl || "",
-                    username: data.username || "",
-                    password: data.password || "",
-                    category: data.category || "Personal",
-                    notes: data.notes || ""
+                    websiteName:
+                        data.websiteName || "",
+
+                    websiteUrl:
+                        data.websiteUrl || "",
+
+                    username:
+                        data.username || "",
+
+                    password:
+                        data.password || "",
+
+                    category:
+                        data.category || "Personal",
+
+                    notes:
+                        data.notes || ""
                 });
 
 
@@ -101,7 +121,7 @@ function EditPassword() {
                 );
 
                 setError(
-                    "Unable to load password"
+                    "Unable to connect to server. Please try again."
                 );
 
             } finally {
@@ -131,7 +151,8 @@ function EditPassword() {
 
     function handleChange(e) {
 
-        const { name, value } = e.target;
+        const { name, value } =
+            e.target;
 
 
         setFormData((previous) => ({
@@ -183,6 +204,7 @@ function EditPassword() {
             );
 
 
+            // Unauthorized session
             if (response.status === 401) {
 
                 navigate("/login");
@@ -191,18 +213,22 @@ function EditPassword() {
             }
 
 
+            // Access denied
             if (response.status === 403) {
 
-                setError("Access denied");
+                setError(
+                    "Access denied. You do not have permission to update this password."
+                );
 
                 return;
             }
 
 
+            // Password not found
             if (response.status === 404) {
 
                 setError(
-                    "Password not found"
+                    "Password not found."
                 );
 
                 return;
@@ -211,13 +237,48 @@ function EditPassword() {
 
             if (!response.ok) {
 
-                const message =
-                    await response.text();
+                let message =
+                    "Unable to update password. Please try again.";
 
-                setError(
-                    message ||
-                    "Unable to update password"
-                );
+                try {
+
+                    const responseText =
+                        await response.text();
+
+                    if (responseText) {
+
+                        message =
+                            responseText;
+                    }
+
+                } catch (readError) {
+
+                    console.error(
+                        "Error reading update response:",
+                        readError
+                    );
+                }
+
+
+                /*
+                 * Prevent technical backend errors
+                 * from being displayed to the user.
+                 */
+
+                if (
+                    message.includes("Exception") ||
+                    message.includes("at org.") ||
+                    message.includes("at java.") ||
+                    message.includes("StackTrace") ||
+                    message.includes("Error:")
+                ) {
+
+                    message =
+                        "Unable to update password. Please try again.";
+                }
+
+
+                setError(message);
 
                 return;
             }
@@ -226,6 +287,7 @@ function EditPassword() {
             alert(
                 "Password Updated Successfully!"
             );
+
 
             navigate("/passwords");
 
@@ -238,7 +300,7 @@ function EditPassword() {
             );
 
             setError(
-                "Unable to connect to server"
+                "Unable to connect to server. Please try again."
             );
 
         } finally {

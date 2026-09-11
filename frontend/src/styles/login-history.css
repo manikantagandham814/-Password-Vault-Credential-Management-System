@@ -509,11 +509,99 @@
     font-size: 14px;
 
     font-weight: 500;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 
 /* =====================================================
    RESPONSIVE
+   ===================================================== */
+
+
+/* =====================================================
+   TABLET
+   ===================================================== */
+
+@media (max-width: 900px) {
+
+    .login-history-page .wrapper {
+        flex-direction: column;
+    }
+
+    .login-history-page .sidebar {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+
+        gap: 8px;
+
+        padding: 10px 12px;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+
+        box-sizing: border-box;
+
+        box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+    }
+
+    .login-history-page .sidebar a {
+        flex: 0 0 auto;
+
+        width: auto;
+
+        margin-bottom: 0;
+
+        padding: 12px 14px;
+
+        white-space: nowrap;
+
+        font-size: 14px;
+
+        gap: 8px;
+    }
+
+    .login-history-page .sidebar a:hover {
+        transform: none;
+    }
+
+    .login-history-page .content {
+        width: 100%;
+
+        min-width: 0;
+
+        padding: 25px 20px;
+
+        box-sizing: border-box;
+    }
+
+    .login-history-page .table-card {
+        width: 100%;
+
+        max-width: 100%;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .login-history-page table {
+        min-width: 650px;
+    }
+}
+
+
+/* =====================================================
+   TABLET / SMALL TABLET
    ===================================================== */
 
 @media (max-width: 768px) {
@@ -522,62 +610,251 @@
         padding: 0 20px;
     }
 
-
     .login-history-page .logo {
         font-size: 20px;
     }
 
-
-    .login-history-page .wrapper {
-        flex-direction: column;
+    .login-history-page .profile-btn {
+        padding: 7px;
     }
 
-
-    .login-history-page .sidebar {
-        width: 100%;
-
-        display: flex;
-
-        justify-content: center;
-
-        gap: 5px;
-
-        padding: 15px;
-
-        overflow-x: auto;
+    .login-history-page .welcome {
+        margin-bottom: 22px;
     }
-
-
-    .login-history-page .sidebar a {
-        margin-bottom: 0;
-
-        white-space: nowrap;
-
-        padding: 12px 14px;
-    }
-
-
-    .login-history-page .sidebar a:hover {
-        transform: none;
-    }
-
-
-    .login-history-page .content {
-        padding: 20px;
-    }
-
 
     .login-history-page .welcome h2 {
         font-size: 26px;
     }
 
-
-    .login-history-page .table-card {
-        padding: 18px;
+    .login-history-page .welcome p {
+        font-size: 14px;
     }
 
+    .login-history-page .table-card {
+        padding: 20px;
+    }
+
+    .login-history-page .table-header {
+        margin-bottom: 16px;
+    }
 
     .login-history-page .table-header h3 {
         font-size: 19px;
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 480px) {
+
+    .login-history-page .navbar {
+        height: 60px;
+
+        padding: 0 15px;
+    }
+
+    .login-history-page .logo {
+        font-size: 18px;
+
+        gap: 8px;
+    }
+
+    .login-history-page .profile-btn {
+        padding: 6px;
+    }
+
+    .login-history-page .profile-btn span {
+        display: none;
+    }
+
+    .login-history-page .profile-btn > i:first-child {
+        font-size: 25px;
+    }
+
+    .login-history-page .profile-btn > i:last-child {
+        display: none;
+    }
+
+    .login-history-page .sidebar {
+        padding: 8px 10px;
+
+        gap: 6px;
+    }
+
+    .login-history-page .sidebar a {
+        padding: 10px 12px;
+
+        font-size: 13px;
+
+        border-radius: 8px;
+    }
+
+    .login-history-page .content {
+        padding: 15px;
+
+        box-sizing: border-box;
+    }
+
+    .login-history-page .welcome {
+        margin-bottom: 18px;
+    }
+
+    .login-history-page .welcome h2 {
+        font-size: 23px;
+    }
+
+    .login-history-page .welcome p {
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+    .login-history-page .table-card {
+        padding: 15px;
+
+        border-radius: 12px;
+    }
+
+    .login-history-page .table-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+        margin-bottom: 15px;
+    }
+
+    .login-history-page .table-header h3 {
+        font-size: 18px;
+    }
+
+    .login-history-page table {
+        min-width: 620px;
+    }
+
+    .login-history-page th {
+        padding: 13px 12px;
+
+        font-size: 13px;
+    }
+
+    .login-history-page td {
+        padding: 14px 12px;
+
+        font-size: 13px;
+    }
+
+    .login-history-page .login-status {
+        padding: 6px 10px;
+
+        font-size: 11px;
+    }
+
+    .login-history-page .login-status i {
+        font-size: 11px;
+    }
+
+    .login-history-page .empty {
+        padding: 40px 15px;
+    }
+
+    .login-history-page .empty > i {
+        font-size: 34px;
+    }
+
+    .login-history-page .empty h3 {
+        font-size: 18px;
+    }
+
+    .login-history-page .empty p {
+        font-size: 13px;
+    }
+
+    .login-history-page .error {
+        font-size: 13px;
+    }
+
+    .login-history-page .dropdown {
+        width: 195px;
+
+        right: -5px;
+    }
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 400px) {
+
+    .login-history-page .navbar {
+        padding: 0 12px;
+    }
+
+    .login-history-page .logo {
+        font-size: 17px;
+    }
+
+    .login-history-page .sidebar {
+        justify-content: flex-start;
+
+        overflow-x: auto;
+    }
+
+    .login-history-page .sidebar a {
+        flex: 0 0 auto;
+
+        white-space: nowrap;
+    }
+
+    .login-history-page .content {
+        padding: 12px;
+    }
+
+    .login-history-page .welcome h2 {
+        font-size: 21px;
+    }
+
+    .login-history-page .welcome p {
+        font-size: 12px;
+    }
+
+    .login-history-page .table-card {
+        padding: 12px;
+    }
+
+    .login-history-page .table-header h3 {
+        font-size: 17px;
+    }
+
+    .login-history-page table {
+        min-width: 600px;
+    }
+
+    .login-history-page th {
+        padding: 11px 10px;
+
+        font-size: 12px;
+    }
+
+    .login-history-page td {
+        padding: 12px 10px;
+
+        font-size: 12px;
+    }
+
+    .login-history-page .empty {
+        padding: 35px 12px;
+    }
+
+    .login-history-page .dropdown {
+        width: 185px;
+
+        right: -8px;
     }
 }

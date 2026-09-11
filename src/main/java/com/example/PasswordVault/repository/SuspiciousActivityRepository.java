@@ -32,4 +32,6 @@ public interface SuspiciousActivityRepository
             String activityType,
             LocalDateTime detectedAt
     );
+    
+    long countByUser(User user);
 }

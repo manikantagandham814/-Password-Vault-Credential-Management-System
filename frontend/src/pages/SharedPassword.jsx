@@ -60,14 +60,20 @@ function SharedPassword() {
                 }
 
 
-                if (!response.ok) {
-
-                    const message =
-                        await response.text();
+                if (response.status === 404) {
 
                     setError(
-                        message ||
-                        "Unable to load shared password"
+                        "Shared password not found."
+                    );
+
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    setError(
+                        "Unable to load shared password. Please try again."
                     );
 
                     return;
@@ -89,10 +95,21 @@ function SharedPassword() {
                 );
 
 
-                setError(
-                    "Unable to load shared password"
-                );
+                if (
+                    error instanceof TypeError
+                ) {
 
+                    setError(
+                        "Unable to connect to server. Please check your connection and try again."
+                    );
+
+                } else {
+
+                    setError(
+                        "Unable to load shared password. Please try again."
+                    );
+
+                }
 
             } finally {
 

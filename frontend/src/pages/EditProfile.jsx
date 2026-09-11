@@ -1,24 +1,21 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "../styles/profile/profile.css";
-
 
 function EditProfile() {
 
     const navigate = useNavigate();
 
-
     const [fullName, setFullName] = useState("");
-
     const [email, setEmail] = useState("");
 
     const [loading, setLoading] = useState(true);
-
     const [saving, setSaving] = useState(false);
 
-    const [error, setError] = useState("");
+    const [editing, setEditing] = useState(false);
 
+    const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
 
@@ -36,7 +33,6 @@ function EditProfile() {
                     "http://localhost:8082/api/profile",
                     {
                         method: "GET",
-
                         credentials: "include"
                     }
                 );
@@ -66,6 +62,7 @@ function EditProfile() {
                     data.fullName || ""
                 );
 
+
                 setEmail(
                     data.email || ""
                 );
@@ -78,14 +75,27 @@ function EditProfile() {
                     error
                 );
 
-                setError(
-                    "Unable to load profile"
-                );
+
+                if (error instanceof TypeError) {
+
+                    setError(
+                        "Unable to connect to server. Please check your connection and try again."
+                    );
+
+                } else {
+
+                    setError(
+                        "Unable to load your profile. Please try again."
+                    );
+
+                }
 
             } finally {
 
                 setLoading(false);
+
             }
+
         }
 
 
@@ -103,8 +113,18 @@ function EditProfile() {
         e.preventDefault();
 
         setError("");
-
         setSuccess("");
+
+
+        if (!fullName.trim()) {
+
+            setError(
+                "Full Name cannot be empty"
+            );
+
+            return;
+        }
+
 
         setSaving(true);
 
@@ -142,13 +162,35 @@ function EditProfile() {
                 const message =
                     await response.text();
 
-                setError(
-                    message ||
-                    "Unable to update profile"
-                );
+                const technicalError =
+                    /Exception|at org\.|at java\.|StackTrace|Error:/i.test(
+                        message
+                    );
+
+                if (
+                    technicalError ||
+                    !message.trim()
+                ) {
+
+                    setError(
+                        "Unable to update your profile. Please try again."
+                    );
+
+                } else {
+
+                    setError(
+                        message
+                    );
+
+                }
 
                 return;
             }
+
+
+            setFullName(
+                fullName.trim()
+            );
 
 
             setSuccess(
@@ -156,11 +198,7 @@ function EditProfile() {
             );
 
 
-            setTimeout(() => {
-
-                navigate("/profile");
-
-            }, 700);
+            setEditing(false);
 
 
         } catch (error) {
@@ -170,14 +208,18 @@ function EditProfile() {
                 error
             );
 
+
             setError(
-                "Unable to connect to server"
+                "Unable to connect to server. Please check your connection and try again."
             );
+
 
         } finally {
 
             setSaving(false);
+
         }
+
     }
 
 
@@ -210,7 +252,7 @@ function EditProfile() {
 
                         <div className="profile-header">
 
-                            <i className="fa-solid fa-user-pen"></i>
+                            <i className="fa-solid fa-user"></i>
 
                             <h2>
                                 Loading Profile...
@@ -223,12 +265,14 @@ function EditProfile() {
                 </div>
 
             </div>
+
         );
+
     }
 
 
     // =====================================================
-    // UI
+    // PROFILE PAGE
     // =====================================================
 
     return (
@@ -279,10 +323,19 @@ function EditProfile() {
 
                     <div className="profile-header">
 
-                        <i className="fa-solid fa-user-pen"></i>
+                        <i
+                            className={
+                                editing
+                                    ? "fa-solid fa-user-pen"
+                                    : "fa-solid fa-user"
+                            }
+                        ></i>
 
                         <h2>
-                            Edit Profile
+                            {editing
+                                ? "Edit Profile"
+                                : "My Profile"
+                            }
                         </h2>
 
                     </div>
@@ -317,92 +370,169 @@ function EditProfile() {
                         )}
 
 
-                        <form onSubmit={handleSubmit}>
+                        {/* =================================================
+                            VIEW PROFILE
+                        ================================================= */}
+
+                        {!editing && (
+
+                            <div>
+
+                                <div className="form-group">
+
+                                    <label>
+                                        Full Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        value={fullName}
+                                        readOnly
+                                    />
+
+                                </div>
 
 
-                            {/* =========================================
-                                FULL NAME
-                            ========================================= */}
+                                <div className="form-group">
 
-                            <div className="form-group">
+                                    <label>
+                                        Email
+                                    </label>
 
-                                <label htmlFor="fullName">
-                                    Full Name
-                                </label>
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        readOnly
+                                    />
 
-                                <input
-                                    id="fullName"
-                                    type="text"
-                                    name="fullName"
-                                    value={fullName}
-                                    onChange={(e) =>
-                                        setFullName(
-                                            e.target.value
-                                        )
-                                    }
-                                    required
-                                />
-
-                            </div>
+                                </div>
 
 
-                            {/* =========================================
-                                EMAIL
-                            ========================================= */}
+                                <div className="buttons">
 
-                            <div className="form-group">
+                                    <button
+                                        type="button"
+                                        className="btn-save"
+                                        onClick={() => {
+                                            setError("");
+                                            setSuccess("");
+                                            setEditing(true);
+                                        }}
+                                    >
 
-                                <label htmlFor="email">
-                                    Email
-                                </label>
+                                        <i className="fa-solid fa-pen"></i>
 
-                                <input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    value={email}
-                                    readOnly
-                                />
+                                        Edit Profile
 
-                            </div>
+                                    </button>
 
-
-                            {/* =========================================
-                                BUTTONS
-                            ========================================= */}
-
-                            <div className="buttons">
-
-                                <button
-                                    type="submit"
-                                    className="btn-save"
-                                    disabled={saving}
-                                >
-
-                                    <i className="fa-solid fa-floppy-disk"></i>
-
-                                    {saving
-                                        ? "Saving..."
-                                        : "Save Changes"
-                                    }
-
-                                </button>
-
-
-                                <Link
-                                    to="/profile"
-                                    className="btn-back"
-                                >
-
-                                    <i className="fa-solid fa-xmark"></i>
-
-                                    Cancel
-
-                                </Link>
+                                </div>
 
                             </div>
 
-                        </form>
+                        )}
+
+
+                        {/* =================================================
+                            EDIT PROFILE
+                        ================================================= */}
+
+                        {editing && (
+
+                            <form onSubmit={handleSubmit}>
+
+
+                                {/* =========================================
+                                    FULL NAME
+                                ========================================= */}
+
+                                <div className="form-group">
+
+                                    <label htmlFor="fullName">
+                                        Full Name
+                                    </label>
+
+                                    <input
+                                        id="fullName"
+                                        type="text"
+                                        name="fullName"
+                                        value={fullName}
+                                        onChange={(e) =>
+                                            setFullName(
+                                                e.target.value
+                                            )
+                                        }
+                                        required
+                                    />
+
+                                </div>
+
+
+                                {/* =========================================
+                                    EMAIL
+                                ========================================= */}
+
+                                <div className="form-group">
+
+                                    <label htmlFor="email">
+                                        Email
+                                    </label>
+
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        value={email}
+                                        readOnly
+                                    />
+
+                                </div>
+
+
+                                {/* =========================================
+                                    BUTTONS
+                                ========================================= */}
+
+                                <div className="buttons">
+
+                                    <button
+                                        type="submit"
+                                        className="btn-save"
+                                        disabled={saving}
+                                    >
+
+                                        <i className="fa-solid fa-floppy-disk"></i>
+
+                                        {saving
+                                            ? "Saving..."
+                                            : "Save Changes"
+                                        }
+
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        className="btn-back"
+                                        onClick={() => {
+                                            setError("");
+                                            setSuccess("");
+                                            setEditing(false);
+                                        }}
+                                    >
+
+                                        <i className="fa-solid fa-xmark"></i>
+
+                                        Cancel
+
+                                    </button>
+
+                                </div>
+
+
+                            </form>
+
+                        )}
 
                     </div>
 
@@ -411,7 +541,9 @@ function EditProfile() {
             </main>
 
         </div>
+
     );
+
 }
 
 

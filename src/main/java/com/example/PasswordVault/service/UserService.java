@@ -19,6 +19,13 @@ public interface UserService {
     // Reset Password
     String resetPassword(String email, String password);
 
+    // Change Password
+    String changePassword(
+            String email,
+            String currentPassword,
+            String newPassword
+    );
+
     // Get User By Email
     User getUserByEmail(String email);
 

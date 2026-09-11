@@ -5,6 +5,7 @@ import {
     useSearchParams
 } from "react-router-dom";
 
+import Layout from "../components/Layout";
 import "../styles/passwords/passwords.css";
 import "../styles/dashboard/dashboard.css";
 
@@ -23,10 +24,10 @@ function Passwords() {
         useState(true);
 
     const [fullName, setFullName] =
-        useState("Manikanta");
+        useState("");
 
-    const [profileOpen, setProfileOpen] =
-        useState(false);
+    const [error, setError] =
+        useState("");
 
     const [searchParams] =
         useSearchParams();
@@ -79,7 +80,7 @@ function Passwords() {
 
 
                 setFullName(
-                    data.fullName || "Manikanta"
+                    data.fullName || ""
                 );
 
 
@@ -101,37 +102,6 @@ function Passwords() {
 
 
     // =====================================================
-    // CLOSE PROFILE DROPDOWN
-    // =====================================================
-
-    useEffect(() => {
-
-        function handleDocumentClick() {
-
-            setProfileOpen(false);
-
-        }
-
-
-        document.addEventListener(
-            "click",
-            handleDocumentClick
-        );
-
-
-        return () => {
-
-            document.removeEventListener(
-                "click",
-                handleDocumentClick
-            );
-
-        };
-
-    }, []);
-
-
-    // =====================================================
     // LOAD PASSWORDS
     // =====================================================
 
@@ -140,6 +110,7 @@ function Passwords() {
         async function loadPasswords() {
 
             setLoading(true);
+            setError("");
 
             try {
 
@@ -187,8 +158,8 @@ function Passwords() {
 
                 if (response.status === 403) {
 
-                    alert(
-                        "Access denied"
+                    setError(
+                        "Access denied. You do not have permission to view your passwords."
                     );
 
                     navigate(
@@ -226,10 +197,22 @@ function Passwords() {
                     error
                 );
 
-                alert(
-                    "Unable to load passwords"
-                );
 
+                if (
+                    error instanceof TypeError
+                ) {
+
+                    setError(
+                        "Unable to connect to server. Please check your connection and try again."
+                    );
+
+                } else {
+
+                    setError(
+                        "Unable to load passwords. Please try again."
+                    );
+
+                }
 
             } finally {
 
@@ -295,7 +278,6 @@ function Passwords() {
         if (!confirmDelete) {
 
             return;
-
         }
 
 
@@ -316,25 +298,23 @@ function Passwords() {
                 navigate("/login");
 
                 return;
-
             }
 
 
             if (response.status === 403) {
 
                 alert(
-                    "Access denied"
+                    "Access denied. You do not have permission to delete this password."
                 );
 
                 return;
-
             }
 
 
             if (response.status === 404) {
 
                 alert(
-                    "Password not found"
+                    "Password not found. It may have already been deleted."
                 );
 
 
@@ -348,7 +328,6 @@ function Passwords() {
 
 
                 return;
-
             }
 
 
@@ -378,48 +357,21 @@ function Passwords() {
             );
 
 
-            alert(
-                "Unable to delete password"
-            );
+            if (
+                error instanceof TypeError
+            ) {
 
-        }
+                alert(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
 
-    }
+            } else {
 
+                alert(
+                    "Unable to delete password. Please try again."
+                );
 
-    // =====================================================
-    // LOGOUT
-    // =====================================================
-
-    async function handleLogout(e) {
-
-        e.preventDefault();
-
-
-        try {
-
-            await fetch(
-                "http://localhost:8082/api/logout",
-                {
-                    method: "POST",
-                    credentials: "include"
-                }
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Logout error:",
-                error
-            );
-
-
-        } finally {
-
-            navigate(
-                "/login"
-            );
+            }
 
         }
 
@@ -434,182 +386,18 @@ function Passwords() {
 
         return (
 
-            <div className="passwords-page dashboard-page">
+            <Layout
+                fullName={fullName}
+                pageClassName="passwords-page"
+            >
 
-                <header className="navbar">
+                <div className="loading">
 
-
-                    {/* LOGO */}
-
-                    <div className="logo">
-
-                        <i className="fa-solid fa-lock"></i>
-
-                        <span>
-                            PasswordVault
-                        </span>
-
-                    </div>
-
-
-                    {/* PROFILE */}
-
-                    <div className="profile">
-
-                        <button
-                            type="button"
-                            className="profile-btn"
-                            onClick={(e) => {
-
-                                e.stopPropagation();
-
-                                setProfileOpen(
-                                    value =>
-                                        !value
-                                );
-
-                            }}
-                        >
-
-                            <i className="fa-solid fa-circle-user"></i>
-
-                            <span>
-                                {fullName}
-                            </span>
-
-                            <i className="fa-solid fa-angle-down"></i>
-
-                        </button>
-
-
-                        {profileOpen && (
-
-                            <div
-                                className="dropdown show"
-                                onClick={(e) =>
-                                    e.stopPropagation()
-                                }
-                            >
-
-                                <Link to="/profile">
-
-                                    <i className="fa-solid fa-user"></i>
-
-                                    My Profile
-
-                                </Link>
-
-
-                                <Link to="/change-password">
-
-                                    <i className="fa-solid fa-key"></i>
-
-                                    Change Password
-
-                                </Link>
-
-
-                                <Link to="/settings">
-
-                                    <i className="fa-solid fa-gear"></i>
-
-                                    Settings
-
-                                </Link>
-
-
-                                <hr />
-
-
-                                <a
-                                    href="/login"
-                                    onClick={
-                                        handleLogout
-                                    }
-                                >
-
-                                    <i className="fa-solid fa-right-from-bracket"></i>
-
-                                    Logout
-
-                                </a>
-
-                            </div>
-
-                        )}
-
-                    </div>
-
-                </header>
-
-
-                <div className="wrapper">
-
-                    <aside className="sidebar">
-
-                        <Link to="/dashboard">
-
-                            <i className="fa-solid fa-chart-line"></i>
-
-                            Overview
-
-                        </Link>
-
-
-                        <Link
-                            to="/passwords"
-                            className="active"
-                        >
-
-                            <i className="fa-solid fa-key"></i>
-
-                            My Passwords
-
-                        </Link>
-
-
-                        <Link to="/add-password">
-
-                            <i className="fa-solid fa-plus"></i>
-
-                            Add Password
-
-                        </Link>
-
-
-                        <Link to="/inbox">
-
-                            <i className="fa-solid fa-inbox"></i>
-
-                            Inbox
-
-                        </Link>
-
-
-                        <Link to="/sent">
-
-                            <i className="fa-solid fa-paper-plane"></i>
-
-                            Sent
-
-                        </Link>
-
-                    </aside>
-
-
-                    <main className="content">
-
-                        <div className="loading">
-
-                            Loading Passwords...
-
-                        </div>
-
-                    </main>
+                    Loading Passwords...
 
                 </div>
 
-            </div>
+            </Layout>
 
         );
 
@@ -622,489 +410,293 @@ function Passwords() {
 
     return (
 
-        <div className="passwords-page dashboard-page">
-
+        <Layout
+            fullName={fullName}
+            pageClassName="passwords-page"
+        >
 
             {/* =================================================
-                NAVBAR
+                TOP BAR
             ================================================= */}
 
-            <header className="navbar">
+            <div className="top-bar">
+
+                <h2>
+                    My Passwords
+                </h2>
 
 
-                {/* =================================================
-                    LOGO
-                ================================================= */}
-
-                <div className="logo">
-
-                    <i className="fa-solid fa-lock"></i>
-
-                    <span>
-                        PasswordVault
-                    </span>
-
-                </div>
-
-
-                {/* =================================================
-                    PROFILE
-                ================================================= */}
-
-                <div className="profile">
-
-                    <button
-                        type="button"
-                        className="profile-btn"
-                        onClick={(e) => {
-
-                            e.stopPropagation();
-
-                            setProfileOpen(
-                                value =>
-                                    !value
-                            );
-
-                        }}
-                    >
-
-                        <i className="fa-solid fa-circle-user"></i>
-
-                        <span>
-                            {fullName}
-                        </span>
-
-                        <i className="fa-solid fa-angle-down"></i>
-
-                    </button>
+                <div className="top-actions">
 
 
                     {/* =================================================
-                        PROFILE DROPDOWN
+                        SEARCH
                     ================================================= */}
 
-                    {profileOpen && (
-
-                        <div
-                            className="dropdown show"
-                            onClick={(e) =>
-                                e.stopPropagation()
-                            }
-                        >
-
-                            <Link to="/profile">
-
-                                <i className="fa-solid fa-user"></i>
-
-                                My Profile
-
-                            </Link>
-
-
-                            <Link to="/change-password">
-
-                                <i className="fa-solid fa-key"></i>
-
-                                Change Password
-
-                            </Link>
-
-
-                            <Link to="/settings">
-
-                                <i className="fa-solid fa-gear"></i>
-
-                                Settings
-
-                            </Link>
-
-
-                            <hr />
-
-
-                            <a
-                                href="/login"
-                                onClick={
-                                    handleLogout
-                                }
-                            >
-
-                                <i className="fa-solid fa-right-from-bracket"></i>
-
-                                Logout
-
-                            </a>
-
-                        </div>
-
-                    )}
-
-                </div>
-
-            </header>
-
-
-            {/* =================================================
-                MAIN LAYOUT
-            ================================================= */}
-
-            <div className="wrapper">
-
-
-                {/* =================================================
-                    SIDEBAR
-                ================================================= */}
-
-                <aside className="sidebar">
-
-
-                    {/* DASHBOARD */}
-
-                    <Link to="/dashboard">
-
-                        <i className="fa-solid fa-chart-line"></i>
-
-                        Overview
-
-                    </Link>
-
-
-                    {/* MY PASSWORDS */}
-
-                    <Link
-                        to="/passwords"
-                        className="active"
+                    <form
+                        onSubmit={
+                            handleSearch
+                        }
                     >
 
-                        <i className="fa-solid fa-key"></i>
+                        <input
+                            type="text"
+                            name="keyword"
+                            placeholder="Search Website..."
+                            value={keyword}
+                            onChange={(e) =>
+                                setKeyword(
+                                    e.target.value
+                                )
+                            }
+                            aria-label="Search passwords"
+                        />
 
-                        My Passwords
 
-                    </Link>
+                        <button
+                            type="submit"
+                            title="Search"
+                        >
+
+                            <i className="fa-solid fa-magnifying-glass"></i>
+
+                        </button>
+
+                    </form>
 
 
-                    {/* ADD PASSWORD */}
+                    {/* =================================================
+                        ADD PASSWORD
+                    ================================================= */}
 
-                    <Link to="/add-password">
+                    <Link
+                        to="/add-password"
+                        className="add-btn"
+                    >
 
                         <i className="fa-solid fa-plus"></i>
 
-                        Add Password
+                        {" "}Add New
 
                     </Link>
 
-
-                    {/* INBOX */}
-
-                    <Link to="/inbox">
-
-                        <i className="fa-solid fa-inbox"></i>
-
-                        Inbox
-
-                    </Link>
-
-
-                    {/* SENT */}
-
-                    <Link to="/sent">
-
-                        <i className="fa-solid fa-paper-plane"></i>
-
-                        Sent
-
-                    </Link>
-
-                     <Link to="/login-history">
-
-        <i className="fa-solid fa-clock-rotate-left"></i>
-
-        Login History
-
-    </Link>
-    <Link to="/security">
-
-        <i className="fa-solid fa-shield-halved"></i>
-
-        Security
-
-    </Link>
-
-                </aside>
-
-
-                {/* =================================================
-                    CONTENT
-                ================================================= */}
-
-                <main className="content">
-
-
-                    {/* =================================================
-                        TOP BAR
-                    ================================================= */}
-
-                    <div className="top-bar">
-
-                        <h2>
-                            My Passwords
-                        </h2>
-
-
-                        <div className="top-actions">
-
-
-                            {/* =================================================
-                                SEARCH
-                            ================================================= */}
-
-                            <form
-                                onSubmit={
-                                    handleSearch
-                                }
-                            >
-
-                                <input
-                                    type="text"
-                                    name="keyword"
-                                    placeholder="Search Website..."
-                                    value={keyword}
-                                    onChange={(e) =>
-                                        setKeyword(
-                                            e.target.value
-                                        )
-                                    }
-                                    aria-label="Search passwords"
-                                />
-
-
-                                <button
-                                    type="submit"
-                                    title="Search"
-                                >
-
-                                    <i className="fa-solid fa-magnifying-glass"></i>
-
-                                </button>
-
-                            </form>
-
-
-                            {/* =================================================
-                                ADD PASSWORD
-                            ================================================= */}
-
-                            <Link
-                                to="/add-password"
-                                className="add-btn"
-                            >
-
-                                <i className="fa-solid fa-plus"></i>
-
-                                {" "}Add New
-
-                            </Link>
-
-                        </div>
-
-                    </div>
-
-
-                    {/* =================================================
-                        PASSWORD TABLE
-                    ================================================= */}
-
-                    <div className="table-wrapper">
-
-                        <table>
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>
-                                        Website
-                                    </th>
-
-                                    <th>
-                                        Username
-                                    </th>
-
-                                    <th>
-                                        Category
-                                    </th>
-
-                                    <th>
-                                        Actions
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody>
-
-                                {passwords.length === 0 ? (
-
-                                    <tr>
-
-                                        <td
-                                            colSpan="4"
-                                            className="empty"
-                                        >
-
-                                            {keyword
-                                                ? "No passwords found"
-                                                : "No Passwords Saved Yet"
-                                            }
-
-                                        </td>
-
-                                    </tr>
-
-                                ) : (
-
-                                    passwords.map(
-                                        (password) => (
-
-                                            <tr
-                                                key={
-                                                    password.id
-                                                }
-                                            >
-
-
-                                                {/* WEBSITE */}
-
-                                                <td>
-
-                                                    <i className="fa-solid fa-globe"></i>
-
-                                                    <span>
-
-                                                        {
-                                                            password.websiteName
-                                                        }
-
-                                                    </span>
-
-                                                </td>
-
-
-                                                {/* USERNAME */}
-
-                                                <td>
-
-                                                    {
-                                                        password.username
-                                                    }
-
-                                                </td>
-
-
-                                                {/* CATEGORY */}
-
-                                                <td>
-
-                                                    <span className="category">
-
-                                                        {
-                                                            password.category ||
-                                                            "Other"
-                                                        }
-
-                                                    </span>
-
-                                                </td>
-
-
-                                                {/* ACTIONS */}
-
-                                                <td>
-
-                                                    <div className="actions">
-
-
-                                                        {/* VIEW */}
-
-                                                        <Link
-                                                            to={`/view-password/${password.id}`}
-                                                            title="View Password"
-                                                            aria-label="View Password"
-                                                        >
-
-                                                            <i className="fa-solid fa-eye view"></i>
-
-                                                        </Link>
-
-
-                                                        {/* EDIT */}
-
-                                                        <Link
-                                                            to={`/edit-password/${password.id}`}
-                                                            title="Edit Password"
-                                                            aria-label="Edit Password"
-                                                        >
-
-                                                            <i className="fa-solid fa-pen edit"></i>
-
-                                                        </Link>
-
-
-                                                        {/* DELETE */}
-
-                                                        <button
-                                                            type="button"
-                                                            onClick={() =>
-                                                                handleDelete(
-                                                                    password.id
-                                                                )
-                                                            }
-                                                            title="Delete Password"
-                                                            aria-label="Delete Password"
-                                                        >
-
-                                                            <i className="fa-solid fa-trash delete"></i>
-
-                                                        </button>
-
-
-                                                        {/* SHARE */}
-
-                                                        <Link
-                                                            to={`/share-password/${password.id}`}
-                                                            title="Share Password"
-                                                            aria-label="Share Password"
-                                                        >
-
-                                                            <i className="fa-solid fa-share-nodes share"></i>
-
-                                                        </Link>
-
-                                                    </div>
-
-                                                </td>
-
-                                            </tr>
-
-                                        )
-                                    )
-
-                                )}
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </main>
+                </div>
 
             </div>
 
-        </div>
+
+            {/* =================================================
+                ERROR
+            ================================================= */}
+
+            {error && (
+
+                <p className="error">
+
+                    {error}
+
+                </p>
+
+            )}
+
+
+            {/* =================================================
+                PASSWORD TABLE
+            ================================================= */}
+
+            {!error && (
+
+                <div className="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Website
+                                </th>
+
+                                <th>
+                                    Username
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {passwords.length === 0 ? (
+
+                                <tr>
+
+                                    <td
+                                        colSpan="4"
+                                        className="empty"
+                                    >
+
+                                        {keyword
+                                            ? "No passwords found"
+                                            : "No Passwords Saved Yet"
+                                        }
+
+                                    </td>
+
+                                </tr>
+
+                            ) : (
+
+                                passwords.map(
+                                    (password) => (
+
+                                        <tr
+                                            key={
+                                                password.id
+                                            }
+                                        >
+
+
+                                            {/* WEBSITE */}
+
+                                            <td>
+
+                                                <i className="fa-solid fa-globe"></i>
+
+                                                <span>
+
+                                                    {
+                                                        password.websiteName
+                                                    }
+
+                                                </span>
+
+                                            </td>
+
+
+                                            {/* USERNAME */}
+
+                                            <td>
+
+                                                {
+                                                    password.username
+                                                }
+
+                                            </td>
+
+
+                                            {/* CATEGORY */}
+
+                                            <td>
+
+                                                <span className="category">
+
+                                                    {
+                                                        password.category ||
+                                                        "Other"
+                                                    }
+
+                                                </span>
+
+                                            </td>
+
+
+                                            {/* ACTIONS */}
+
+                                            <td>
+
+                                                <div className="actions">
+
+
+                                                    {/* VIEW */}
+
+                                                    <Link
+                                                        to={`/view-password/${password.id}`}
+                                                        title="View Password"
+                                                        aria-label="View Password"
+                                                    >
+
+                                                        <i className="fa-solid fa-eye view"></i>
+
+                                                    </Link>
+
+
+                                                    {/* EDIT */}
+
+                                                    <Link
+                                                        to={`/edit-password/${password.id}`}
+                                                        title="Edit Password"
+                                                        aria-label="Edit Password"
+                                                    >
+
+                                                        <i className="fa-solid fa-pen edit"></i>
+
+                                                    </Link>
+
+
+                                                    {/* DELETE */}
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                password.id
+                                                            )
+                                                        }
+                                                        title="Delete Password"
+                                                        aria-label="Delete Password"
+                                                    >
+
+                                                        <i className="fa-solid fa-trash delete"></i>
+
+                                                    </button>
+
+
+                                                    {/* SHARE */}
+
+                                                    <Link
+                                                        to={`/share-password/${password.id}`}
+                                                        title="Share Password"
+                                                        aria-label="Share Password"
+                                                    >
+
+                                                        <i className="fa-solid fa-share-nodes share"></i>
+
+                                                    </Link>
+
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+
+                                    )
+                                )
+
+                            )}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            )}
+
+        </Layout>
+
     );
+
 }
 
 

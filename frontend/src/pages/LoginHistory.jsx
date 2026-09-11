@@ -1,50 +1,24 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+import Layout from "../components/Layout";
 import "../styles/login-history.css";
 
 function LoginHistory() {
 
     const navigate = useNavigate();
 
-    const [profileOpen, setProfileOpen] = useState(false);
+    const [fullName, setFullName] =
+        useState("");
 
-    const [fullName, setFullName] = useState("");
+    const [history, setHistory] =
+        useState([]);
 
-    const [history, setHistory] = useState([]);
+    const [loading, setLoading] =
+        useState(true);
 
-    const [loading, setLoading] = useState(true);
-
-    const [error, setError] = useState("");
-
-
-    // =====================================================
-    // CLOSE PROFILE DROPDOWN
-    // =====================================================
-
-    useEffect(() => {
-
-        function handleDocumentClick() {
-
-            setProfileOpen(false);
-
-        }
-
-        document.addEventListener(
-            "click",
-            handleDocumentClick
-        );
-
-        return () => {
-
-            document.removeEventListener(
-                "click",
-                handleDocumentClick
-            );
-
-        };
-
-    }, []);
+    const [error, setError] =
+        useState("");
 
 
     // =====================================================
@@ -88,11 +62,7 @@ function LoginHistory() {
 
                 if (!response.ok) {
 
-                    const message =
-                        await response.text();
-
                     throw new Error(
-                        message ||
                         "Unable to load login history"
                     );
                 }
@@ -105,7 +75,6 @@ function LoginHistory() {
                 if (!mounted) {
 
                     return;
-
                 }
 
 
@@ -126,10 +95,19 @@ function LoginHistory() {
 
                 if (mounted) {
 
-                    setError(
-                        error.message ||
-                        "Unable to load login history"
-                    );
+                    if (error instanceof TypeError) {
+
+                        setError(
+                            "Unable to connect to server. Please check your connection and try again."
+                        );
+
+                    } else {
+
+                        setError(
+                            "Unable to load login history. Please try again."
+                        );
+
+                    }
 
                 }
 
@@ -182,7 +160,9 @@ function LoginHistory() {
                     );
 
 
-                if (response.status === 401) {
+                if (
+                    response.status === 401
+                ) {
 
                     navigate("/login");
 
@@ -212,6 +192,7 @@ function LoginHistory() {
 
                 }
 
+
             } catch (error) {
 
                 console.error(
@@ -237,41 +218,6 @@ function LoginHistory() {
 
 
     // =====================================================
-    // LOGOUT
-    // =====================================================
-
-    async function handleLogout(e) {
-
-        e.preventDefault();
-
-
-        try {
-
-            await fetch(
-                "http://localhost:8082/api/logout",
-                {
-                    method: "POST",
-                    credentials: "include"
-                }
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Logout error:",
-                error
-            );
-
-        } finally {
-
-            navigate("/login");
-
-        }
-
-    }
-
-
-    // =====================================================
     // FORMAT DATE & TIME
     // =====================================================
 
@@ -288,9 +234,11 @@ function LoginHistory() {
             new Date(value);
 
 
-        if (Number.isNaN(
-            date.getTime()
-        )) {
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
 
             return value;
 
@@ -342,40 +290,24 @@ function LoginHistory() {
 
         return (
 
-            <div className="login-history-page">
+            <Layout
+                fullName={fullName}
+                pageClassName="login-history-page"
+            >
 
-                <header className="navbar">
+                <section className="table-card">
 
-                    <div className="logo">
+                    <div className="table-header">
 
-                        <i className="fa-solid fa-lock"></i>
-
-                        <span>
-                            PasswordVault
-                        </span>
+                        <h3>
+                            Loading Login History...
+                        </h3>
 
                     </div>
 
-                </header>
+                </section>
 
-
-                <main className="content">
-
-                    <section className="table-card">
-
-                        <div className="table-header">
-
-                            <h3>
-                                Loading Login History...
-                            </h3>
-
-                        </div>
-
-                    </section>
-
-                </main>
-
-            </div>
+            </Layout>
 
         );
 
@@ -388,368 +320,178 @@ function LoginHistory() {
 
     return (
 
-        <div className="login-history-page">
+        <Layout
+            fullName={fullName}
+            pageClassName="login-history-page"
+        >
+
+            {/* =================================================
+                PAGE HEADER
+            ================================================= */}
+
+            <section className="welcome">
+
+                <h2>
+                    Login History
+                </h2>
+
+
+                <p>
+                    View your recent successful and unsuccessful login attempts.
+                </p>
+
+            </section>
 
 
             {/* =================================================
-                NAVBAR
+                ERROR
             ================================================= */}
 
-            <header className="navbar">
+            {error && (
 
-                <div className="logo">
+                <p className="error">
 
-                    <i className="fa-solid fa-lock"></i>
+                    {error}
 
-                    <span>
-                        PasswordVault
-                    </span>
+                </p>
+
+            )}
+
+
+            {/* =================================================
+                LOGIN HISTORY TABLE
+            ================================================= */}
+
+            <section className="table-card">
+
+
+                <div className="table-header">
+
+                    <h3>
+                        Recent Login Activity
+                    </h3>
 
                 </div>
 
 
-                {/* =================================================
-                    PROFILE
-                ================================================= */}
+                {history.length === 0 ? (
 
-                <div className="profile">
-
-                    <button
-                        type="button"
-                        className="profile-btn"
-                        onClick={(e) => {
-
-                            e.stopPropagation();
-
-                            setProfileOpen(
-                                (value) => !value
-                            );
-
-                        }}
-                    >
-
-                        <i className="fa-solid fa-circle-user"></i>
-
-                        <span>
-                            {fullName || "User"}
-                        </span>
-
-                        <i className="fa-solid fa-angle-down"></i>
-
-                    </button>
-
-
-                    {profileOpen && (
-
-                        <div
-                            className="dropdown show"
-                            onClick={(e) =>
-                                e.stopPropagation()
-                            }
-                        >
-
-                            <Link to="/profile">
-
-                                <i className="fa-solid fa-user"></i>
-
-                                My Profile
-
-                            </Link>
-
-
-                            <Link to="/change-password">
-
-                                <i className="fa-solid fa-key"></i>
-
-                                Change Password
-
-                            </Link>
-
-
-                            <Link to="/settings">
-
-                                <i className="fa-solid fa-gear"></i>
-
-                                Settings
-
-                            </Link>
-
-
-                            <hr />
-
-
-                            <a
-                                href="/login"
-                                onClick={handleLogout}
-                            >
-
-                                <i className="fa-solid fa-right-from-bracket"></i>
-
-                                Logout
-
-                            </a>
-
-                        </div>
-
-                    )}
-
-                </div>
-
-            </header>
-
-
-            {/* =================================================
-                MAIN LAYOUT
-            ================================================= */}
-
-            <div className="wrapper">
-
-
-                {/* =================================================
-                    SIDEBAR
-                ================================================= */}
-
-                <aside className="sidebar">
-
-                    <Link to="/dashboard">
-
-                        <i className="fa-solid fa-chart-line"></i>
-
-                        Overview
-
-                    </Link>
-
-
-                    <Link to="/passwords">
-
-                        <i className="fa-solid fa-key"></i>
-
-                        My Passwords
-
-                    </Link>
-
-
-                    <Link to="/add-password">
-
-                        <i className="fa-solid fa-plus"></i>
-
-                        Add Password
-
-                    </Link>
-
-
-                    <Link to="/inbox">
-
-                        <i className="fa-solid fa-inbox"></i>
-
-                        Inbox
-
-                    </Link>
-
-
-                    <Link to="/sent">
-
-                        <i className="fa-solid fa-paper-plane"></i>
-
-                        Sent
-
-                    </Link>
-
-
-                    <Link
-                        to="/login-history"
-                        className="active"
-                    >
+                    <div className="empty">
 
                         <i className="fa-solid fa-clock-rotate-left"></i>
 
-                        Login History
-
-                    </Link>
-                    <Link to="/security">
-
-        <i className="fa-solid fa-shield-halved"></i>
-
-        Security
-
-    </Link>
-
-                </aside>
-
-
-                {/* =================================================
-                    CONTENT
-                ================================================= */}
-
-                <main className="content">
-
-
-                    {/* =================================================
-                        PAGE HEADER
-                    ================================================= */}
-
-                    <section className="welcome">
-
-                        <h2>
-                            Login History
-                        </h2>
-
+                        <h3>
+                            No Login History
+                        </h3>
 
                         <p>
-                            View your recent successful and unsuccessful login attempts.
+                            Your login activity will appear here.
                         </p>
 
-                    </section>
+                    </div>
+
+                ) : (
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Email
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Date & Time
+                                </th>
+
+                            </tr>
+
+                        </thead>
 
 
-                    {/* =================================================
-                        ERROR
-                    ================================================= */}
+                        <tbody>
 
-                    {error && (
+                            {history.map(
+                                (item) => (
 
-                        <p className="error">
-                            {error}
-                        </p>
+                                    <tr
+                                        key={item.id}
+                                    >
 
-                    )}
+                                        <td>
 
+                                            <i className="fa-solid fa-envelope"></i>
 
-                    {/* =================================================
-                        LOGIN HISTORY TABLE
-                    ================================================= */}
+                                            <span>
+                                                {" "}
+                                                {item.email}
+                                            </span>
 
-                    <section className="table-card">
-
-
-                        <div className="table-header">
-
-                            <h3>
-                                Recent Login Activity
-                            </h3>
-
-                        </div>
+                                        </td>
 
 
-                        {history.length === 0 ? (
+                                        <td>
 
-                            <div className="empty">
+                                            <span
+                                                className={`login-status ${getStatusClass(
+                                                    item.status
+                                                )}`}
+                                            >
 
-                                <i className="fa-solid fa-clock-rotate-left"></i>
+                                                <i
+                                                    className={
+                                                        String(
+                                                            item.status
+                                                        )
+                                                            .toUpperCase()
+                                                            === "SUCCESS"
+                                                            ? "fa-solid fa-circle-check"
+                                                            : "fa-solid fa-circle-xmark"
+                                                    }
+                                                ></i>
 
-                                <h3>
-                                    No Login History
-                                </h3>
+                                                {" "}
 
-                                <p>
-                                    Your login activity will appear here.
-                                </p>
+                                                {item.status}
 
-                            </div>
+                                            </span>
 
-                        ) : (
+                                        </td>
 
-                            <table>
 
-                                <thead>
+                                        <td>
 
-                                    <tr>
+                                            <i className="fa-regular fa-clock"></i>
 
-                                        <th>
-                                            Email
-                                        </th>
+                                            {" "}
 
-                                        <th>
-                                            Status
-                                        </th>
+                                            {formatDateTime(
+                                                item.loginTime
+                                            )}
 
-                                        <th>
-                                            Date & Time
-                                        </th>
+                                        </td>
 
                                     </tr>
 
-                                </thead>
+                                )
+                            )}
 
+                        </tbody>
 
-                                <tbody>
+                    </table>
 
-                                    {history.map(
-                                        (item) => (
+                )}
 
-                                            <tr
-                                                key={item.id}
-                                            >
+            </section>
 
-                                                <td>
+        </Layout>
 
-                                                    <i className="fa-solid fa-envelope"></i>
-
-                                                    <span>
-                                                        {" "}
-                                                        {item.email}
-                                                    </span>
-
-                                                </td>
-
-
-                                                <td>
-
-                                                    <span
-                                                        className={`login-status ${getStatusClass(
-                                                            item.status
-                                                        )}`}
-                                                    >
-
-                                                        <i
-                                                            className={
-                                                                String(item.status)
-                                                                    .toUpperCase()
-                                                                    === "SUCCESS"
-                                                                    ? "fa-solid fa-circle-check"
-                                                                    : "fa-solid fa-circle-xmark"
-                                                            }
-                                                        ></i>
-
-                                                        {" "}
-
-                                                        {item.status}
-
-                                                    </span>
-
-                                                </td>
-
-
-                                                <td>
-
-                                                    <i className="fa-regular fa-clock"></i>
-
-                                                    {" "}
-
-                                                    {formatDateTime(
-                                                        item.loginTime
-                                                    )}
-
-                                                </td>
-
-                                            </tr>
-
-                                        )
-                                    )}
-
-                                </tbody>
-
-                            </table>
-
-                        )}
-
-                    </section>
-
-                </main>
-
-            </div>
-
-        </div>
     );
 }
 

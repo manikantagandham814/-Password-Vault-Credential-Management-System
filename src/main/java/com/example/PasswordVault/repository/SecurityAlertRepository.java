@@ -36,4 +36,5 @@ public interface SecurityAlertRepository
             String alertType,
             SecurityAlertStatus status
     );
+    long countByUser(User user);
 }

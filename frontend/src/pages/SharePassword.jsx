@@ -54,12 +54,38 @@ function SharePassword() {
                 if (
                     passwordResponse.status === 401
                 ) {
+
                     navigate("/login");
                     return;
                 }
 
 
+                if (
+                    passwordResponse.status === 403
+                ) {
+
+                    setError(
+                        "You do not have permission to access this password."
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    passwordResponse.status === 404
+                ) {
+
+                    setError(
+                        "Password not found."
+                    );
+
+                    return;
+                }
+
+
                 if (!passwordResponse.ok) {
+
                     throw new Error(
                         "Unable to load password"
                     );
@@ -81,15 +107,41 @@ function SharePassword() {
                     );
 
 
-                if (sharesResponse.status === 403) {
+                if (
+                    sharesResponse.status === 401
+                ) {
+
+                    navigate("/login");
+                    return;
+                }
+
+
+                if (
+                    sharesResponse.status === 403
+                ) {
+
                     setError(
                         "You do not have permission to manage sharing."
                     );
+
+                    return;
+                }
+
+
+                if (
+                    sharesResponse.status === 404
+                ) {
+
+                    setError(
+                        "Password sharing information was not found."
+                    );
+
                     return;
                 }
 
 
                 if (!sharesResponse.ok) {
+
                     throw new Error(
                         "Unable to load shares"
                     );
@@ -103,11 +155,27 @@ function SharePassword() {
 
             } catch (error) {
 
-                console.error(error);
-
-                setError(
-                    "Unable to load sharing information"
+                console.error(
+                    "Share data loading error:",
+                    error
                 );
+
+
+                if (
+                    error instanceof TypeError
+                ) {
+
+                    setError(
+                        "Unable to connect to server. Please check your connection and try again."
+                    );
+
+                } else {
+
+                    setError(
+                        "Unable to load sharing information. Please try again."
+                    );
+
+                }
 
             } finally {
 
@@ -167,6 +235,7 @@ function SharePassword() {
             if (
                 response.status === 401
             ) {
+
                 navigate("/login");
                 return;
             }
@@ -178,12 +247,54 @@ function SharePassword() {
 
             if (!response.ok) {
 
-                setError(message);
+                if (
+                    response.status === 403
+                ) {
+
+                    setError(
+                        "You do not have permission to share this password."
+                    );
+
+                } else if (
+                    response.status === 404
+                ) {
+
+                    setError(
+                        "Password or recipient was not found."
+                    );
+
+                } else if (
+                    response.status === 409
+                ) {
+
+                    setError(
+                        "This password has already been shared with this user."
+                    );
+
+                } else if (
+                    response.status === 400
+                ) {
+
+                    setError(
+                        "Please check the recipient email and permission."
+                    );
+
+                } else {
+
+                    setError(
+                        "Unable to share password. Please try again."
+                    );
+
+                }
+
                 return;
             }
 
 
-            setSuccess(message);
+            setSuccess(
+                message ||
+                "Password shared successfully."
+            );
 
             setEmail("");
             setPermission("VIEW_ONLY");
@@ -193,11 +304,27 @@ function SharePassword() {
 
         } catch (error) {
 
-            console.error(error);
-
-            setError(
-                "Unable to connect to server"
+            console.error(
+                "Share password error:",
+                error
             );
+
+
+            if (
+                error instanceof TypeError
+            ) {
+
+                setError(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+
+            } else {
+
+                setError(
+                    "Unable to share password. Please try again."
+                );
+
+            }
 
         } finally {
 
@@ -212,21 +339,77 @@ function SharePassword() {
 
     async function reloadShares() {
 
-        const response =
-            await fetch(
-                `http://localhost:8082/api/shares/password/${id}`,
-                {
-                    credentials: "include"
-                }
+        try {
+
+            const response =
+                await fetch(
+                    `http://localhost:8082/api/shares/password/${id}`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+
+            if (
+                response.status === 401
+            ) {
+
+                navigate("/login");
+                return;
+            }
+
+
+            if (
+                response.status === 403
+            ) {
+
+                setError(
+                    "You do not have permission to manage sharing."
+                );
+
+                return;
+            }
+
+
+            if (response.ok) {
+
+                const data =
+                    await response.json();
+
+                setShares(data);
+
+            } else {
+
+                setError(
+                    "Unable to refresh sharing information. Please try again."
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Reload shares error:",
+                error
             );
 
 
-        if (response.ok) {
+            if (
+                error instanceof TypeError
+            ) {
 
-            const data =
-                await response.json();
+                setError(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
 
-            setShares(data);
+            } else {
+
+                setError(
+                    "Unable to refresh sharing information. Please try again."
+                );
+
+            }
+
         }
     }
 
@@ -294,13 +477,49 @@ function SharePassword() {
                 );
 
 
-            const message =
-                await response.text();
+            if (
+                response.status === 401
+            ) {
+
+                navigate("/login");
+                return;
+            }
 
 
             if (!response.ok) {
 
-                alert(message);
+                if (
+                    response.status === 403
+                ) {
+
+                    alert(
+                        "You do not have permission to change this sharing permission."
+                    );
+
+                } else if (
+                    response.status === 404
+                ) {
+
+                    alert(
+                        "Sharing record not found."
+                    );
+
+                } else if (
+                    response.status === 400
+                ) {
+
+                    alert(
+                        "Invalid permission. Please select a valid permission."
+                    );
+
+                } else {
+
+                    alert(
+                        "Unable to update permission. Please try again."
+                    );
+
+                }
+
                 return;
             }
 
@@ -309,11 +528,27 @@ function SharePassword() {
 
         } catch (error) {
 
-            console.error(error);
-
-            alert(
-                "Unable to update permission"
+            console.error(
+                "Update permission error:",
+                error
             );
+
+
+            if (
+                error instanceof TypeError
+            ) {
+
+                alert(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+
+            } else {
+
+                alert(
+                    "Unable to update permission. Please try again."
+                );
+
+            }
         }
     }
 
@@ -331,6 +566,7 @@ function SharePassword() {
                 "Remove access for this user?"
             )
         ) {
+
             return;
         }
 
@@ -348,13 +584,41 @@ function SharePassword() {
                 );
 
 
-            const message =
-                await response.text();
+            if (
+                response.status === 401
+            ) {
+
+                navigate("/login");
+                return;
+            }
 
 
             if (!response.ok) {
 
-                alert(message);
+                if (
+                    response.status === 403
+                ) {
+
+                    alert(
+                        "You do not have permission to remove this user's access."
+                    );
+
+                } else if (
+                    response.status === 404
+                ) {
+
+                    alert(
+                        "Sharing record not found."
+                    );
+
+                } else {
+
+                    alert(
+                        "Unable to remove access. Please try again."
+                    );
+
+                }
+
                 return;
             }
 
@@ -363,11 +627,27 @@ function SharePassword() {
 
         } catch (error) {
 
-            console.error(error);
-
-            alert(
-                "Unable to remove access"
+            console.error(
+                "Remove access error:",
+                error
             );
+
+
+            if (
+                error instanceof TypeError
+            ) {
+
+                alert(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+
+            } else {
+
+                alert(
+                    "Unable to remove access. Please try again."
+                );
+
+            }
         }
     }
 
@@ -380,9 +660,13 @@ function SharePassword() {
 
         return (
             <div className="share-page">
+
                 <div className="share-card">
+
                     <h2>Loading...</h2>
+
                 </div>
+
             </div>
         );
     }

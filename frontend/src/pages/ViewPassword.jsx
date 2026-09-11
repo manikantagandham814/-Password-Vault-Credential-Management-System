@@ -55,7 +55,9 @@ function ViewPassword() {
 
                 if (response.status === 403) {
 
-                    alert("Access denied");
+                    alert(
+                        "Access denied. You do not have permission to view this password."
+                    );
 
                     navigate("/passwords");
 
@@ -68,6 +70,10 @@ function ViewPassword() {
                 // =================================================
 
                 if (response.status === 404) {
+
+                    alert(
+                        "Password not found."
+                    );
 
                     navigate("/passwords");
 
@@ -104,16 +110,32 @@ function ViewPassword() {
                     error
                 );
 
-                alert(
-                    "Unable to load password"
-                );
+
+                if (
+                    error instanceof TypeError
+                ) {
+
+                    alert(
+                        "Unable to connect to server. Please check your connection and try again."
+                    );
+
+                } else {
+
+                    alert(
+                        "Unable to load password. Please try again."
+                    );
+
+                }
+
 
                 navigate("/passwords");
 
             } finally {
 
                 setLoading(false);
+
             }
+
         }
 
 
@@ -126,6 +148,7 @@ function ViewPassword() {
             navigate("/passwords");
 
             setLoading(false);
+
         }
 
     }, [id, navigate]);
@@ -159,10 +182,13 @@ function ViewPassword() {
                 error
             );
 
+
             alert(
-                "Unable to copy password"
+                "Unable to copy password. Please try again."
             );
+
         }
+
     }
 
 
@@ -190,6 +216,7 @@ function ViewPassword() {
 
             </div>
         );
+
     }
 
 

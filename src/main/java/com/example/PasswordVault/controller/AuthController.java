@@ -8,6 +8,7 @@ import com.example.PasswordVault.dto.ForgotPasswordRequest;
 import com.example.PasswordVault.dto.LoginRequest;
 import com.example.PasswordVault.dto.RegisterRequest;
 import com.example.PasswordVault.dto.ResetPasswordRequest;
+import com.example.PasswordVault.dto.ChangePasswordRequest;
 
 import com.example.PasswordVault.entity.User;
 import com.example.PasswordVault.entity.LoginStatus;
@@ -439,7 +440,41 @@ public class AuthController {
                 "Password Reset Successfully"
         );
     }
+ // =====================================================
+ // CHANGE PASSWORD
+ // =====================================================
 
+ @PutMapping("/change-password")
+ public ResponseEntity<?> changePassword(
+         @RequestBody ChangePasswordRequest request,
+         HttpSession session) {
+
+     String email =
+             (String) session.getAttribute("email");
+
+     if (email == null) {
+
+         return ResponseEntity
+                 .status(401)
+                 .body("Please login first");
+     }
+
+     String result =
+             userService.changePassword(
+                     email,
+                     request.getCurrentPassword(),
+                     request.getNewPassword()
+             );
+
+     if (result.equals("Password Changed Successfully")) {
+
+         return ResponseEntity.ok(result);
+     }
+
+     return ResponseEntity
+             .badRequest()
+             .body(result);
+ }
 
     // =====================================================
     // LOGOUT

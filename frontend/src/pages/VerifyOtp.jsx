@@ -69,6 +69,16 @@ function VerifyOtp() {
             );
 
 
+            if (
+                response.status === 401
+            ) {
+
+                navigate("/login");
+
+                return;
+            }
+
+
             if (response.ok) {
 
                 setSuccess(
@@ -83,27 +93,24 @@ function VerifyOtp() {
 
             } else {
 
-                let message =
-                    "Invalid or expired OTP";
+                if (
+                    response.status === 400 ||
+                    response.status === 401 ||
+                    response.status === 410
+                ) {
 
-                try {
-
-                    const text =
-                        await response.text();
-
-                    if (text) {
-                        message = text;
-                    }
-
-                } catch (error) {
-
-                    console.error(
-                        "Error reading OTP response:",
-                        error
+                    setError(
+                        "Invalid or expired OTP"
                     );
+
+                } else {
+
+                    setError(
+                        "Unable to verify OTP. Please try again."
+                    );
+
                 }
 
-                setError(message);
             }
 
         } catch (error) {
@@ -113,9 +120,22 @@ function VerifyOtp() {
                 error
             );
 
-            setError(
-                "Unable to connect to server"
-            );
+
+            if (
+                error instanceof TypeError
+            ) {
+
+                setError(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+
+            } else {
+
+                setError(
+                    "Unable to verify OTP. Please try again."
+                );
+
+            }
 
         } finally {
 
@@ -146,6 +166,16 @@ function VerifyOtp() {
             );
 
 
+            if (
+                response.status === 401
+            ) {
+
+                navigate("/login");
+
+                return;
+            }
+
+
             if (response.ok) {
 
                 setTimeLeft(60);
@@ -158,27 +188,23 @@ function VerifyOtp() {
 
             } else {
 
-                let message =
-                    "Unable to resend OTP";
+                if (
+                    response.status === 400 ||
+                    response.status === 410
+                ) {
 
-                try {
-
-                    const text =
-                        await response.text();
-
-                    if (text) {
-                        message = text;
-                    }
-
-                } catch (error) {
-
-                    console.error(
-                        "Error reading resend response:",
-                        error
+                    setError(
+                        "Unable to resend OTP. Please request a new OTP again."
                     );
+
+                } else {
+
+                    setError(
+                        "Unable to resend OTP. Please try again."
+                    );
+
                 }
 
-                setError(message);
             }
 
         } catch (error) {
@@ -188,9 +214,22 @@ function VerifyOtp() {
                 error
             );
 
-            setError(
-                "Unable to connect to server"
-            );
+
+            if (
+                error instanceof TypeError
+            ) {
+
+                setError(
+                    "Unable to connect to server. Please check your connection and try again."
+                );
+
+            } else {
+
+                setError(
+                    "Unable to resend OTP. Please try again."
+                );
+
+            }
 
         } finally {
 

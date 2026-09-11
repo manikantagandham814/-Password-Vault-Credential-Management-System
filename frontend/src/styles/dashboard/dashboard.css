@@ -292,80 +292,325 @@
 
 
 /* =========================================================
-   CARDS
+   PASSWORD HEALTH
 ========================================================= */
 
-.dashboard-page .cards {
-    display: flex;
-
-    gap: 25px;
-
-    margin-bottom: 35px;
-}
-
-.dashboard-page .card {
-    flex: 1;
+.dashboard-page .password-health-card {
 
     background: white;
 
-    border-radius: 16px;
+    border-radius: 18px;
 
-    padding: 25px;
+    padding: 28px 30px;
 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
-
-    transition: .3s;
-
-    position: relative;
+    margin-bottom: 35px;
 
     border: 1px solid #F1F5F9;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, .08);
 }
 
-.dashboard-page .card:hover {
-    transform: translateY(-8px);
 
-    box-shadow: 0 18px 35px rgba(0, 0, 0, .12);
-}
+/* =========================================================
+   PASSWORD HEALTH HEADER
+========================================================= */
 
-.dashboard-page .card-icon {
-    position: absolute;
-
-    right: 20px;
-    top: 20px;
-
-    width: 55px;
-    height: 55px;
-
-    border-radius: 50%;
-
-    background: #EEF2FF;
+.dashboard-page .password-health-header {
 
     display: flex;
 
-    justify-content: center;
     align-items: center;
 
-    font-size: 22px;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 28px;
+}
+
+.dashboard-page .password-health-header h3 {
+
+    margin: 0;
+
+    color: #1E293B;
+
+    font-size: 25px;
+
+    font-weight: 600;
+}
+
+.dashboard-page .password-health-header h3 i {
+
+    color: #4F46E5;
+
+    margin-right: 10px;
+}
+
+.dashboard-page .password-health-header p {
+
+    margin: 7px 0 0;
+
+    color: #64748B;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   OVERALL HEALTH SCORE
+========================================================= */
+
+.dashboard-page .health-score {
+
+    text-align: right;
+
+    min-width: 120px;
+}
+
+.dashboard-page .health-score span {
+
+    display: block;
+
+    color: #64748B;
+
+    font-size: 13px;
+
+    margin-bottom: 4px;
+}
+
+.dashboard-page .health-score strong {
+
+    display: block;
+
+    color: #4F46E5;
+
+    font-size: 30px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   HEALTH STAT GRID
+========================================================= */
+
+.dashboard-page .health-stat-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+}
+
+
+/* =========================================================
+   HEALTH STAT
+========================================================= */
+
+.dashboard-page .health-stat {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 18px;
+
+    background: #F8FAFC;
+
+    border: 1px solid #EEF2F7;
+
+    border-radius: 14px;
+
+    transition: .25s;
+}
+
+.dashboard-page .health-stat:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, .06);
+}
+
+
+/* =========================================================
+   HEALTH STAT NUMBERS
+========================================================= */
+
+.dashboard-page .health-stat strong {
+
+    display: block;
+
+    color: #1E293B;
+
+    font-size: 25px;
+
+    line-height: 1.2;
+
+    font-weight: 600;
+}
+
+.dashboard-page .health-stat span {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: #64748B;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   HEALTH ICON
+========================================================= */
+
+.dashboard-page .health-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    min-width: 46px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+}
+
+
+/* TOTAL */
+
+.dashboard-page .health-icon.total {
+
+    background: #EEF2FF;
 
     color: #4F46E5;
 }
 
-.dashboard-page .card h1 {
-    margin-top: 20px;
 
-    font-size: 36px;
+/* STRONG */
+
+.dashboard-page .health-icon.strong {
+
+    background: #ECFDF5;
+
+    color: #16A34A;
+}
+
+
+/* MEDIUM */
+
+.dashboard-page .health-icon.medium {
+
+    background: #FFF7ED;
+
+    color: #D97706;
+}
+
+
+/* WEAK */
+
+.dashboard-page .health-icon.weak {
+
+    background: #FEF2F2;
+
+    color: #DC2626;
+}
+
+
+/* =========================================================
+   HEALTH PROGRESS
+========================================================= */
+
+.dashboard-page .health-progress {
+
+    margin-top: 25px;
+}
+
+.dashboard-page .health-progress-label {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+
+    color: #64748B;
+
+    font-size: 13px;
+}
+
+.dashboard-page .health-progress-label strong {
 
     color: #1E293B;
 
     font-weight: 600;
 }
 
-.dashboard-page .card p {
-    margin-top: 10px;
+
+/* =========================================================
+   PROGRESS TRACK
+========================================================= */
+
+.dashboard-page .health-progress-track {
+
+    width: 100%;
+
+    height: 10px;
+
+    background: #E5E7EB;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   PROGRESS FILL
+========================================================= */
+
+.dashboard-page .health-progress-fill {
+
+    height: 100%;
+
+    background: #4F46E5;
+
+    border-radius: 20px;
+
+    transition:
+        width .5s ease;
+}
+
+
+/* =========================================================
+   HEALTH LOADING
+========================================================= */
+
+.dashboard-page .health-loading {
+
+    padding: 30px;
+
+    text-align: center;
 
     color: #64748B;
 
-    font-size: 16px;
+    font-size: 14px;
 }
 
 
@@ -522,7 +767,6 @@
 
 
 /* =========================================================
-  /* =========================================================
    ACTION ICONS
 ========================================================= */
 
@@ -645,6 +889,21 @@
 
 
 /* =========================================================
+   SHARE
+========================================================= */
+
+.dashboard-page .share {
+    color: #7C3AED;
+}
+
+.dashboard-page .share:hover {
+    color: #6D28D9;
+
+    transform: scale(1.15);
+}
+
+
+/* =========================================================
    REMOVE GLOBAL BUTTON BLUE BACKGROUND
 ========================================================= */
 
@@ -686,14 +945,15 @@
 
     box-shadow: none !important;
 }
+
 /* =========================================================
    RESPONSIVE - TABLET
 ========================================================= */
 
 @media (max-width: 1000px) {
 
-    .dashboard-page .cards {
-        flex-direction: column;
+    .dashboard-page .health-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .dashboard-page .sidebar {
@@ -703,7 +963,7 @@
 
 
 /* =========================================================
-   RESPONSIVE - MOBILE
+   RESPONSIVE - MOBILE / TABLET NAVIGATION
 ========================================================= */
 
 @media (max-width: 768px) {
@@ -712,34 +972,85 @@
         flex-direction: column;
     }
 
+    /* Horizontal navigation */
     .dashboard-page .sidebar {
         width: 100%;
+        height: auto;
 
         display: flex;
+        flex-direction: row;
 
-        justify-content: center;
+        align-items: center;
+        justify-content: flex-start;
 
-        gap: 10px;
+        gap: 8px;
 
-        padding: 15px;
+        padding: 10px 12px;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        box-sizing: border-box;
+
+        flex-shrink: 0;
+
+        box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+
+        -webkit-overflow-scrolling: touch;
     }
 
+    /* Navigation items */
     .dashboard-page .sidebar a {
-        margin-bottom: 0;
+        flex: 0 0 auto;
+
+        width: auto;
+
+        margin: 0;
+
+        padding: 12px 14px;
+
+        white-space: nowrap;
+
+        font-size: 14px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        transform: none;
     }
 
     .dashboard-page .sidebar a:hover {
         transform: none;
     }
 
+    /* Content */
     .dashboard-page .content {
+        width: 100%;
+        min-width: 0;
+
         padding: 20px;
+
+        box-sizing: border-box;
     }
 
-    .dashboard-page .cards {
+    /* Password health */
+    .dashboard-page .password-health-header {
         flex-direction: column;
+        align-items: flex-start;
     }
 
+    .dashboard-page .health-score {
+        text-align: left;
+    }
+
+    .dashboard-page .health-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Table */
     .dashboard-page .table-card {
         overflow-x: auto;
     }
@@ -747,33 +1058,41 @@
     .dashboard-page table {
         min-width: 750px;
     }
-
-    .dashboard-page th {
-        font-size: 16px;
-    }
-
-    .dashboard-page td {
-        font-size: 16px;
-    }
 }
 
 
 /* =========================================================
-   SMALL MOBILE
+   MOBILE
 ========================================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
 
     .dashboard-page .navbar {
-        padding: 0 20px;
+        height: 60px;
+        padding: 0 15px;
     }
 
     .dashboard-page .logo {
         font-size: 20px;
     }
 
+    .dashboard-page .profile-btn {
+        padding: 6px;
+    }
+
     .dashboard-page .profile-btn span {
         display: none;
+    }
+
+    .dashboard-page .sidebar {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .dashboard-page .sidebar a {
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 8px;
     }
 
     .dashboard-page .content {
@@ -786,6 +1105,18 @@
 
     .dashboard-page .welcome p {
         font-size: 15px;
+    }
+
+    .dashboard-page .password-health-card {
+        padding: 20px;
+    }
+
+    .dashboard-page .password-health-header h3 {
+        font-size: 22px;
+    }
+
+    .dashboard-page .health-stat {
+        padding: 15px;
     }
 
     .dashboard-page .table-card {
@@ -802,5 +1133,27 @@
 
     .dashboard-page td {
         font-size: 15px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .dashboard-page .sidebar {
+        justify-content: flex-start;
+        overflow-x: auto;
+    }
+
+    .dashboard-page .sidebar a {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .dashboard-page .content {
+        padding: 12px;
     }
 }
