@@ -166,10 +166,15 @@ function Dashboard() {
                 );
 
 
-                // Unauthorized session
+                // Password health is a secondary dashboard request.
+                // Do not redirect to login if this report alone returns 401.
                 if (response.status === 401) {
 
-                    navigate("/login");
+                    if (mounted) {
+                        setHealthError(
+                            "Unable to load password health information."
+                        );
+                    }
 
                     return;
                 }
@@ -199,6 +204,7 @@ function Dashboard() {
 
 
                 setPasswordHealth({
+
                     totalCredentials:
                         data.totalCredentials || 0,
 
@@ -317,6 +323,7 @@ function Dashboard() {
                 "Delete password error:",
                 error
             );
+
 
             alert(
                 "Unable to delete password. Please try again."
