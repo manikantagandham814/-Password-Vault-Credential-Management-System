@@ -16,7 +16,7 @@ import ResetPassword from "./pages/ResetPassword";
 // DASHBOARD
 // =====================================================
 
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/Dashboard";
 
 
 // =====================================================
