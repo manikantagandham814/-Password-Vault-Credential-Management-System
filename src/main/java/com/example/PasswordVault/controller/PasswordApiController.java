@@ -19,419 +19,292 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/passwords")
-@CrossOrigin(
-    origins = "http://localhost:5173",
-    allowCredentials = "true"
-)
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class PasswordApiController {
 
-    @Autowired
-    private PasswordService passwordService;
+	@Autowired
+	private PasswordService passwordService;
 
-    @Autowired
-    private PasswordShareService passwordShareService;
+	@Autowired
+	private PasswordShareService passwordShareService;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
+	// =====================================================
+	// Get All Passwords
+	// GET /api/passwords
+	// =====================================================
 
-    // =====================================================
-    // Get All Passwords
-    // GET /api/passwords
-    // =====================================================
+	@GetMapping
+	public ResponseEntity<?> getPasswords(HttpSession session) {
 
-    @GetMapping
-    public ResponseEntity<?> getPasswords(
-            HttpSession session) {
+		String email = (String) session.getAttribute("email");
 
-        String email =
-                (String) session.getAttribute("email");
+		if (email == null) {
 
-        if (email == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please login first");
+		}
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Please login first");
-        }
+		User user = userRepository.findByEmail(email).orElse(null);
 
-        User user =
-                userRepository
-                        .findByEmail(email)
-                        .orElse(null);
+		if (user == null) {
 
-        if (user == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+		}
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("User not found");
-        }
+		List<Password> passwords = passwordService.getAllPasswords(user);
 
-        List<Password> passwords =
-                passwordService.getAllPasswords(user);
+		return ResponseEntity.ok(passwords);
+	}
 
-        return ResponseEntity.ok(passwords);
-    }
+	// =====================================================
+	// Search Passwords
+	// GET /api/passwords/search?keyword=google
+	// =====================================================
 
+	@GetMapping("/search")
+	public ResponseEntity<?> searchPasswords(@RequestParam("keyword") String keyword, HttpSession session) {
 
-    // =====================================================
-    // Search Passwords
-    // GET /api/passwords/search?keyword=google
-    // =====================================================
+		String email = (String) session.getAttribute("email");
 
-    @GetMapping("/search")
-    public ResponseEntity<?> searchPasswords(
-            @RequestParam("keyword") String keyword,
-            HttpSession session) {
+		if (email == null) {
 
-        String email =
-                (String) session.getAttribute("email");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please login first");
+		}
 
-        if (email == null) {
+		User user = userRepository.findByEmail(email).orElse(null);
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Please login first");
-        }
+		if (user == null) {
 
-        User user =
-                userRepository
-                        .findByEmail(email)
-                        .orElse(null);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+		}
 
-        if (user == null) {
+		List<Password> passwords = passwordService.searchPasswords(user, keyword);
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("User not found");
-        }
+		return ResponseEntity.ok(passwords);
+	}
 
-        List<Password> passwords =
-                passwordService.searchPasswords(
-                        user,
-                        keyword
-                );
+	// =====================================================
+	// Add Password
+	// POST /api/passwords
+	// =====================================================
 
-        return ResponseEntity.ok(passwords);
-    }
+	@PostMapping
+	public ResponseEntity<?> addPassword(@RequestBody PasswordRequest request, HttpSession session) {
 
+		String email = (String) session.getAttribute("email");
 
-    // =====================================================
-    // Add Password
-    // POST /api/passwords
-    // =====================================================
+		if (email == null) {
 
-    @PostMapping
-    public ResponseEntity<?> addPassword(
-            @RequestBody PasswordRequest request,
-            HttpSession session) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please login first");
+		}
 
-        String email =
-                (String) session.getAttribute("email");
+		User user = userRepository.findByEmail(email).orElse(null);
 
-        if (email == null) {
+		if (user == null) {
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Please login first");
-        }
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+		}
 
-        User user =
-                userRepository
-                        .findByEmail(email)
-                        .orElse(null);
+		passwordService.savePassword(request, user);
 
-        if (user == null) {
+		return ResponseEntity.ok("Password Saved Successfully");
+	}
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("User not found");
-        }
+	// =====================================================
+	// View Password
+	// GET /api/passwords/{id}/view
+	// =====================================================
 
-        passwordService.savePassword(
-                request,
-                user
-        );
+	@GetMapping("/{id}/view")
+	public ResponseEntity<?> viewPassword(@PathVariable Long id, HttpSession session) {
 
-        return ResponseEntity.ok(
-                "Password Saved Successfully"
-        );
-    }
+		User user = getLoggedInUser(session);
 
+		if (user == null) {
+			return unauthorized();
+		}
 
-    // =====================================================
-    // View Password
-    // GET /api/passwords/{id}/view
-    // =====================================================
+		Password password = passwordService.getPasswordById(id);
 
-    @GetMapping("/{id}/view")
-    public ResponseEntity<?> viewPassword(
-            @PathVariable Long id,
-            HttpSession session) {
+		if (password == null) {
 
-        User user = getLoggedInUser(session);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Password not found");
+		}
 
-        if (user == null) {
-            return unauthorized();
-        }
+		// =================================================
+		// OWNER OR SHARED USER
+		// =================================================
 
+		if (!passwordShareService.canView(password, user)) {
 
-        Password password =
-                passwordService.getPasswordById(id);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+		}
 
-        if (password == null) {
+		String decryptedPassword = AESUtil.decrypt(password.getEncryptedPassword());
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Password not found");
-        }
+		PasswordResponse response = new PasswordResponse(password.getId(), password.getWebsiteName(),
+				password.getWebsiteUrl(), password.getUsername(), decryptedPassword, password.getCategory(),
+				password.getNotes());
 
+		return ResponseEntity.ok(response);
+	}
 
-        // =================================================
-        // OWNER OR SHARED USER
-        // =================================================
+	// =====================================================
+	// Update Password
+	// PUT /api/passwords/{id}
+	// =====================================================
 
-        if (!passwordShareService.canView(
-                password,
-                user)) {
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody PasswordRequest request,
+			HttpSession session) {
 
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("Access denied");
-        }
+		User user = getLoggedInUser(session);
 
+		if (user == null) {
+			return unauthorized();
+		}
 
-        String decryptedPassword =
-                AESUtil.decrypt(
-                        password.getEncryptedPassword()
-                );
+		Password password = passwordService.getPasswordById(id);
 
+		if (password == null) {
 
-        PasswordResponse response =
-                new PasswordResponse(
-                        password.getId(),
-                        password.getWebsiteName(),
-                        password.getWebsiteUrl(),
-                        password.getUsername(),
-                        decryptedPassword,
-                        password.getCategory(),
-                        password.getNotes()
-                );
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Password not found");
+		}
 
+		// =================================================
+		// OWNER OR EDIT/FULL MANAGEMENT
+		// =================================================
 
-        return ResponseEntity.ok(response);
-    }
+		if (!passwordShareService.canEdit(password, user)) {
 
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not have permission to edit this password");
+		}
 
-    // =====================================================
-    // Update Password
-    // PUT /api/passwords/{id}
-    // =====================================================
+		passwordService.updatePassword(id, request);
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updatePassword(
-            @PathVariable Long id,
-            @RequestBody PasswordRequest request,
-            HttpSession session) {
+		return ResponseEntity.ok("Password Updated Successfully");
+	}
 
-        User user = getLoggedInUser(session);
+	// =====================================================
+	// Delete Password
+	// DELETE /api/passwords/{id}
+	// =====================================================
 
-        if (user == null) {
-            return unauthorized();
-        }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deletePassword(@PathVariable Long id, HttpSession session) {
 
+		User user = getLoggedInUser(session);
 
-        Password password =
-                passwordService.getPasswordById(id);
+		if (user == null) {
+			return unauthorized();
+		}
 
-        if (password == null) {
+		Password password = passwordService.getPasswordById(id);
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Password not found");
-        }
+		if (password == null) {
 
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Password not found");
+		}
 
-        // =================================================
-        // OWNER OR EDIT/FULL MANAGEMENT
-        // =================================================
+		// =================================================
+		// OWNER OR FULL MANAGEMENT
+		// =================================================
 
-        if (!passwordShareService.canEdit(
-                password,
-                user)) {
+		if (!passwordShareService.canDelete(password, user)) {
 
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(
-                        "You do not have permission to edit this password"
-                    );
-        }
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+					.body("You do not have permission to delete this password");
+		}
 
+		passwordService.deletePassword(id);
 
-        passwordService.updatePassword(
-                id,
-                request
-        );
+		return ResponseEntity.ok("Password Deleted Successfully");
+	}
 
+	// =====================================================
+	// SESSION USER
+	// =====================================================
 
-        return ResponseEntity.ok(
-                "Password Updated Successfully"
-        );
-    }
+	private User getLoggedInUser(HttpSession session) {
 
+		String email = (String) session.getAttribute("email");
 
-    // =====================================================
-    // Delete Password
-    // DELETE /api/passwords/{id}
-    // =====================================================
+		if (email == null) {
+			return null;
+		}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePassword(
-            @PathVariable Long id,
-            HttpSession session) {
+		return userRepository.findByEmail(email).orElse(null);
+	}
 
-        User user = getLoggedInUser(session);
+	// =====================================================
+	// UNAUTHORIZED
+	// =====================================================
 
-        if (user == null) {
-            return unauthorized();
-        }
+	private ResponseEntity<?> unauthorized() {
 
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please login first");
+	}
 
-        Password password =
-                passwordService.getPasswordById(id);
+	// =====================================================
+	// Response DTO for View Password
+	// =====================================================
 
-        if (password == null) {
+	public static class PasswordResponse {
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Password not found");
-        }
+		private Long id;
 
+		private String websiteName;
 
-        // =================================================
-        // OWNER OR FULL MANAGEMENT
-        // =================================================
+		private String websiteUrl;
 
-        if (!passwordShareService.canDelete(
-                password,
-                user)) {
+		private String username;
 
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(
-                        "You do not have permission to delete this password"
-                    );
-        }
+		private String password;
 
+		private String category;
 
-        passwordService.deletePassword(id);
+		private String notes;
 
+		public PasswordResponse(Long id, String websiteName, String websiteUrl, String username, String password,
+				String category, String notes) {
 
-        return ResponseEntity.ok(
-                "Password Deleted Successfully"
-        );
-    }
+			this.id = id;
+			this.websiteName = websiteName;
+			this.websiteUrl = websiteUrl;
+			this.username = username;
+			this.password = password;
+			this.category = category;
+			this.notes = notes;
+		}
 
+		public Long getId() {
+			return id;
+		}
 
-    // =====================================================
-    // SESSION USER
-    // =====================================================
+		public String getWebsiteName() {
+			return websiteName;
+		}
 
-    private User getLoggedInUser(
-            HttpSession session) {
+		public String getWebsiteUrl() {
+			return websiteUrl;
+		}
 
-        String email =
-                (String) session.getAttribute("email");
+		public String getUsername() {
+			return username;
+		}
 
+		public String getPassword() {
+			return password;
+		}
 
-        if (email == null) {
-            return null;
-        }
+		public String getCategory() {
+			return category;
+		}
 
-
-        return userRepository
-                .findByEmail(email)
-                .orElse(null);
-    }
-
-
-    // =====================================================
-    // UNAUTHORIZED
-    // =====================================================
-
-    private ResponseEntity<?> unauthorized() {
-
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body("Please login first");
-    }
-
-
-    // =====================================================
-    // Response DTO for View Password
-    // =====================================================
-
-    public static class PasswordResponse {
-
-        private Long id;
-
-        private String websiteName;
-
-        private String websiteUrl;
-
-        private String username;
-
-        private String password;
-
-        private String category;
-
-        private String notes;
-
-
-        public PasswordResponse(
-                Long id,
-                String websiteName,
-                String websiteUrl,
-                String username,
-                String password,
-                String category,
-                String notes) {
-
-            this.id = id;
-            this.websiteName = websiteName;
-            this.websiteUrl = websiteUrl;
-            this.username = username;
-            this.password = password;
-            this.category = category;
-            this.notes = notes;
-        }
-
-
-        public Long getId() {
-            return id;
-        }
-
-        public String getWebsiteName() {
-            return websiteName;
-        }
-
-        public String getWebsiteUrl() {
-            return websiteUrl;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public String getCategory() {
-            return category;
-        }
-
-        public String getNotes() {
-            return notes;
-        }
-    }
+		public String getNotes() {
+			return notes;
+		}
+	}
 }
