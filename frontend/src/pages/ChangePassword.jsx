@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +34,7 @@ function ChangePassword() {
             try {
 
                 const response = await fetch(
-                    "http://localhost:8082/api/dashboard",
+                    `${API_URL}/api/dashboard`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -141,7 +142,7 @@ function ChangePassword() {
         try {
 
             const response = await fetch(
-                "http://localhost:8082/api/change-password",
+                `${API_URL}/api/change-password`,
                 {
                     method: "PUT",
 

@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -43,7 +44,7 @@ function Sent() {
 
             const response =
                 await fetch(
-                    "http://localhost:8082/api/shares/sent",
+                    `${API_URL}/api/shares/sent`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -152,7 +153,7 @@ function Sent() {
 
                 const response =
                     await fetch(
-                        "http://localhost:8082/api/dashboard",
+                        `${API_URL}/api/dashboard`,
                         {
                             method: "GET",
                             credentials: "include"
@@ -236,7 +237,7 @@ function Sent() {
 
             const response =
                 await fetch(
-                    `http://localhost:8082/api/shares/${shareId}`,
+                    `${API_URL}/api/shares/${shareId}`,
                     {
                         method: "DELETE",
                         credentials: "include"

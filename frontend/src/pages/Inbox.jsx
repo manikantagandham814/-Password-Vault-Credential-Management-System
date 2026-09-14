@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -26,7 +27,7 @@ function Inbox() {
             setError("");
 
             const response = await fetch(
-                "http://localhost:8082/api/shares/inbox",
+                `${API_URL}/api/shares/inbox`,
                 {
                     method: "GET",
                     credentials: "include"
@@ -76,7 +77,7 @@ function Inbox() {
         async function loadUser() {
             try {
                 const response = await fetch(
-                    "http://localhost:8082/api/dashboard",
+                    `${API_URL}/api/dashboard`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -154,7 +155,7 @@ function Inbox() {
 
         try {
             const response = await fetch(
-                `http://localhost:8082/api/shares/${shareId}/password`,
+                `${API_URL}/api/shares/${shareId}/password`,
                 {
                     method: "DELETE",
                     credentials: "include"

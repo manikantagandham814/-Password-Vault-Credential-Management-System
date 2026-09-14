@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -43,7 +44,7 @@ function Dashboard() {
                 setDashboardError("");
 
                 const response = await fetch(
-                    "http://localhost:8082/api/dashboard",
+                    `${API_URL}/api/dashboard`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -157,7 +158,7 @@ function Dashboard() {
                 setHealthError("");
 
                 const response = await fetch(
-                    "http://localhost:8082/api/reports/password-health",
+                    `${API_URL}/api/reports/password-health`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -272,7 +273,7 @@ function Dashboard() {
         try {
 
             const response = await fetch(
-                `http://localhost:8082/api/passwords/${id}`,
+                `${API_URL}/api/passwords/${id}`,
                 {
                     method: "DELETE",
                     credentials: "include"

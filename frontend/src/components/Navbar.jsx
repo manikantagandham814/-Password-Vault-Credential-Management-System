@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -21,7 +22,7 @@ function Navbar({ fullName }) {
         e.preventDefault();
 
         try {
-            await fetch("http://localhost:8082/api/logout", {
+            await fetch(`${API_URL}/api/logout`, {
                 method: "POST",
                 credentials: "include"
             });

@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import {
     Link,
@@ -45,7 +46,7 @@ function Passwords() {
 
                 const response =
                     await fetch(
-                        "http://localhost:8082/api/dashboard",
+                        `${API_URL}/api/dashboard`,
                         {
                             method: "GET",
                             credentials: "include"
@@ -119,13 +120,13 @@ function Passwords() {
 
 
                 let url =
-                    "http://localhost:8082/api/passwords";
+                    `${API_URL}/api/passwords`;
 
 
                 if (searchKeyword) {
 
                     url =
-                        `http://localhost:8082/api/passwords/search?keyword=${encodeURIComponent(searchKeyword)}`;
+                        `${API_URL}/api/passwords/search?keyword=${encodeURIComponent(searchKeyword)}`;
 
                     setKeyword(
                         searchKeyword
@@ -285,7 +286,7 @@ function Passwords() {
 
             const response =
                 await fetch(
-                    `http://localhost:8082/api/passwords/${id}`,
+                    `${API_URL}/api/passwords/${id}`,
                     {
                         method: "DELETE",
                         credentials: "include"

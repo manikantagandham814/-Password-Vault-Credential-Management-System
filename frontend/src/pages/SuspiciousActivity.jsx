@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -60,7 +61,7 @@ function SuspiciousActivity() {
 
             const dashboardResponse =
                 await fetch(
-                    "http://localhost:8082/api/dashboard",
+                    `${API_URL}/api/dashboard`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -114,7 +115,7 @@ function SuspiciousActivity() {
 
             const suspiciousResponse =
                 await fetch(
-                    "http://localhost:8082/api/security/suspicious",
+                    `${API_URL}/api/security/suspicious`,
                     {
                         method: "GET",
                         credentials: "include"

@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -63,7 +64,7 @@ function Security() {
 
             const dashboardResponse =
                 await fetch(
-                    "http://localhost:8082/api/dashboard",
+                    `${API_URL}/api/dashboard`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -121,14 +122,14 @@ function Security() {
             ] = await Promise.all([
 
                 fetch(
-                    "http://localhost:8082/api/security/alerts",
+                    `${API_URL}/api/security/alerts`,
                     {
                         credentials: "include"
                     }
                 ),
 
                 fetch(
-                    "http://localhost:8082/api/security/suspicious",
+                    `${API_URL}/api/security/suspicious`,
                     {
                         credentials: "include"
                     }

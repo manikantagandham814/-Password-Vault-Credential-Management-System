@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 
@@ -28,7 +29,7 @@ function ViewPassword() {
             try {
 
                 const response = await fetch(
-                    `http://localhost:8082/api/passwords/${id}/view`,
+                    `${API_URL}/api/passwords/${id}/view`,
                     {
                         method: "GET",
 

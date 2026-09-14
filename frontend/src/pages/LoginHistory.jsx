@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -36,7 +37,7 @@ function LoginHistory() {
 
                 const response =
                     await fetch(
-                        "http://localhost:8082/api/login-history",
+                        `${API_URL}/api/login-history`,
                         {
                             method: "GET",
                             credentials: "include"
@@ -152,7 +153,7 @@ function LoginHistory() {
 
                 const response =
                     await fetch(
-                        "http://localhost:8082/api/dashboard",
+                        `${API_URL}/api/dashboard`,
                         {
                             method: "GET",
                             credentials: "include"

@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -44,7 +45,7 @@ function SharePassword() {
 
                 const passwordResponse =
                     await fetch(
-                        `http://localhost:8082/api/passwords/${id}/view`,
+                        `${API_URL}/api/passwords/${id}/view`,
                         {
                             credentials: "include"
                         }
@@ -100,7 +101,7 @@ function SharePassword() {
 
                 const sharesResponse =
                     await fetch(
-                        `http://localhost:8082/api/shares/password/${id}`,
+                        `${API_URL}/api/shares/password/${id}`,
                         {
                             credentials: "include"
                         }
@@ -207,7 +208,7 @@ function SharePassword() {
 
             const response =
                 await fetch(
-                    "http://localhost:8082/api/shares",
+                    `${API_URL}/api/shares`,
                     {
                         method: "POST",
 
@@ -343,7 +344,7 @@ function SharePassword() {
 
             const response =
                 await fetch(
-                    `http://localhost:8082/api/shares/password/${id}`,
+                    `${API_URL}/api/shares/password/${id}`,
                     {
                         credentials: "include"
                     }
@@ -458,7 +459,7 @@ function SharePassword() {
 
             const response =
                 await fetch(
-                    `http://localhost:8082/api/shares/${shareId}`,
+                    `${API_URL}/api/shares/${shareId}`,
                     {
                         method: "PUT",
 
@@ -575,7 +576,7 @@ function SharePassword() {
 
             const response =
                 await fetch(
-                    `http://localhost:8082/api/shares/${shareId}`,
+                    `${API_URL}/api/shares/${shareId}`,
                     {
                         method: "DELETE",
 

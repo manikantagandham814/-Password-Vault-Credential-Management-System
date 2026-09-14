@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -34,7 +35,7 @@ function SharedPassword() {
 
                 const response =
                     await fetch(
-                        `http://localhost:8082/api/shares/${shareId}`,
+                        `${API_URL}/api/shares/${shareId}`,
                         {
                             method: "GET",
                             credentials: "include"

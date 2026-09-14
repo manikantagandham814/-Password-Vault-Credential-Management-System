@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -60,7 +61,7 @@ function AuditLogs() {
 
             const dashboardResponse =
                 await fetch(
-                    "http://localhost:8082/api/dashboard",
+                    `${API_URL}/api/dashboard`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -114,7 +115,7 @@ function AuditLogs() {
 
             const auditResponse =
                 await fetch(
-                    "http://localhost:8082/api/security/audit-logs",
+                    `${API_URL}/api/security/audit-logs`,
                     {
                         method: "GET",
                         credentials: "include"

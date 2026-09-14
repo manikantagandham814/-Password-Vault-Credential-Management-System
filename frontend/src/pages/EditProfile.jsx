@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -30,7 +31,7 @@ function EditProfile() {
             try {
 
                 const response = await fetch(
-                    "http://localhost:8082/api/profile",
+                    `${API_URL}/api/profile`,
                     {
                         method: "GET",
                         credentials: "include"
@@ -132,7 +133,7 @@ function EditProfile() {
         try {
 
             const response = await fetch(
-                "http://localhost:8082/api/profile",
+                `${API_URL}/api/profile`,
                 {
                     method: "PUT",
 
